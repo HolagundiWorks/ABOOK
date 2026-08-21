@@ -1,0 +1,6 @@
+{
+  "name": "Architect Fee & Invoicing Suite",
+  "description": "Carbon UI architectural studio management suite for CoA fee proposals, milestone invoicing (Regular GST, Composition, Non-GST), client payments, billable/non-billable expenses, salaries, GST bookkeeping, LAN network sync, and app lock.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

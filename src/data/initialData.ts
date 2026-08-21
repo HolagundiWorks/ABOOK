@@ -1,0 +1,748 @@
+import { 
+  FirmProfile, 
+  ProjectProposal, 
+  Invoice, 
+  PaymentRecord, 
+  ExpenseItem, 
+  SalaryRecord, 
+  AppModulesConfig, 
+  AppSecurityConfig 
+} from '../types';
+import { COA_STANDARD_STAGES, COA_STANDARD_CLAUSES } from './coaStandards';
+
+export const INITIAL_FIRM_PROFILE: FirmProfile = {
+  firmType: 'PROPRIETORSHIP',
+  firmName: 'Studio Vistara Architects',
+  architectName: 'Ar. Vishwabhiram Shenoy',
+  qualification: 'B.Arch, AIIA (Gold Medalist)',
+  coaRegistrationNo: 'CA/2015/68294',
+  iiaNumber: 'A-21945',
+  email: 'connect@studiovistara.in',
+  phone: '+91 98450 12890',
+  address: 'Suite 402, Design Quarter, 80 Feet Road, Indiranagar',
+  city: 'Bengaluru',
+  state: 'Karnataka',
+  stateCode: '29',
+  pincode: '560038',
+  website: 'www.studiovistara.in',
+  pan: 'AABCU9824M',
+  gstin: '29AABCU9824M1Z5',
+  cinOrLlpin: '',
+  partners: [
+    {
+      id: 'partner-1',
+      name: 'Ar. Vishwabhiram Shenoy',
+      coaRegistrationNo: 'CA/2015/68294',
+      designation: 'Principal Architect / Proprietor',
+      sharePercentage: 100,
+      phone: '+91 98450 12890',
+      email: 'vish@studiovistara.in'
+    }
+  ],
+  defaultTaxScheme: 'REGULAR_GST',
+  compositionSchemeDeclaration: 'Composition taxable person under Section 10(2A), not eligible to collect tax on supplies',
+  bankName: 'HDFC Bank Ltd',
+  accountHolderName: 'Studio Vistara Architects',
+  accountNumber: '50200049281923',
+  ifscCode: 'HDFC0001234',
+  branch: 'Indiranagar 80 Feet Road Branch, Bengaluru',
+  upiId: 'studiovistara@hdfcbank',
+  standardPaymentTerms: 'Invoices raised upon milestone completion are payable within 15 days. Payments delayed beyond 30 days shall attract interest @ 18% p.a. as per Council of Architecture guidelines.',
+  sacCodeDefault: '998321'
+};
+
+export const INITIAL_MODULES_CONFIG: AppModulesConfig = {
+  proposals: true,
+  invoices: true,
+  payments: true,
+  expenses: true,
+  salaries: true,
+  books: true,
+  freelanceTemplates: true
+};
+
+export const INITIAL_SECURITY_CONFIG: AppSecurityConfig = {
+  isLockEnabled: false,
+  pin: '1234',
+  autoLockMinutes: 15,
+  securityHint: 'Default PIN is 1234'
+};
+
+export const INITIAL_EXPENSES: ExpenseItem[] = [
+  {
+    id: 'exp-001',
+    date: '2026-04-22',
+    category: 'PRINTING_PLOTTING',
+    description: 'A0 & A1 Architectural Working Drawing Blueprints & Lamination (8 Sets)',
+    amount: 8500,
+    isBillable: true,
+    projectId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    isBilled: false,
+    paymentMethod: 'UPI',
+    vendorOrPayee: 'Apex Reprographics & Plotting Hub',
+    referenceNumber: 'BILL-88219',
+    notes: 'Reimbursable as per client agreement clause 4.',
+    createdAt: '2026-04-22T14:30:00.000Z'
+  },
+  {
+    id: 'exp-002',
+    date: '2026-05-10',
+    category: 'RENDER_3D_COMPUTE',
+    description: 'Corona / Chaos Cloud Render Farm Credits for 8K Exterior Fly-through Walkthrough',
+    amount: 6200,
+    isBillable: true,
+    projectId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    isBilled: true,
+    invoiceNumber: 'INV/2026-27/002',
+    paymentMethod: 'BANK_TRANSFER',
+    vendorOrPayee: 'Chaos Group Cloud Render Services',
+    referenceNumber: 'INV-CG-9921',
+    notes: 'Billed to client in Stage 2.',
+    createdAt: '2026-05-10T16:15:00.000Z'
+  },
+  {
+    id: 'exp-003',
+    date: '2026-05-18',
+    category: 'SOFTWARE_SUBSCRIPTIONS',
+    description: 'Autodesk AEC Collection (Revit, AutoCAD, Navisworks) & Rhino 3D Subscription',
+    amount: 48000,
+    isBillable: false,
+    isBilled: false,
+    paymentMethod: 'NEFT_RTGS',
+    vendorOrPayee: 'Autodesk India Software Pvt Ltd',
+    referenceNumber: 'AD-2026-IN-4491',
+    notes: 'Annual studio overhead software licenses.',
+    createdAt: '2026-05-18T10:00:00.000Z'
+  },
+  {
+    id: 'exp-004',
+    date: '2026-05-24',
+    category: 'TRAVEL_SITE_VISIT',
+    description: 'Outstation Site Travel & Structural Soil Core Inspection (Whitefield)',
+    amount: 4200,
+    isBillable: true,
+    projectId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    isBilled: false,
+    paymentMethod: 'UPI',
+    vendorOrPayee: 'Fuel & Highway Fastag Charges',
+    referenceNumber: 'FUEL-5591',
+    notes: 'Reimbursable site visit.',
+    createdAt: '2026-05-24T18:00:00.000Z'
+  },
+  {
+    id: 'exp-005',
+    date: '2026-06-04',
+    category: 'MODEL_MAKING',
+    description: 'Architectural 1:100 Scale Acrylic & Balsa Wood Laser Cut Massing Model',
+    amount: 18000,
+    isBillable: true,
+    projectId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    isBilled: false,
+    paymentMethod: 'CHEQUE',
+    vendorOrPayee: 'Form & Matrix Prototyping Workshop',
+    referenceNumber: 'CHQ-000491',
+    notes: 'Physical model requested by client.',
+    createdAt: '2026-06-04T12:00:00.000Z'
+  },
+  {
+    id: 'exp-006',
+    date: '2026-06-15',
+    category: 'STUDIO_RENT_UTILITIES',
+    description: 'High-speed Leased Line Fiber Internet & Studio Electricity Bill',
+    amount: 5800,
+    isBillable: false,
+    isBilled: false,
+    paymentMethod: 'UPI',
+    vendorOrPayee: 'Tata Tele & BESCOM Bangalore',
+    referenceNumber: 'BESCOM-991204',
+    notes: 'Monthly overhead utility bill.',
+    createdAt: '2026-06-15T11:00:00.000Z'
+  }
+];
+
+export const INITIAL_SALARIES: SalaryRecord[] = [
+  {
+    id: 'sal-001',
+    monthYear: '2026-05',
+    paymentDate: '2026-05-31',
+    employeeName: 'Ar. Ananya Sharma',
+    role: 'Senior Associate Architect',
+    employmentType: 'FULL_TIME',
+    basicSalary: 55000,
+    allowances: 5000,
+    deductions: 200,
+    tdsDeducted: 5500, // 10% TDS
+    netPaid: 54300,
+    paymentMethod: 'NEFT_RTGS',
+    transactionReference: 'NEFT-HDFC-99120',
+    paymentStatus: 'PAID',
+    notes: 'May 2026 salary disbursement.',
+    createdAt: '2026-05-31T17:00:00.000Z'
+  },
+  {
+    id: 'sal-002',
+    monthYear: '2026-05',
+    paymentDate: '2026-05-31',
+    employeeName: 'Rohan Mehta',
+    role: 'Senior 3D Visualizer & BIM Lead',
+    employmentType: 'FULL_TIME',
+    basicSalary: 42000,
+    allowances: 3000,
+    deductions: 200,
+    tdsDeducted: 4200,
+    netPaid: 40600,
+    paymentMethod: 'NEFT_RTGS',
+    transactionReference: 'NEFT-HDFC-99121',
+    paymentStatus: 'PAID',
+    notes: 'May 2026 salary disbursement.',
+    createdAt: '2026-05-31T17:05:00.000Z'
+  },
+  {
+    id: 'sal-003',
+    monthYear: '2026-05',
+    paymentDate: '2026-05-31',
+    employeeName: 'Divya Krishnan',
+    role: 'Junior Architect',
+    employmentType: 'FULL_TIME',
+    basicSalary: 28000,
+    allowances: 2000,
+    deductions: 200,
+    tdsDeducted: 0,
+    netPaid: 29800,
+    paymentMethod: 'NEFT_RTGS',
+    transactionReference: 'NEFT-HDFC-99122',
+    paymentStatus: 'PAID',
+    notes: 'May 2026 salary disbursement.',
+    createdAt: '2026-05-31T17:10:00.000Z'
+  },
+  {
+    id: 'sal-004',
+    monthYear: '2026-05',
+    paymentDate: '2026-05-31',
+    employeeName: 'Karthik Venkatesh',
+    role: 'Architectural Intern (B.Arch Year 4)',
+    employmentType: 'INTERN_STIPEND',
+    basicSalary: 12000,
+    allowances: 0,
+    deductions: 0,
+    tdsDeducted: 0,
+    netPaid: 12000,
+    paymentMethod: 'UPI',
+    transactionReference: 'UPI-HDFC-99123',
+    paymentStatus: 'PAID',
+    notes: 'May 2026 internship stipend.',
+    createdAt: '2026-05-31T17:15:00.000Z'
+  }
+];
+
+
+export const INITIAL_PROPOSALS: ProjectProposal[] = [
+  {
+    id: 'prop-zenith-villa',
+    proposalNumber: 'PROP/2026-27/001',
+    date: '2026-04-10',
+    validUntil: '2026-05-10',
+    client: {
+      name: 'Mr. Arvind & Priya Kulkarni',
+      organization: 'Kulkarni Holdings',
+      email: 'arvind.kulkarni@gmail.com',
+      phone: '+91 98860 44512',
+      address: 'Plot 42, Palm Meadows Estates, Whitefield',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560066',
+      pan: 'ABCPK8891J',
+      gstin: '29ABCPK8891J1Z8'
+    },
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Contemporary Villa',
+    projectType: 'Bespoke Luxury Residential',
+    siteLocation: 'Plot 42, Palm Meadows, Whitefield, Bengaluru',
+    builtUpAreaSqFt: 6200,
+    estimatedCostOfWork: 24000000, // ₹ 2.40 Crore
+    feeModel: 'PERCENTAGE_COST',
+    percentageRate: 6.0, // 6% of ₹ 2.40 Cr = ₹ 14.40 Lakh
+    totalEstimatedFee: 1440000,
+    taxScheme: 'REGULAR_GST',
+    gstRate: 18,
+    milestones: [
+      {
+        stageId: 'coa_stage_1',
+        stageNumber: 1,
+        name: 'Concept Design & Brief Formulation',
+        deliverables: 'Site appraisal, Vastu/solar orientation analysis, 3 conceptual layout options, area statements.',
+        percentage: 10,
+        amount: 144000
+      },
+      {
+        stageId: 'coa_stage_2',
+        stageNumber: 2,
+        name: 'Preliminary Design & 3D Visualization',
+        deliverables: 'Refined architectural floor plans, exterior 3D photorealistic renderings, preliminary BOQ cost estimate.',
+        percentage: 15,
+        amount: 216000
+      },
+      {
+        stageId: 'coa_stage_3',
+        stageNumber: 3,
+        name: 'Municipal Sanction & Statutory Drawings',
+        deliverables: 'BBMP/BMRDA municipal sanction drawing set, FAR/setback compliance charts, liaison coordination.',
+        percentage: 15,
+        amount: 216000
+      },
+      {
+        stageId: 'coa_stage_4',
+        stageNumber: 4,
+        name: 'Working Drawings, BOQ & Tender Documents',
+        deliverables: 'Detailed civil, structural coordinated, plumbing, electrical working drawings, window schedules, itemized BOQ.',
+        percentage: 20,
+        amount: 288000
+      },
+      {
+        stageId: 'coa_stage_5',
+        stageNumber: 5,
+        name: 'Contractor Appointment & Tender Evaluation',
+        deliverables: 'Contractor comparative bid analysis, contract agreement drafting, construction schedule.',
+        percentage: 5,
+        amount: 72000
+      },
+      {
+        stageId: 'coa_stage_6',
+        stageNumber: 6,
+        name: 'Construction Administration & Periodic Inspection',
+        deliverables: 'GFC drawings release, 15 periodic site supervision visits, certifying contractor stage bills.',
+        percentage: 25,
+        amount: 360000
+      },
+      {
+        stageId: 'coa_stage_7',
+        stageNumber: 7,
+        name: 'Completion Certificate & As-Built Drawings',
+        deliverables: 'Final snagging audit, as-built CAD drawings archive, occupancy certificate assistance.',
+        percentage: 10,
+        amount: 144000
+      }
+    ],
+    scopeOfWorkClauses: COA_STANDARD_CLAUSES,
+    reimbursableExpensesNotes: 'Printing/plotting charges of sets beyond 4 copies, physical scale model, and official municipal filing fees shall be billed at actuals.',
+    termsAndConditions: [
+      'Fee calculation is pegged to the estimated cost of ₹ 2.40 Cr and adjusted on final certified construction cost.',
+      'Milestone disbursements must be released prior to commencement of subsequent stages.',
+      'Site visits included: Up to 15 periodic supervisory visits for the project duration.'
+    ],
+    status: 'ACCEPTED',
+    notes: 'Client approved the proposal. Initial retainer and Concept design invoices raised.',
+    createdAt: '2026-04-10T10:30:00.000Z',
+    updatedAt: '2026-04-15T14:20:00.000Z'
+  },
+  {
+    id: 'prop-aura-hub',
+    proposalNumber: 'PROP/2026-27/002',
+    date: '2026-05-02',
+    validUntil: '2026-06-02',
+    client: {
+      name: 'Naveen Reddy (Director)',
+      organization: 'Aura Infotech Parks LLP',
+      email: 'n.reddy@aurainfotech.com',
+      phone: '+91 99001 88231',
+      address: 'Plot 18, Electronic City Phase 1',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560100',
+      pan: 'AABCA4419K',
+      gstin: '29AABCA4419K1Z2'
+    },
+    projectTitle: 'Aura Commercial Innovation Hub (G+4 Floors)',
+    projectType: 'Commercial Office Building',
+    siteLocation: 'Electronic City Phase 1, Bengaluru',
+    builtUpAreaSqFt: 22500,
+    feeModel: 'PER_SQFT',
+    ratePerSqFt: 120, // ₹ 120 / sq.ft * 22,500 sq.ft = ₹ 27,00,000
+    totalEstimatedFee: 2700000,
+    taxScheme: 'REGULAR_GST',
+    gstRate: 18,
+    milestones: COA_STANDARD_STAGES.map((s) => ({
+      stageId: s.id,
+      stageNumber: s.stageNumber,
+      name: s.name,
+      deliverables: s.deliverables.join('; '),
+      percentage: s.percentageOfFee,
+      amount: Math.round((2700000 * s.percentageOfFee) / 100)
+    })),
+    scopeOfWorkClauses: COA_STANDARD_CLAUSES,
+    reimbursableExpensesNotes: '3D physical model and third-party MEP / Traffic Impact assessment consultants shall be paid directly by client.',
+    termsAndConditions: [
+      'Payment terms: Net 15 days upon invoice submission.',
+      'TDS applicable under Section 194J at 10% on professional fees.'
+    ],
+    status: 'SENT',
+    notes: 'Proposal sent to board for formal contract signing.',
+    createdAt: '2026-05-02T11:00:00.000Z',
+    updatedAt: '2026-05-02T11:00:00.000Z'
+  },
+  {
+    id: 'prop-boutique-interior',
+    proposalNumber: 'PROP/2026-27/003',
+    date: '2026-06-12',
+    validUntil: '2026-07-12',
+    client: {
+      name: 'Dr. Shalini Ramanathan',
+      organization: 'Private Clinic',
+      email: 'dr.shalini.r@gmail.com',
+      phone: '+91 97411 90234',
+      address: 'Flat 14B, Kingfisher Towers, Lavelle Road',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560001',
+      pan: 'ARQPR1284L'
+    },
+    projectTitle: 'Boutique Aesthetic Wellness Studio & Lounge',
+    projectType: 'Interior Architecture & Styling',
+    siteLocation: 'Lavelle Road, Bengaluru',
+    builtUpAreaSqFt: 1850,
+    feeModel: 'LUMP_SUM',
+    lumpSumFee: 480000,
+    totalEstimatedFee: 480000,
+    taxScheme: 'COMPOSITION_GST',
+    gstRate: 6,
+    milestones: [
+      {
+        stageId: 'int_1',
+        stageNumber: 1,
+        name: 'Space Planning & Thematic Moodboards',
+        deliverables: 'Detailed spatial circulation, lighting moods, and finishes palette.',
+        percentage: 25,
+        amount: 120000
+      },
+      {
+        stageId: 'int_2',
+        stageNumber: 2,
+        name: '3D Visualizations & Material Specifications',
+        deliverables: 'Photorealistic 3D interior views for reception, consultation suites, and lounge.',
+        percentage: 25,
+        amount: 120000
+      },
+      {
+        stageId: 'int_3',
+        stageNumber: 3,
+        name: 'Detailed Joinery, False Ceiling & Electrical Drawings',
+        deliverables: 'Detailed fabrication drawings for custom millwork, RCP, electrical schedules, BOQ.',
+        percentage: 30,
+        amount: 144000
+      },
+      {
+        stageId: 'int_4',
+        stageNumber: 4,
+        name: 'Site Execution Guidance & Snag Handover',
+        deliverables: 'Material procurement visits, vendor coordination, final styling and defect checks.',
+        percentage: 20,
+        amount: 96000
+      }
+    ],
+    scopeOfWorkClauses: COA_STANDARD_CLAUSES,
+    reimbursableExpensesNotes: 'Outstation travel and custom sample procurements at actual cost.',
+    termsAndConditions: [
+      'Composition scheme billing under Section 10(2A) of CGST Act.',
+      'Deliverables transferred electronically upon milestone receipt.'
+    ],
+    status: 'ACCEPTED',
+    notes: 'Composition scheme applied. Stage 1 completed.',
+    createdAt: '2026-06-12T09:15:00.000Z',
+    updatedAt: '2026-06-15T16:40:00.000Z'
+  }
+];
+
+export const INITIAL_INVOICES: Invoice[] = [
+  {
+    id: 'inv-001',
+    invoiceNumber: 'INV/2026-27/001',
+    type: 'TAX_INVOICE',
+    date: '2026-04-18',
+    dueDate: '2026-05-03',
+    proposalId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    client: {
+      name: 'Mr. Arvind & Priya Kulkarni',
+      organization: 'Kulkarni Holdings',
+      email: 'arvind.kulkarni@gmail.com',
+      phone: '+91 98860 44512',
+      address: 'Plot 42, Palm Meadows Estates, Whitefield',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560066',
+      pan: 'ABCPK8891J',
+      gstin: '29ABCPK8891J1Z8'
+    },
+    taxScheme: 'REGULAR_GST',
+    placeOfSupply: 'Karnataka (29)',
+    placeOfSupplyStateCode: '29',
+    isInterState: false,
+    lineItems: [
+      {
+        id: 'li-1',
+        description: 'CoA Stage 1: Concept Design, Brief Formulation & Vastu Orientation Analysis',
+        stageName: 'Concept Design',
+        sacCode: '998321',
+        percentageBilled: 10,
+        quantity: 1,
+        rate: 144000,
+        amount: 144000
+      }
+    ],
+    subtotal: 144000,
+    gstRate: 18,
+    cgstRate: 9,
+    cgstAmount: 12960,
+    sgstRate: 9,
+    sgstAmount: 12960,
+    igstRate: 0,
+    igstAmount: 0,
+    totalAmount: 169920,
+    paidAmount: 155520, // Net received
+    tdsDeducted: 14400, // 10% TDS under 194J on base fee ₹144,000
+    balanceDue: 0,
+    status: 'PAID',
+    notes: 'Payment received in full via NEFT. TDS 10% deducted by client u/s 194J.',
+    termsAndConditions: 'Thank you for your business. All drawings issued remain copyrighted to Studio Vistara Architects.',
+    createdAt: '2026-04-18T10:00:00.000Z',
+    updatedAt: '2026-04-28T15:30:00.000Z'
+  },
+  {
+    id: 'inv-002',
+    invoiceNumber: 'INV/2026-27/002',
+    type: 'TAX_INVOICE',
+    date: '2026-05-15',
+    dueDate: '2026-05-30',
+    proposalId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    client: {
+      name: 'Mr. Arvind & Priya Kulkarni',
+      organization: 'Kulkarni Holdings',
+      email: 'arvind.kulkarni@gmail.com',
+      phone: '+91 98860 44512',
+      address: 'Plot 42, Palm Meadows Estates, Whitefield',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560066',
+      pan: 'ABCPK8891J',
+      gstin: '29ABCPK8891J1Z8'
+    },
+    taxScheme: 'REGULAR_GST',
+    placeOfSupply: 'Karnataka (29)',
+    placeOfSupplyStateCode: '29',
+    isInterState: false,
+    lineItems: [
+      {
+        id: 'li-2',
+        description: 'CoA Stage 2: Preliminary Design, 3D Architectural Visualizations & Scheme Estimates',
+        stageName: 'Preliminary Design',
+        sacCode: '998321',
+        percentageBilled: 15,
+        quantity: 1,
+        rate: 216000,
+        amount: 216000
+      }
+    ],
+    subtotal: 216000,
+    gstRate: 18,
+    cgstRate: 9,
+    cgstAmount: 19440,
+    sgstRate: 9,
+    sgstAmount: 19440,
+    igstRate: 0,
+    igstAmount: 0,
+    totalAmount: 254880,
+    paidAmount: 150000,
+    tdsDeducted: 0,
+    balanceDue: 104880,
+    status: 'PARTIALLY_PAID',
+    notes: 'Partial payment of ₹ 1,50,000 received via RTGS. Balance pending.',
+    termsAndConditions: 'Please remit balance within 15 days.',
+    createdAt: '2026-05-15T11:30:00.000Z',
+    updatedAt: '2026-05-25T17:00:00.000Z'
+  },
+  {
+    id: 'inv-003',
+    invoiceNumber: 'INV/2026-27/003',
+    type: 'BILL_OF_SUPPLY',
+    date: '2026-06-20',
+    dueDate: '2026-07-05',
+    proposalId: 'prop-boutique-interior',
+    projectTitle: 'Boutique Aesthetic Wellness Studio & Lounge',
+    client: {
+      name: 'Dr. Shalini Ramanathan',
+      organization: 'Private Clinic',
+      email: 'dr.shalini.r@gmail.com',
+      phone: '+91 97411 90234',
+      address: 'Flat 14B, Kingfisher Towers, Lavelle Road',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '560001',
+      pan: 'ARQPR1284L'
+    },
+    taxScheme: 'COMPOSITION_GST',
+    placeOfSupply: 'Karnataka (29)',
+    placeOfSupplyStateCode: '29',
+    isInterState: false,
+    lineItems: [
+      {
+        id: 'li-3',
+        description: 'Interior Architecture Stage 1: Space Planning, Furniture Zoning & Thematic Mood Boards',
+        stageName: 'Space Planning & Concept',
+        sacCode: '998322',
+        percentageBilled: 25,
+        quantity: 1,
+        rate: 120000,
+        amount: 120000
+      }
+    ],
+    subtotal: 120000,
+    gstRate: 6,
+    cgstRate: 3,
+    cgstAmount: 3600,
+    sgstRate: 3,
+    sgstAmount: 3600,
+    igstRate: 0,
+    igstAmount: 0,
+    totalAmount: 127200,
+    paidAmount: 127200,
+    tdsDeducted: 0,
+    balanceDue: 0,
+    status: 'PAID',
+    notes: 'Composition Scheme - Bill of Supply issued. Full payment received via UPI.',
+    termsAndConditions: 'Composition taxable person under Section 10(2A), not eligible to collect tax on supplies.',
+    createdAt: '2026-06-20T14:00:00.000Z',
+    updatedAt: '2026-06-22T11:00:00.000Z'
+  },
+  {
+    id: 'inv-004',
+    invoiceNumber: 'INV/2026-27/004',
+    type: 'TAX_INVOICE',
+    date: '2026-07-02',
+    dueDate: '2026-07-17',
+    projectTitle: 'Site Feasibility & Topographical Zoning Consultation',
+    client: {
+      name: 'Aditya & Neha Deshmukh',
+      email: 'aditya.deshmukh@outlook.com',
+      phone: '+91 98200 55190',
+      address: 'Plot 7, Green Acres, Devanahalli',
+      city: 'Bengaluru',
+      state: 'Karnataka',
+      pincode: '562110',
+      pan: 'AWQPD7712B'
+    },
+    taxScheme: 'NO_GST',
+    placeOfSupply: 'Karnataka (29)',
+    placeOfSupplyStateCode: '29',
+    isInterState: false,
+    lineItems: [
+      {
+        id: 'li-4',
+        description: 'Comprehensive Site Due-Diligence, Topography Evaluation & Master Layout Advisory Report',
+        stageName: 'Consultation & Advisory',
+        sacCode: '998329',
+        quantity: 1,
+        rate: 65000,
+        amount: 65000
+      }
+    ],
+    subtotal: 65000,
+    gstRate: 0,
+    cgstRate: 0,
+    cgstAmount: 0,
+    sgstRate: 0,
+    sgstAmount: 0,
+    igstRate: 0,
+    igstAmount: 0,
+    totalAmount: 65000,
+    paidAmount: 65000,
+    tdsDeducted: 0,
+    balanceDue: 0,
+    status: 'PAID',
+    notes: 'Exempt / Without GST billing. Full payment received in advance.',
+    termsAndConditions: 'Advisory consultation report handed over.',
+    createdAt: '2026-07-02T16:00:00.000Z',
+    updatedAt: '2026-07-03T10:15:00.000Z'
+  }
+];
+
+export const INITIAL_PAYMENTS: PaymentRecord[] = [
+  {
+    id: 'pay-001',
+    receiptNumber: 'REC/2026-27/001',
+    paymentDate: '2026-04-28',
+    invoiceId: 'inv-001',
+    invoiceNumber: 'INV/2026-27/001',
+    proposalId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    netAmountReceived: 155520,
+    tdsDeducted: 14400, // 10% on ₹1,44,000 subtotal
+    grossAmountSettled: 169920,
+    paymentMethod: 'NEFT_RTGS',
+    transactionReference: 'HDFCN2608194721',
+    bankAccountCredited: 'HDFC Bank - 50200049281923',
+    notes: 'Stage 1 Concept Fee. Client deducted 10% TDS under Section 194J.',
+    createdAt: '2026-04-28T15:30:00.000Z'
+  },
+  {
+    id: 'pay-002',
+    receiptNumber: 'REC/2026-27/002',
+    paymentDate: '2026-05-25',
+    invoiceId: 'inv-002',
+    invoiceNumber: 'INV/2026-27/002',
+    proposalId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    netAmountReceived: 150000,
+    tdsDeducted: 0,
+    grossAmountSettled: 150000,
+    paymentMethod: 'NEFT_RTGS',
+    transactionReference: 'SBIN2608210398',
+    bankAccountCredited: 'HDFC Bank - 50200049281923',
+    notes: 'Part payment towards Stage 2 Preliminary Design. Balance ₹ 1,04,880 pending.',
+    createdAt: '2026-05-25T17:00:00.000Z'
+  },
+  {
+    id: 'pay-003',
+    receiptNumber: 'REC/2026-27/003',
+    paymentDate: '2026-06-22',
+    invoiceId: 'inv-003',
+    invoiceNumber: 'INV/2026-27/003',
+    proposalId: 'prop-boutique-interior',
+    projectTitle: 'Boutique Aesthetic Wellness Studio & Lounge',
+    clientName: 'Dr. Shalini Ramanathan',
+    netAmountReceived: 127200,
+    tdsDeducted: 0,
+    grossAmountSettled: 127200,
+    paymentMethod: 'UPI',
+    transactionReference: 'UPI-623910482910',
+    bankAccountCredited: 'HDFC Bank (UPI QR Scan)',
+    notes: 'Stage 1 Interior space planning payment settled in full.',
+    createdAt: '2026-06-22T11:00:00.000Z'
+  },
+  {
+    id: 'pay-004',
+    receiptNumber: 'REC/2026-27/004',
+    paymentDate: '2026-07-03',
+    invoiceId: 'inv-004',
+    invoiceNumber: 'INV/2026-27/004',
+    projectTitle: 'Site Feasibility & Topographical Zoning Consultation',
+    clientName: 'Aditya & Neha Deshmukh',
+    netAmountReceived: 65000,
+    tdsDeducted: 0,
+    grossAmountSettled: 65000,
+    paymentMethod: 'UPI',
+    transactionReference: 'UPI-771920381044',
+    bankAccountCredited: 'HDFC Bank (UPI QR Scan)',
+    notes: 'Consultation fee advance payment received.',
+    createdAt: '2026-07-03T10:15:00.000Z'
+  }
+];
