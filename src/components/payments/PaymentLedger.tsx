@@ -25,8 +25,8 @@ interface PaymentLedgerProps {
 }
 
 export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
-  payments,
-  invoices,
+  payments = [],
+  invoices = [],
   firmProfile,
   onRecordPayment,
   onViewReceipt,
@@ -35,47 +35,50 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [methodFilter, setMethodFilter] = useState<string>('ALL');
 
-  const filteredPayments = payments.filter((pay) => {
+  const safePayments = payments || [];
+  const safeInvoices = invoices || [];
+
+  const filteredPayments = safePayments.filter((pay) => {
     const matchesSearch =
-      pay.receiptNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pay.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pay.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pay.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      pay.transactionReference.toLowerCase().includes(searchTerm.toLowerCase());
+      (pay.receiptNumber && pay.receiptNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (pay.invoiceNumber && pay.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (pay.clientName && pay.clientName.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (pay.projectTitle && pay.projectTitle.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (pay.transactionReference && pay.transactionReference.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesMethod = methodFilter === 'ALL' || pay.paymentMethod === methodFilter;
     return matchesSearch && matchesMethod;
   });
 
   // Totals
-  const totalNetReceived = payments.reduce((sum, p) => sum + p.netAmountReceived, 0);
-  const totalTdsDeducted = payments.reduce((sum, p) => sum + p.tdsDeducted, 0);
-  const totalGrossSettled = payments.reduce((sum, p) => sum + p.grossAmountSettled, 0);
-  const totalPendingInvoices = invoices.reduce((sum, inv) => sum + inv.balanceDue, 0);
+  const totalNetReceived = safePayments.reduce((sum, p) => sum + (p.netAmountReceived || 0), 0);
+  const totalTdsDeducted = safePayments.reduce((sum, p) => sum + (p.tdsDeducted || 0), 0);
+  const totalGrossSettled = safePayments.reduce((sum, p) => sum + (p.grossAmountSettled || 0), 0);
+  const totalPendingInvoices = safeInvoices.reduce((sum, inv) => sum + (inv.balanceDue || 0), 0);
 
   const getMethodBadge = (method: string) => {
     switch (method) {
       case 'UPI':
         return (
-          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#ff832b] border border-[#ff832b]">
+          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#edf5ff] text-[#0043ce] border border-[#0f62fe]">
             UPI
           </span>
         );
       case 'NEFT_RTGS':
         return (
-          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-white border border-[#8d8d8d]">
+          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#edf5ff] text-[#0043ce] border border-[#a6c8ff]">
             NEFT/RTGS
           </span>
         );
       case 'CHEQUE':
         return (
-          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-white border border-[#8d8d8d]">
+          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#fdf8e2] text-[#8a6d00] border border-[#f1c21b]">
             CHEQUE
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#e0e0e0] text-[#161616]">
+          <span className="inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold bg-[#f4f4f4] text-[#161616] border border-[#e0e0e0]">
             {method}
           </span>
         );
@@ -85,15 +88,15 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
   return (
     <div className="space-y-4">
       {/* Header Banner */}
-      <div className="p-4 sm:p-5 bg-[#161616] text-white border-2 border-[#393939]">
+      <div className="p-4 sm:p-5 bg-[#161616] text-white border border-[#393939]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="px-1.5 py-0.5 bg-[#ff832b] text-black text-[10px] font-mono font-bold uppercase tracking-wider">
-                RECEIPTS & TDS (SEC 194J)
+              <span className="px-1.5 py-0.5 bg-[#0f62fe] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                STEP 4 • RECEIPTS & TDS (SEC 194J) CREDITS
               </span>
               <span className="text-[11px] font-mono text-[#8d8d8d]">
-                Total: {payments.length}
+                Total: {safePayments.length} Receipts
               </span>
             </div>
             <h2 className="text-xl font-bold mt-1 text-white uppercase tracking-tight">
@@ -107,9 +110,9 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
           <button
             id="payments-record-btn"
             onClick={() => onRecordPayment()}
-            className="inline-flex items-center justify-center px-4 py-2.5 bg-[#ff832b] hover:bg-[#fa7516] text-black font-bold uppercase tracking-wider text-xs border border-black transition-colors shrink-0"
+            className="carbon-btn-primary inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold uppercase tracking-wider shrink-0"
           >
-            <Plus className="w-4 h-4 mr-1.5 stroke-[2.5]" />
+            <Plus className="w-4 h-4 mr-1.5 stroke-[2]" />
             Record Payment
           </button>
         </div>
@@ -117,23 +120,23 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5">
-        <div className="bg-white p-3.5 border-2 border-[#393939]">
+        <div className="bg-white p-3.5 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#525252] block">
             Net In-Bank
           </span>
           <p className="text-lg font-bold font-mono text-[#161616] mt-1">
             {formatINR(totalNetReceived)}
           </p>
-          <span className="text-[10px] font-mono text-[#24a148] block mt-0.5">
+          <span className="text-[10px] font-mono text-[#0043ce] block mt-0.5">
             Direct Collections
           </span>
         </div>
 
-        <div className="bg-white p-3.5 border-2 border-[#393939]">
+        <div className="bg-white p-3.5 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#525252] block">
             TDS Credits (194J)
           </span>
-          <p className="text-lg font-bold font-mono text-[#ff832b] mt-1">
+          <p className="text-lg font-bold font-mono text-[#0043ce] mt-1">
             {formatINR(totalTdsDeducted)}
           </p>
           <span className="text-[10px] font-mono text-[#8d8d8d] block mt-0.5">
@@ -141,7 +144,7 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
           </span>
         </div>
 
-        <div className="bg-white p-3.5 border-2 border-[#393939]">
+        <div className="bg-white p-3.5 border border-[#e0e0e0] border-t-2 border-t-[#161616]">
           <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#525252] block">
             Gross Settled
           </span>
@@ -153,8 +156,8 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
           </span>
         </div>
 
-        <div className="bg-white p-3.5 border-2 border-[#393939]">
-          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#525252] block">
+        <div className="bg-white p-3.5 border border-[#e0e0e0] border-t-2 border-t-[#da1e28]">
+          <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#da1e28] block">
             Receivables
           </span>
           <p className="text-lg font-bold font-mono text-[#da1e28] mt-1">
@@ -167,7 +170,7 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
       </div>
 
       {/* Toolbar */}
-      <div className="p-3 bg-white border border-[#393939] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+      <div className="p-3 bg-white border border-[#e0e0e0] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-[#8d8d8d] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -176,7 +179,7 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
             placeholder="Search by receipt #, client, UTR, or project..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs font-sans bg-[#f4f4f4] border border-[#8d8d8d] focus:border-[#ff832b] focus:bg-white focus:outline-none"
+            className="carbon-input w-full pl-9 pr-3 py-2 text-xs font-sans"
           />
         </div>
 
@@ -188,7 +191,7 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
               onClick={() => setMethodFilter(m)}
               className={`px-3 py-1.5 text-[11px] font-mono uppercase font-bold border transition-colors whitespace-nowrap ${
                 methodFilter === m
-                  ? 'bg-[#161616] text-[#ff832b] border-[#ff832b]'
+                  ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
                   : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
               }`}
             >
@@ -199,7 +202,7 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
       </div>
 
       {/* Ledger Table */}
-      <div className="bg-white border-2 border-[#393939] overflow-hidden">
+      <div className="bg-white border border-[#e0e0e0] overflow-hidden">
         {filteredPayments.length === 0 ? (
           <div className="text-center py-12 p-6">
             <WalletCards className="w-10 h-10 text-[#8d8d8d] mx-auto mb-2" />
@@ -209,7 +212,7 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
             </p>
             <button
               onClick={() => onRecordPayment()}
-              className="inline-flex items-center px-4 py-2 bg-[#161616] text-[#ff832b] border border-[#ff832b] text-xs font-bold uppercase tracking-wider hover:bg-[#262626] transition-colors"
+              className="carbon-btn-primary inline-flex items-center px-4 py-2 text-xs font-bold uppercase tracking-wider"
             >
               <Plus className="w-4 h-4 mr-1.5" />
               Record First Payment
@@ -264,11 +267,11 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
                       </span>
                     </td>
 
-                    <td className="py-2.5 px-3 text-right font-mono font-bold text-[#24a148] text-xs">
+                    <td className="py-2.5 px-3 text-right font-mono font-bold text-[#0043ce] text-xs">
                       {formatINR(pay.netAmountReceived)}
                     </td>
 
-                    <td className="py-2.5 px-3 text-right font-mono font-semibold text-[#ff832b]">
+                    <td className="py-2.5 px-3 text-right font-mono font-semibold text-[#0043ce]">
                       {pay.tdsDeducted > 0 ? formatINR(pay.tdsDeducted) : '—'}
                     </td>
 
@@ -280,14 +283,14 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
                       <div className="flex items-center justify-center space-x-1">
                         <button
                           onClick={() => onViewReceipt(pay)}
-                          className="p-1 text-[#161616] hover:bg-[#e0e0e0] border border-[#8d8d8d] transition-colors"
+                          className="carbon-btn-ghost p-1"
                           title="Print Receipt Voucher"
                         >
                           <Printer className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => onDeletePayment(pay.id)}
-                          className="p-1 text-[#8d8d8d] hover:text-[#da1e28] hover:bg-[#da1e28]/10 border border-transparent hover:border-[#da1e28] transition-colors"
+                          className="p-1 text-[#8d8d8d] hover:text-[#da1e28] hover:bg-[#fff1f1] border border-transparent hover:border-[#da1e28] transition-colors"
                           title="Delete Payment Record"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -301,6 +304,7 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };

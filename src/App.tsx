@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
   FirmProfile, 
+  ClientProfile,
   ProjectProposal, 
   Invoice, 
   PaymentRecord, 
@@ -14,6 +15,9 @@ import {
 import { 
   loadFirmProfile, 
   saveFirmProfile, 
+  loadClients,
+  saveClients,
+  generateNextClientCode,
   loadProposals, 
   saveProposals, 
   loadInvoices, 
@@ -42,6 +46,8 @@ import { MainTabType } from './components/Navbar';
 import { BottomNavBar } from './components/navigation/BottomNavBar';
 import { FloatingCreateButton } from './components/navigation/FloatingCreateButton';
 import { SidePaneDrawer } from './components/navigation/SidePaneDrawer';
+import { ClientList } from './components/clients/ClientList';
+import { ClientModal } from './components/clients/ClientModal';
 import { ProposalList } from './components/proposals/ProposalList';
 import { ProposalModal } from './components/proposals/ProposalModal';
 import { ProposalView } from './components/proposals/ProposalView';
@@ -64,6 +70,7 @@ import { LanShareModal } from './components/lan/LanShareModal';
 export default function App() {
   // Core App State
   const [firmProfile, setFirmProfile] = useState<FirmProfile>(loadFirmProfile);
+  const [clients, setClients] = useState<ClientProfile[]>(loadClients);
   const [proposals, setProposals] = useState<ProjectProposal[]>(loadProposals);
   const [invoices, setInvoices] = useState<Invoice[]>(loadInvoices);
   const [payments, setPayments] = useState<PaymentRecord[]>(loadPayments);
@@ -79,8 +86,14 @@ export default function App() {
     return Boolean(sec.isLockEnabled);
   });
 
-  // Tab State
-  const [activeTab, setActiveTab] = useState<MainTabType>('proposals');
+  // Tab State - Default to 'clients' for Client-First Workflow
+  const [activeTab, setActiveTab] = useState<MainTabType>('clients');
+
+  // Client Modals
+  const [isClientModalOpen, setIsClientModalOpen] = useState(false);
+  const [editingClient, setEditingClient] = useState<ClientProfile | null>(null);
+  const [preselectedClientForProposal, setPreselectedClientForProposal] = useState<ClientProfile | null>(null);
+  const [preselectedClientForInvoice, setPreselectedClientForInvoice] = useState<ClientProfile | null>(null);
 
   // Proposal Modals
   const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
@@ -118,6 +131,10 @@ export default function App() {
   }, [firmProfile]);
 
   useEffect(() => {
+    saveClients(clients);
+  }, [clients]);
+
+  useEffect(() => {
     saveProposals(proposals);
   }, [proposals]);
 
@@ -152,14 +169,57 @@ export default function App() {
   // Financial Summary Calculation
   const summary: FinancialSummary = calculateFinancialSummary(invoices, payments, expenses, salaries);
 
+  // ================= Client Actions =================
+  const handleNewClient = () => {
+    setEditingClient(null);
+    setIsClientModalOpen(true);
+  };
+
+  const handleEditClient = (client: ClientProfile) => {
+    setEditingClient(client);
+    setIsClientModalOpen(true);
+  };
+
+  const handleSaveClient = (savedClient: ClientProfile) => {
+    const existingIndex = clients.findIndex((c) => c.id === savedClient.id);
+    if (existingIndex >= 0) {
+      const updated = [...clients];
+      updated[existingIndex] = savedClient;
+      setClients(updated);
+    } else {
+      setClients([savedClient, ...clients]);
+    }
+  };
+
+  const handleDeleteClient = (id: string) => {
+    if (confirm('Are you sure you want to delete this client profile from your registry?')) {
+      setClients(clients.filter((c) => c.id !== id));
+    }
+  };
+
+  const handleCreateProposalForClient = (client: ClientProfile) => {
+    setPreselectedClientForProposal(client);
+    setEditingProposal(null);
+    setIsProposalModalOpen(true);
+  };
+
+  const handleCreateInvoiceForClient = (client: ClientProfile) => {
+    setPreselectedClientForInvoice(client);
+    setEditingInvoice(null);
+    setPreselectedProposalForInvoice(null);
+    setIsInvoiceModalOpen(true);
+  };
+
   // ================= Proposal Actions =================
   const handleNewProposal = () => {
     setEditingProposal(null);
+    setPreselectedClientForProposal(null);
     setIsProposalModalOpen(true);
   };
 
   const handleEditProposal = (prop: ProjectProposal) => {
     setEditingProposal(prop);
+    setPreselectedClientForProposal(null);
     setIsProposalModalOpen(true);
   };
 
@@ -197,6 +257,7 @@ export default function App() {
 
   const handleCreateInvoiceFromProposal = (prop: ProjectProposal) => {
     setPreselectedProposalForInvoice(prop);
+    setPreselectedClientForInvoice(null);
     setEditingInvoice(null);
     setIsInvoiceModalOpen(true);
   };
@@ -205,12 +266,14 @@ export default function App() {
   const handleNewInvoice = () => {
     setEditingInvoice(null);
     setPreselectedProposalForInvoice(null);
+    setPreselectedClientForInvoice(null);
     setIsInvoiceModalOpen(true);
   };
 
   const handleEditInvoice = (inv: Invoice) => {
     setEditingInvoice(inv);
     setPreselectedProposalForInvoice(null);
+    setPreselectedClientForInvoice(null);
     setIsInvoiceModalOpen(true);
   };
 
@@ -412,6 +475,7 @@ export default function App() {
     if (typeof customJson === 'string') {
       if (importAllDataFromJSON(customJson)) {
         setFirmProfile(loadFirmProfile());
+        setClients(loadClients());
         setProposals(loadProposals());
         setInvoices(loadInvoices());
         setPayments(loadPayments());
@@ -438,6 +502,7 @@ export default function App() {
         const content = event.target?.result as string;
         if (content && importAllDataFromJSON(content)) {
           setFirmProfile(loadFirmProfile());
+          setClients(loadClients());
           setProposals(loadProposals());
           setInvoices(loadInvoices());
           setPayments(loadPayments());
@@ -460,6 +525,7 @@ export default function App() {
     if (confirm('Reset all records to Council of Architecture (CoA) sample practice defaults?')) {
       resetAllToSampleData();
       setFirmProfile(loadFirmProfile());
+      setClients(loadClients());
       setProposals(loadProposals());
       setInvoices(loadInvoices());
       setPayments(loadPayments());
@@ -501,8 +567,23 @@ export default function App() {
       {/* Mobile Shell Wrapper */}
       <div className="w-full max-w-4xl mx-auto min-h-screen bg-white flex flex-col relative border-x border-[#e0e0e0] shadow-sm">
         
-        {/* Main Content View (No Top Bar, Generous Mobile Spacing) */}
+        {/* Main Content View (No Top Bar, Clean Layout, IBM Design System) */}
         <main className="flex-1 w-full px-3 sm:px-5 pt-4 sm:pt-6 pb-28">
+          {/* Step 1: Clients Directory (Workflow Step 1) */}
+          {activeTab === 'clients' && modulesConfig.clients !== false && (
+            <ClientList
+              clients={clients}
+              proposals={proposals}
+              invoices={invoices}
+              onAddClient={handleNewClient}
+              onNewClient={handleNewClient}
+              onEditClient={handleEditClient}
+              onDeleteClient={handleDeleteClient}
+              onCreateProposalForClient={handleCreateProposalForClient}
+              onCreateInvoiceForClient={handleCreateInvoiceForClient}
+            />
+          )}
+
           {activeTab === 'proposals' && modulesConfig.proposals && (
             <ProposalList
               proposals={proposals}
@@ -573,9 +654,10 @@ export default function App() {
           )}
         </main>
 
-        {/* Floating Create Action Button (FAB) */}
+        {/* Floating Create Action Button (FAB - scaled down to 0.5x, strict IBM Blue #0f62fe) */}
         <FloatingCreateButton
           modulesConfig={modulesConfig}
+          onNewClient={handleNewClient}
           onNewProposal={handleNewProposal}
           onNewInvoice={handleNewInvoice}
           onNewPayment={() => handleNewPayment()}
@@ -608,6 +690,7 @@ export default function App() {
         onImportData={() => handleImportData()}
         onResetData={handleResetData}
         counts={{
+          clients: clients.length,
           proposals: proposals.length,
           invoices: invoices.length,
           payments: payments.length,
@@ -616,16 +699,34 @@ export default function App() {
         }}
       />
 
-      {/* Modals & Overlays */}
+      {/* Client Registration Modal */}
+      {isClientModalOpen && (
+        <ClientModal
+          isOpen={isClientModalOpen}
+          onClose={() => setIsClientModalOpen(false)}
+          onSave={handleSaveClient}
+          initialClient={editingClient}
+          generatedClientCode={generateNextClientCode(clients)}
+          firmProfile={firmProfile}
+        />
+      )}
+
+      {/* Proposal Modal */}
       {isProposalModalOpen && (
         <ProposalModal
           isOpen={isProposalModalOpen}
-          onClose={() => setIsProposalModalOpen(false)}
+          onClose={() => {
+            setIsProposalModalOpen(false);
+            setPreselectedClientForProposal(null);
+          }}
           onSave={handleSaveProposal}
           initialProposal={editingProposal}
           generatedProposalNumber={generateNextProposalNumber(proposals)}
           firmProfile={firmProfile}
           freelanceTemplates={freelanceTemplates}
+          clients={clients}
+          onAddNewClient={handleNewClient}
+          preselectedClient={preselectedClientForProposal}
         />
       )}
 
@@ -638,12 +739,14 @@ export default function App() {
         />
       )}
 
+      {/* Invoice Modal */}
       {isInvoiceModalOpen && (
         <InvoiceModal
           isOpen={isInvoiceModalOpen}
           onClose={() => {
             setIsInvoiceModalOpen(false);
             setPreselectedProposalForInvoice(null);
+            setPreselectedClientForInvoice(null);
           }}
           onSave={handleSaveInvoice}
           initialInvoice={editingInvoice}
@@ -652,6 +755,9 @@ export default function App() {
           firmProfile={firmProfile}
           preselectedProposal={preselectedProposalForInvoice}
           freelanceTemplates={freelanceTemplates}
+          clients={clients}
+          onAddNewClient={handleNewClient}
+          preselectedClient={preselectedClientForInvoice}
         />
       )}
 

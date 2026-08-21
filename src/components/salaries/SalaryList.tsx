@@ -26,7 +26,7 @@ interface SalaryListProps {
 }
 
 export const SalaryList: React.FC<SalaryListProps> = ({
-  salaries,
+  salaries = [],
   firmProfile,
   onAddSalary,
   onEditSalary,
@@ -37,26 +37,28 @@ export const SalaryList: React.FC<SalaryListProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [slipModalSalary, setSlipModalSalary] = useState<SalaryRecord | null>(null);
 
+  const safeSalaries = salaries || [];
+
   // Extract unique months from salary records
   const availableMonths = useMemo(() => {
-    const months = Array.from(new Set(salaries.map(s => s.monthYear))).sort().reverse();
+    const months = Array.from(new Set(safeSalaries.map(s => s.monthYear))).sort().reverse();
     return months;
-  }, [salaries]);
+  }, [safeSalaries]);
 
   // Filtered salaries
   const filteredSalaries = useMemo(() => {
-    return salaries.filter(s => {
+    return safeSalaries.filter(s => {
       if (selectedMonth !== 'ALL' && s.monthYear !== selectedMonth) return false;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchName = s.employeeName.toLowerCase().includes(q);
-        const matchRole = s.role.toLowerCase().includes(q);
-        const matchRef = s.transactionReference.toLowerCase().includes(q);
+        const matchName = (s.employeeName || '').toLowerCase().includes(q);
+        const matchRole = (s.role || '').toLowerCase().includes(q);
+        const matchRef = (s.transactionReference || '').toLowerCase().includes(q);
         return matchName || matchRole || matchRef;
       }
       return true;
     }).sort((a, b) => new Date(b.paymentDate).getTime() - new Date(a.paymentDate).getTime());
-  }, [salaries, selectedMonth, searchQuery]);
+  }, [safeSalaries, selectedMonth, searchQuery]);
 
   // Calculations
   const totalNetDisbursed = filteredSalaries.filter(s => s.paymentStatus === 'PAID').reduce((sum, s) => sum + s.netPaid, 0);

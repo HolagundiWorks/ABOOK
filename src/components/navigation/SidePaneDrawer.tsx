@@ -17,7 +17,7 @@ import {
   RotateCcw,
   ShieldCheck,
   ChevronRight,
-  ExternalLink
+  UserCheck
 } from 'lucide-react';
 import { FirmProfile, TaxScheme, AppModulesConfig } from '../../types';
 import { MainTabType } from '../Navbar';
@@ -37,6 +37,7 @@ interface SidePaneDrawerProps {
   onImportData: () => void;
   onResetData: () => void;
   counts: {
+    clients?: number;
     proposals: number;
     invoices: number;
     payments: number;
@@ -90,7 +91,7 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
     switch (scheme) {
       case 'REGULAR_GST':
         return (
-          <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#ff832b] border border-[#ff832b]">
+          <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#4589ff] border border-[#0f62fe]">
             GST 18%
           </span>
         );
@@ -141,7 +142,7 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
         {/* Pane Header */}
         <div className="p-4 bg-[#262626] border-b border-[#393939] flex items-start justify-between">
           <div className="flex items-center space-x-3 overflow-hidden">
-            <div className="w-10 h-10 bg-[#ff832b] text-black flex items-center justify-center font-black shrink-0 border border-black">
+            <div className="w-10 h-10 bg-[#0f62fe] text-white flex items-center justify-center font-black shrink-0 border border-black">
               <Building2 className="w-5 h-5" />
             </div>
             <div className="truncate">
@@ -149,7 +150,7 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                 {firmProfile.firmName}
               </h2>
               <div className="flex items-center space-x-2 text-[10px] text-[#8d8d8d] font-mono mt-0.5">
-                <span className="text-[#ff832b]">CoA: {firmProfile.coaRegistrationNo}</span>
+                <span className="text-[#4589ff]">CoA: {firmProfile.coaRegistrationNo}</span>
                 <span>•</span>
                 <span>{getFirmTypeLabel(firmProfile.firmType)}</span>
               </div>
@@ -180,23 +181,51 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
           {/* Section 1: Studio Practice Modules */}
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8d8d8d] block mb-2 px-1">
-              Practice Modules
+              Practice Modules (Client-First Workflow)
             </span>
             <div className="space-y-1">
+              {/* Clients Tab */}
+              {modulesConfig.clients !== false && (
+                <button
+                  id="side-nav-clients"
+                  onClick={() => handleSelectTab('clients')}
+                  className={`w-full flex items-center justify-between p-3 border transition-colors ${
+                    activeTab === 'clients'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
+                      : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Users className="w-4 h-4 text-[#0f62fe]" />
+                    <div className="text-left">
+                      <span className="text-xs font-bold uppercase tracking-wider block">
+                        1. Client Profiles
+                      </span>
+                      <span className="text-[9px] font-mono text-[#8d8d8d] block">
+                        Statutory GST & PAN Registry
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#4589ff]">
+                    {counts.clients ?? 0}
+                  </span>
+                </button>
+              )}
+
               {modulesConfig.proposals && (
                 <button
                   id="side-nav-proposals"
                   onClick={() => handleSelectTab('proposals')}
                   className={`w-full flex items-center justify-between p-3 border transition-colors ${
                     activeTab === 'proposals'
-                      ? 'bg-[#262626] border-[#ff832b] text-[#ff832b]'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
                       : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <FileText className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">
-                      Fee Proposals
+                      2. Fee Proposals (CoA)
                     </span>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#8d8d8d]">
@@ -211,14 +240,14 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                   onClick={() => handleSelectTab('invoices')}
                   className={`w-full flex items-center justify-between p-3 border transition-colors ${
                     activeTab === 'invoices'
-                      ? 'bg-[#262626] border-[#ff832b] text-[#ff832b]'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
                       : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <ReceiptText className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">
-                      Tax Invoices
+                      3. Tax Invoices & Milestone Billing
                     </span>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#8d8d8d]">
@@ -233,14 +262,14 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                   onClick={() => handleSelectTab('payments')}
                   className={`w-full flex items-center justify-between p-3 border transition-colors ${
                     activeTab === 'payments'
-                      ? 'bg-[#262626] border-[#ff832b] text-[#ff832b]'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
                       : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <WalletCards className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">
-                      Payment Receipts
+                      4. Receipts & TDS Settlements
                     </span>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#8d8d8d]">
@@ -255,14 +284,14 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                   onClick={() => handleSelectTab('expenses')}
                   className={`w-full flex items-center justify-between p-3 border transition-colors ${
                     activeTab === 'expenses'
-                      ? 'bg-[#262626] border-[#ff832b] text-[#ff832b]'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
                       : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <DollarSign className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">
-                      Expenses & Reimbursables
+                      Studio Expenses & Reimbursables
                     </span>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#8d8d8d]">
@@ -277,14 +306,14 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                   onClick={() => handleSelectTab('salaries')}
                   className={`w-full flex items-center justify-between p-3 border transition-colors ${
                     activeTab === 'salaries'
-                      ? 'bg-[#262626] border-[#ff832b] text-[#ff832b]'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
                       : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <Users className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">
-                      Staff Salaries & Payroll
+                      Team Salaries & Stipends
                     </span>
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#8d8d8d]">
@@ -299,158 +328,150 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                   onClick={() => handleSelectTab('books')}
                   className={`w-full flex items-center justify-between p-3 border transition-colors ${
                     activeTab === 'books'
-                      ? 'bg-[#262626] border-[#ff832b] text-[#ff832b]'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
                       : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
                   }`}
                 >
                   <div className="flex items-center space-x-3">
                     <BookOpenCheck className="w-4 h-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">
-                      P&L Books & GST Ledger
+                      Studio Books & P&L Analysis
                     </span>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-[#8d8d8d]" />
                 </button>
               )}
             </div>
           </div>
 
-          {/* Section 2: Studio Tools & Configuration */}
+          {/* Section 2: Studio Tools & Connectivity */}
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8d8d8d] block mb-2 px-1">
-              Studio Configuration & Tools
+              Studio Network & Security
             </span>
             <div className="space-y-1">
               <button
-                id="side-btn-settings"
-                onClick={() => {
-                  onClose();
-                  onOpenSettings();
-                }}
-                className="w-full flex items-center justify-between p-3 bg-[#161616] hover:bg-[#262626] border border-[#393939] text-[#e0e0e0] hover:text-white transition-colors"
-              >
-                <div className="flex items-center space-x-3">
-                  <Settings className="w-4 h-4 text-[#ff832b]" />
-                  <div className="text-left">
-                    <span className="text-xs font-bold uppercase tracking-wider block">
-                      Firm Profile & Bank Setup
-                    </span>
-                    <span className="text-[10px] text-[#8d8d8d] font-mono block">
-                      CoA, GSTIN, Partners & Bank Accounts
-                    </span>
-                  </div>
-                </div>
-                <ChevronRight className="w-4 h-4 text-[#8d8d8d]" />
-              </button>
-
-              {modulesConfig.freelanceTemplates && (
-                <button
-                  id="side-btn-templates"
-                  onClick={() => {
-                    onClose();
-                    onOpenTemplates();
-                  }}
-                  className="w-full flex items-center justify-between p-3 bg-[#161616] hover:bg-[#262626] border border-[#393939] text-[#e0e0e0] hover:text-white transition-colors"
-                >
-                  <div className="flex items-center space-x-3">
-                    <Briefcase className="w-4 h-4 text-[#ff832b]" />
-                    <div className="text-left">
-                      <span className="text-xs font-bold uppercase tracking-wider block">
-                        Freelance Rate Templates
-                      </span>
-                      <span className="text-[10px] text-[#8d8d8d] font-mono block">
-                        3D Renders, Sanctions, Site Visits
-                      </span>
-                    </div>
-                  </div>
-                  <ChevronRight className="w-4 h-4 text-[#8d8d8d]" />
-                </button>
-              )}
-
-              <button
-                id="side-btn-lan"
+                id="side-nav-lan-modal"
                 onClick={() => {
                   onClose();
                   onOpenLanModal();
                 }}
-                className="w-full flex items-center justify-between p-3 bg-[#161616] hover:bg-[#262626] border border-[#393939] text-[#e0e0e0] hover:text-white transition-colors"
+                className="w-full flex items-center justify-between p-3 border border-[#393939] bg-[#161616] hover:bg-[#262626] text-[#e0e0e0] hover:text-white transition-colors"
               >
                 <div className="flex items-center space-x-3">
-                  <Wifi className="w-4 h-4 text-[#ff832b]" />
+                  <Wifi className="w-4 h-4 text-[#0f62fe]" />
                   <div className="text-left">
                     <span className="text-xs font-bold uppercase tracking-wider block">
-                      Wi-Fi / LAN Endpoint
+                      Dedicated Wi-Fi Portal
                     </span>
-                    <span className="text-[10px] text-[#8d8d8d] font-mono block">
-                      Access on mobile devices on same Wi-Fi
+                    <span className="text-[10px] font-mono text-[#8d8d8d]">
+                      Hotspot Air-Gap & Office LAN
                     </span>
                   </div>
+                </div>
+                <span className="text-[10px] font-mono px-1.5 py-0.5 bg-[#0f62fe] text-white font-bold">
+                  SECURE
+                </span>
+              </button>
+
+              {modulesConfig.freelanceTemplates && (
+                <button
+                  id="side-nav-templates"
+                  onClick={() => {
+                    onClose();
+                    onOpenTemplates();
+                  }}
+                  className="w-full flex items-center justify-between p-3 border border-[#393939] bg-[#161616] hover:bg-[#262626] text-[#e0e0e0] hover:text-white transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Briefcase className="w-4 h-4 text-[#0f62fe]" />
+                    <span className="text-xs font-bold uppercase tracking-wider">
+                      Freelance Fee Templates
+                    </span>
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-[#8d8d8d]" />
+                </button>
+              )}
+
+              <button
+                id="side-nav-settings"
+                onClick={() => {
+                  onClose();
+                  onOpenSettings();
+                }}
+                className="w-full flex items-center justify-between p-3 border border-[#393939] bg-[#161616] hover:bg-[#262626] text-[#e0e0e0] hover:text-white transition-colors"
+              >
+                <div className="flex items-center space-x-3">
+                  <Settings className="w-4 h-4" />
+                  <span className="text-xs font-bold uppercase tracking-wider">
+                    Firm Profile & Tax Settings
+                  </span>
                 </div>
                 <ChevronRight className="w-4 h-4 text-[#8d8d8d]" />
               </button>
 
               <button
-                id="side-btn-lock"
+                id="side-nav-lock"
                 onClick={() => {
                   onClose();
                   onLockApp();
                 }}
-                className="w-full flex items-center justify-between p-3 bg-[#161616] hover:bg-[#262626] border border-[#393939] text-[#e0e0e0] hover:text-[#da1e28] transition-colors"
+                className="w-full flex items-center justify-between p-3 border border-[#393939] bg-[#161616] hover:bg-[#262626] text-[#e0e0e0] hover:text-white transition-colors"
               >
                 <div className="flex items-center space-x-3">
                   <Lock className="w-4 h-4 text-[#da1e28]" />
-                  <div className="text-left">
-                    <span className="text-xs font-bold uppercase tracking-wider block">
-                      Lock Application
-                    </span>
-                    <span className="text-[10px] text-[#8d8d8d] font-mono block">
-                      Secure session with PIN authentication
-                    </span>
-                  </div>
+                  <span className="text-xs font-bold uppercase tracking-wider">
+                    Lock Studio PIN Session
+                  </span>
                 </div>
-                <ChevronRight className="w-4 h-4 text-[#8d8d8d]" />
+                <span className="text-[10px] font-mono px-1.5 py-0.5 bg-[#da1e28] text-white">
+                  LOCK
+                </span>
               </button>
             </div>
           </div>
 
-          {/* Section 3: Data Backup & Management */}
+          {/* Section 3: Data Management & Backup */}
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8d8d8d] block mb-2 px-1">
-              Data Management & Backup
+              Local Data Storage & Vault
             </span>
             <div className="grid grid-cols-2 gap-2">
               <button
-                id="side-btn-export"
+                id="side-nav-export"
                 onClick={() => {
                   onClose();
                   onExportData();
                 }}
-                className="flex items-center justify-center space-x-1.5 p-2.5 bg-[#262626] hover:bg-[#393939] border border-[#393939] text-xs font-bold uppercase text-white transition-colors"
+                className="p-2.5 bg-[#262626] hover:bg-[#393939] text-[#e0e0e0] hover:text-white border border-[#393939] flex flex-col items-center justify-center text-center transition-colors"
               >
-                <Download className="w-3.5 h-3.5 text-[#ff832b]" />
-                <span>Export JSON</span>
+                <Download className="w-4 h-4 mb-1 text-[#0f62fe]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">
+                  Export JSON
+                </span>
               </button>
 
               <button
-                id="side-btn-import"
+                id="side-nav-import"
                 onClick={() => {
                   onClose();
                   onImportData();
                 }}
-                className="flex items-center justify-center space-x-1.5 p-2.5 bg-[#262626] hover:bg-[#393939] border border-[#393939] text-xs font-bold uppercase text-white transition-colors"
+                className="p-2.5 bg-[#262626] hover:bg-[#393939] text-[#e0e0e0] hover:text-white border border-[#393939] flex flex-col items-center justify-center text-center transition-colors"
               >
-                <Upload className="w-3.5 h-3.5 text-[#ff832b]" />
-                <span>Import JSON</span>
+                <Upload className="w-4 h-4 mb-1 text-[#0f62fe]" />
+                <span className="text-[10px] font-bold uppercase tracking-wider">
+                  Import JSON
+                </span>
               </button>
             </div>
 
             <button
-              id="side-btn-reset"
+              id="side-nav-reset"
               onClick={() => {
                 onClose();
                 onResetData();
               }}
-              className="w-full mt-2 flex items-center justify-center space-x-1.5 p-2 bg-[#161616] hover:bg-[#da1e28]/20 border border-[#393939] hover:border-[#da1e28] text-[11px] font-mono text-[#8d8d8d] hover:text-[#da1e28] transition-colors"
+              className="w-full mt-2 p-2 bg-[#1f1f1f] hover:bg-[#da1e28] text-[#8d8d8d] hover:text-white border border-[#393939] flex items-center justify-center space-x-2 text-[10px] font-mono uppercase transition-colors"
             >
               <RotateCcw className="w-3 h-3" />
               <span>Reset to Sample CoA Data</span>
@@ -458,10 +479,15 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="p-4 bg-[#262626] border-t border-[#393939] text-center text-[10px] text-[#8d8d8d] font-mono">
-          <p className="text-white font-bold">COUNCIL OF ARCHITECTURE COMPLIANT</p>
-          <p className="mt-0.5">Carbon Architectural Management Suite v2.0</p>
+        {/* Drawer Footer */}
+        <div className="p-4 bg-[#1f1f1f] border-t border-[#393939] text-center space-y-1">
+          <div className="flex items-center justify-center space-x-2 text-[10px] text-[#8d8d8d] font-mono">
+            <ShieldCheck className="w-3.5 h-3.5 text-[#0f62fe]" />
+            <span>CoA Architectural Standards • GST Compliant</span>
+          </div>
+          <p className="text-[9px] text-[#6f6f6f] font-mono">
+            Version 2.0-IBM-Carbon • Offline Local Storage
+          </p>
         </div>
       </div>
     </div>

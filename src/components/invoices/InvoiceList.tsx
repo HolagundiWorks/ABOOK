@@ -53,28 +53,28 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
     switch (status) {
       case 'PAID':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#24a148] border border-[#24a148]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#edf5ff] text-[#0043ce] border border-[#0f62fe]">
             <CheckCircle2 className="w-3 h-3 mr-1" />
             Paid Full
           </span>
         );
       case 'PARTIALLY_PAID':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#ff832b] border border-[#ff832b]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#fdf8e2] text-[#8a6d00] border border-[#f1c21b]">
             <Clock className="w-3 h-3 mr-1" />
             Partially Paid
           </span>
         );
       case 'UNPAID':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#da1e28] border border-[#da1e28]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#fff1f1] text-[#da1e28] border border-[#da1e28]">
             <AlertTriangle className="w-3 h-3 mr-1" />
             Unpaid
           </span>
         );
       case 'CANCELLED':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#8d8d8d] border border-[#393939]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#f4f4f4] text-[#8d8d8d] border border-[#8d8d8d]">
             Cancelled
           </span>
         );
@@ -84,20 +84,20 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
   const getTaxBadge = (inv: Invoice) => {
     if (inv.taxScheme === 'REGULAR_GST') {
       return (
-        <span className="text-[10px] font-mono font-bold text-white bg-[#161616] px-1.5 py-0.5 border border-[#ff832b]">
-          GST 18% {inv.isInterState ? '(IGST)' : '(CGST+SGST)'}
+        <span className="text-[10px] font-mono font-bold text-[#0043ce] bg-[#edf5ff] px-1.5 py-0.5 border border-[#a6c8ff]">
+          GST {inv.gstRate || 18}% {inv.isInterState ? '(IGST)' : '(CGST+SGST)'}
         </span>
       );
     }
     if (inv.taxScheme === 'COMPOSITION_GST') {
       return (
-        <span className="text-[10px] font-mono font-bold text-white bg-[#161616] px-1.5 py-0.5 border border-[#8d8d8d]">
+        <span className="text-[10px] font-mono font-bold text-[#8a6d00] bg-[#fdf8e2] px-1.5 py-0.5 border border-[#f1c21b]">
           COMP 6% (Sec 10(2A))
         </span>
       );
     }
     return (
-      <span className="text-[10px] font-mono font-bold text-white bg-[#24a148] px-1.5 py-0.5 border border-[#24a148]">
+      <span className="text-[10px] font-mono font-bold text-[#161616] bg-[#e0e0e0] px-1.5 py-0.5 border border-[#8d8d8d]">
         NON-GST / Exempt
       </span>
     );
@@ -106,15 +106,15 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
   return (
     <div className="space-y-4">
       {/* Header Banner */}
-      <div className="p-4 sm:p-5 bg-[#161616] text-white border-2 border-[#393939]">
+      <div className="p-4 sm:p-5 bg-[#161616] text-white border border-[#393939]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="px-1.5 py-0.5 bg-[#ff832b] text-black text-[10px] font-mono font-bold uppercase tracking-wider">
-                SAC 998321 • ARCHITECTURAL BILLING
+              <span className="px-1.5 py-0.5 bg-[#0f62fe] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                STEP 3 • SAC 998321 ARCHITECTURAL BILLING
               </span>
               <span className="text-[11px] font-mono text-[#8d8d8d]">
-                Total: {invoices.length}
+                Total: {invoices.length} Invoices
               </span>
             </div>
             <h2 className="text-xl font-bold mt-1 text-white uppercase tracking-tight">
@@ -128,16 +128,16 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
           <button
             id="invoices-create-btn"
             onClick={onNewInvoice}
-            className="inline-flex items-center justify-center px-4 py-2.5 bg-[#ff832b] hover:bg-[#fa7516] text-black font-bold uppercase tracking-wider text-xs border border-black transition-colors shrink-0"
+            className="carbon-btn-primary inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold uppercase tracking-wider shrink-0"
           >
-            <Plus className="w-4 h-4 mr-1.5 stroke-[2.5]" />
+            <Plus className="w-4 h-4 mr-1.5 stroke-[2]" />
             New Invoice
           </button>
         </div>
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="p-3 bg-white border border-[#393939] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+      <div className="p-3 bg-white border border-[#e0e0e0] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-[#8d8d8d] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -146,7 +146,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
             placeholder="Search by invoice #, project, or client..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs font-sans bg-[#f4f4f4] border border-[#8d8d8d] focus:border-[#ff832b] focus:bg-white focus:outline-none"
+            className="carbon-input w-full pl-9 pr-3 py-2 text-xs font-sans"
           />
         </div>
 
@@ -158,7 +158,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
               onClick={() => setStatusFilter(st)}
               className={`px-3 py-1.5 text-[11px] font-mono uppercase font-bold border transition-colors whitespace-nowrap ${
                 statusFilter === st
-                  ? 'bg-[#161616] text-[#ff832b] border-[#ff832b]'
+                  ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
                   : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
               }`}
             >
@@ -174,7 +174,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
 
       {/* Invoices List */}
       {filteredInvoices.length === 0 ? (
-        <div className="text-center py-12 bg-white border border-dashed border-[#8d8d8d] p-6">
+        <div className="text-center py-12 bg-white border border-[#e0e0e0] p-6">
           <ReceiptText className="w-10 h-10 text-[#8d8d8d] mx-auto mb-2" />
           <h3 className="text-sm font-bold uppercase tracking-wider text-[#161616]">No invoices found</h3>
           <p className="text-xs text-[#525252] max-w-sm mx-auto mt-1 mb-4">
@@ -184,7 +184,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
           </p>
           <button
             onClick={onNewInvoice}
-            className="inline-flex items-center px-4 py-2 bg-[#161616] text-[#ff832b] border border-[#ff832b] text-xs font-bold uppercase tracking-wider hover:bg-[#262626] transition-colors"
+            className="carbon-btn-primary inline-flex items-center px-4 py-2 text-xs font-bold uppercase tracking-wider"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Draft Invoice
@@ -196,7 +196,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
             <div
               key={inv.id}
               id={`invoice-item-${inv.id}`}
-              className="bg-white border-2 border-[#393939] p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 hover:border-[#ff832b] transition-colors"
+              className="bg-white border border-[#e0e0e0] p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-3 hover:border-[#0f62fe] transition-colors"
             >
               <div className="space-y-1.5 flex-1">
                 <div className="flex items-center space-x-2 flex-wrap gap-y-1">
@@ -210,19 +210,19 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
                   {getStatusBadge(inv.status)}
                 </div>
 
-                <h4 className="text-base font-bold text-[#161616] uppercase tracking-tight leading-snug">
+                <h4 className="text-sm font-bold text-[#161616] uppercase tracking-tight leading-snug">
                   {inv.projectTitle}
                 </h4>
 
                 <div className="flex items-center space-x-3 text-xs text-[#525252] flex-wrap">
                   <div className="flex items-center space-x-1">
-                    <User className="w-3.5 h-3.5 text-[#ff832b]" />
+                    <User className="w-3.5 h-3.5 text-[#0f62fe]" />
                     <span className="font-semibold text-[#161616]">{inv.client.name}</span>
                   </div>
                   {inv.placeOfSupply && (
                     <span className="font-mono text-[11px] text-[#8d8d8d]">• PoS: {inv.placeOfSupply}</span>
                   )}
-                  {inv.lineItems.length > 0 && inv.lineItems[0].stageName && (
+                  {(inv.lineItems || []).length > 0 && inv.lineItems[0].stageName && (
                     <span className="text-[11px] text-[#525252]">
                       • Stage: <strong>{inv.lineItems[0].stageName}</strong>
                     </span>
@@ -258,7 +258,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
                     {formatINR(inv.balanceDue)}
                   </span>
                   {inv.tdsDeducted > 0 && (
-                    <span className="text-[10px] font-mono text-[#ff832b] block">
+                    <span className="text-[10px] font-mono text-[#0043ce] block">
                       TDS: {formatINR(inv.tdsDeducted, false)}
                     </span>
                   )}
@@ -269,7 +269,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
                   <button
                     id={`invoice-view-${inv.id}-btn`}
                     onClick={() => onViewInvoice(inv)}
-                    className="p-1.5 text-[#161616] hover:bg-[#e0e0e0] border border-[#8d8d8d] transition-colors"
+                    className="carbon-btn-ghost p-1.5"
                     title="View & Print Invoice"
                   >
                     <Printer className="w-4 h-4" />
@@ -279,7 +279,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
                     <button
                       id={`invoice-record-pay-${inv.id}-btn`}
                       onClick={() => onRecordPayment(inv)}
-                      className="inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase text-black bg-[#ff832b] hover:bg-[#fa7516] border border-black transition-colors"
+                      className="carbon-btn-primary inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase"
                       title="Record Payment for this invoice"
                     >
                       <CreditCard className="w-3.5 h-3.5 mr-1" />
@@ -290,7 +290,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
                   <button
                     id={`invoice-edit-${inv.id}-btn`}
                     onClick={() => onEditInvoice(inv)}
-                    className="p-1.5 text-[#525252] hover:text-[#161616] hover:bg-[#e0e0e0] border border-transparent hover:border-[#8d8d8d] transition-colors"
+                    className="p-1.5 text-[#525252] hover:text-[#0f62fe] hover:bg-[#edf5ff] border border-transparent hover:border-[#0f62fe] transition-colors"
                     title="Edit Invoice"
                   >
                     <Edit3 className="w-4 h-4" />
@@ -299,7 +299,7 @@ export const InvoiceList: React.FC<InvoiceListProps> = ({
                   <button
                     id={`invoice-delete-${inv.id}-btn`}
                     onClick={() => onDeleteInvoice(inv.id)}
-                    className="p-1.5 text-[#8d8d8d] hover:text-[#da1e28] hover:bg-[#da1e28]/10 border border-transparent hover:border-[#da1e28] transition-colors"
+                    className="p-1.5 text-[#8d8d8d] hover:text-[#da1e28] hover:bg-[#fff1f1] border border-transparent hover:border-[#da1e28] transition-colors"
                     title="Delete Invoice"
                   >
                     <Trash2 className="w-4 h-4" />

@@ -49,11 +49,12 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
     invoicesCount: number;
   }>();
 
-  invoices.forEach((inv) => {
-    const key = inv.client.name.toLowerCase().trim();
+  (invoices || []).forEach((inv) => {
+    const clientName = inv.client?.name || 'Unknown Client';
+    const key = clientName.toLowerCase().trim();
     const existing = clientMap.get(key) || {
-      clientName: inv.client.name,
-      organization: inv.client.organization,
+      clientName: clientName,
+      organization: inv.client?.organization,
       totalBilled: 0,
       totalPaid: 0,
       totalTds: 0,
@@ -61,10 +62,10 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
       invoicesCount: 0
     };
 
-    existing.totalBilled += inv.totalAmount;
-    existing.totalPaid += inv.paidAmount;
-    existing.totalTds += inv.tdsDeducted;
-    existing.balanceDue += inv.balanceDue;
+    existing.totalBilled += inv.totalAmount || 0;
+    existing.totalPaid += inv.paidAmount || 0;
+    existing.totalTds += inv.tdsDeducted || 0;
+    existing.balanceDue += inv.balanceDue || 0;
     existing.invoicesCount += 1;
 
     clientMap.set(key, existing);
@@ -73,24 +74,24 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
   const clientStats = Array.from(clientMap.values()).sort((a, b) => b.totalBilled - a.totalBilled);
 
   // Expense calculations
-  const totalExpenses = summary.totalExpenses || 0;
-  const billableExpenses = summary.totalBillableExpenses || 0;
-  const nonBillableExpenses = summary.totalNonBillableExpenses || 0;
-  const unbilledReimbursables = summary.totalUnbilledExpenses || 0;
-  const totalSalaries = summary.totalSalariesPaid || 0;
-  const netOperatingProfit = summary.netStudioOperatingProfit || (summary.totalCollectedNet - totalExpenses - totalSalaries);
+  const totalExpenses = summary?.totalExpenses || 0;
+  const billableExpenses = summary?.totalBillableExpenses || 0;
+  const nonBillableExpenses = summary?.totalNonBillableExpenses || 0;
+  const unbilledReimbursables = summary?.totalUnbilledExpenses || 0;
+  const totalSalaries = summary?.totalSalariesPaid || 0;
+  const netOperatingProfit = summary?.netStudioOperatingProfit ?? ((summary?.totalCollectedNet || 0) - totalExpenses - totalSalaries);
 
   // Export to CSV helper
   const handleExportCSV = () => {
     const headers = ['Receipt #', 'Date', 'Invoice #', 'Project', 'Client', 'Payment Mode', 'Ref / UTR', 'Net Received (INR)', 'TDS (194J) (INR)', 'Gross Settled (INR)'];
-    const rows = payments.map((p) => [
+    const rows = (payments || []).map((p) => [
       p.receiptNumber,
       p.paymentDate,
       p.invoiceNumber,
-      `"${p.projectTitle.replace(/"/g, '""')}"`,
-      `"${p.clientName.replace(/"/g, '""')}"`,
+      `"${(p.projectTitle || '').replace(/"/g, '""')}"`,
+      `"${(p.clientName || '').replace(/"/g, '""')}"`,
       p.paymentMethod,
-      `"${p.transactionReference.replace(/"/g, '""')}"`,
+      `"${(p.transactionReference || '').replace(/"/g, '""')}"`,
       p.netAmountReceived,
       p.tdsDeducted,
       p.grossAmountSettled

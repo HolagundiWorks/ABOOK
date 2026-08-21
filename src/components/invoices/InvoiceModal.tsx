@@ -1,33 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  Invoice, 
-  InvoiceType, 
-  InvoiceLineItem, 
-  TaxScheme, 
-  ProjectProposal, 
+import React, { useState } from 'react';
+import {
+  Invoice,
+  InvoiceLineItem,
   FirmProfile,
-  ClientInfo,
-  FreelanceTemplate
+  TaxScheme,
+  InvoiceType,
+  ProjectProposal,
+  FreelanceTemplate,
+  ClientProfile
 } from '../../types';
-import { 
-  calculateGstBreakdown, 
-  formatINR 
-} from '../../utils/taxCalculations';
-import { 
-  SAC_CODES_DIRECTORY, 
-  INDIAN_STATES_AND_CODES 
-} from '../../data/coaStandards';
+import { SAC_CODES_DIRECTORY, INDIAN_STATES_AND_CODES } from '../../data/coaStandards';
 import { INITIAL_FREELANCE_TEMPLATES } from '../../data/freelanceTemplates';
-import { 
-  X, 
-  Plus, 
-  Trash2, 
-  Building2, 
-  Layers, 
+import { calculateGstBreakdown, formatINR } from '../../utils/taxCalculations';
+import {
+  X,
+  Plus,
+  Trash2,
   Sparkles,
-  ShieldCheck,
   Receipt,
-  FileText
+  User,
+  Check,
+  UserPlus
 } from 'lucide-react';
 
 interface InvoiceModalProps {
@@ -40,6 +33,9 @@ interface InvoiceModalProps {
   firmProfile: FirmProfile;
   preselectedProposal?: ProjectProposal | null;
   freelanceTemplates?: FreelanceTemplate[];
+  clients?: ClientProfile[];
+  onAddNewClient?: () => void;
+  preselectedClient?: ClientProfile | null;
 }
 
 export const InvoiceModal: React.FC<InvoiceModalProps> = ({
@@ -51,243 +47,303 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
   proposals,
   firmProfile,
   preselectedProposal,
-  freelanceTemplates = INITIAL_FREELANCE_TEMPLATES
+  freelanceTemplates = INITIAL_FREELANCE_TEMPLATES,
+  clients = [],
+  onAddNewClient,
+  preselectedClient
 }) => {
   if (!isOpen) return null;
 
+  // Header Details
   const [invoiceNumber, setInvoiceNumber] = useState(
     initialInvoice?.invoiceNumber || generatedInvoiceNumber
   );
   const [invoiceType, setInvoiceType] = useState<InvoiceType>(
-    initialInvoice?.type || 
-    (firmProfile.defaultTaxScheme === 'COMPOSITION_GST' ? 'BILL_OF_SUPPLY' : 'TAX_INVOICE')
+    initialInvoice?.invoiceType ||
+      (firmProfile.defaultTaxScheme === 'COMPOSITION_GST'
+        ? 'BILL_OF_SUPPLY'
+        : 'TAX_INVOICE')
   );
   const [date, setDate] = useState(
     initialInvoice?.date || new Date().toISOString().split('T')[0]
   );
   const [dueDate, setDueDate] = useState(
-    initialInvoice?.dueDate || 
-    new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+    initialInvoice?.dueDate ||
+      new Date(Date.now() + 15 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
   );
 
-  // Proposal linkage
+  // Link to Proposal
   const [selectedProposalId, setSelectedProposalId] = useState<string>(
     initialInvoice?.proposalId || preselectedProposal?.id || ''
   );
 
-  // Project & Client Details
+  // Link to Client Profile (Client-First Workflow)
+  const [selectedClientId, setSelectedClientId] = useState<string>(
+    initialInvoice?.client?.clientProfileId || preselectedClient?.id || ''
+  );
+
+  // Client Details
+  const [client, setClient] = useState({
+    clientProfileId: initialInvoice?.client?.clientProfileId || preselectedClient?.id || '',
+    name: initialInvoice?.client.name || preselectedClient?.name || preselectedProposal?.client.name || '',
+    organization: initialInvoice?.client.organization || preselectedClient?.organization || preselectedProposal?.client.organization || '',
+    email: initialInvoice?.client.email || preselectedClient?.email || preselectedProposal?.client.email || '',
+    phone: initialInvoice?.client.phone || preselectedClient?.phone || preselectedProposal?.client.phone || '',
+    address: initialInvoice?.client.address || preselectedClient?.address || preselectedProposal?.client.address || '',
+    city: initialInvoice?.client.city || preselectedClient?.city || preselectedProposal?.client.city || firmProfile.city,
+    state: initialInvoice?.client.state || preselectedClient?.state || preselectedProposal?.client.state || firmProfile.state,
+    stateCode: initialInvoice?.client.stateCode || preselectedClient?.stateCode || preselectedProposal?.client.stateCode || firmProfile.stateCode,
+    pincode: initialInvoice?.client.pincode || preselectedClient?.pincode || preselectedProposal?.client.pincode || '',
+    pan: initialInvoice?.client.pan || preselectedClient?.pan || preselectedProposal?.client.pan || '',
+    gstin: initialInvoice?.client.gstin || preselectedClient?.gstin || preselectedProposal?.client.gstin || ''
+  });
+
+  // Project Info
   const [projectTitle, setProjectTitle] = useState(
     initialInvoice?.projectTitle || preselectedProposal?.projectTitle || ''
   );
-  const [client, setClient] = useState<ClientInfo>(
-    initialInvoice?.client || 
-    preselectedProposal?.client || {
-      name: '',
-      organization: '',
-      email: '',
-      phone: '',
-      address: '',
-      city: firmProfile.city,
-      state: firmProfile.state,
-      pincode: '',
-      pan: '',
-      gstin: ''
-    }
-  );
-
-  // Tax Scheme & Place of Supply
-  const [taxScheme, setTaxScheme] = useState<TaxScheme>(
-    initialInvoice?.taxScheme || preselectedProposal?.taxScheme || firmProfile.defaultTaxScheme
-  );
   const [placeOfSupply, setPlaceOfSupply] = useState(
-    initialInvoice?.placeOfSupply || firmProfile.state
+    initialInvoice?.placeOfSupply || client.state || firmProfile.state
   );
   const [placeOfSupplyStateCode, setPlaceOfSupplyStateCode] = useState(
-    initialInvoice?.placeOfSupplyStateCode || firmProfile.stateCode
+    initialInvoice?.placeOfSupplyStateCode || client.stateCode || firmProfile.stateCode
   );
 
-  // Line items
+  // Tax Scheme
+  const [taxScheme, setTaxScheme] = useState<TaxScheme>(
+    initialInvoice?.taxScheme || firmProfile.defaultTaxScheme
+  );
+
+  // Line Items
   const [lineItems, setLineItems] = useState<InvoiceLineItem[]>(() => {
     if (initialInvoice?.lineItems && initialInvoice.lineItems.length > 0) {
       return initialInvoice.lineItems;
     }
     if (preselectedProposal && preselectedProposal.milestones.length > 0) {
-      const firstM = preselectedProposal.milestones[0];
+      const firstStage = preselectedProposal.milestones[0];
       return [
         {
-          id: 'li-1',
-          description: `CoA Stage ${firstM.stageNumber}: ${firstM.name} - ${firstM.deliverables}`,
-          stageName: firstM.name,
+          id: `li-prop-${firstStage.stageNumber}`,
+          stageNumber: firstStage.stageNumber,
+          description: `Stage ${firstStage.stageNumber}: ${firstStage.name} - ${firstStage.deliverables}`,
           sacCode: firmProfile.sacCodeDefault || '998321',
-          percentageBilled: firstM.percentage,
           quantity: 1,
-          rate: firstM.amount,
-          amount: firstM.amount
+          unit: 'Stage',
+          rate: firstStage.amount,
+          amount: firstStage.amount
         }
       ];
     }
     return [
       {
-        id: 'li-1',
-        description: 'Comprehensive Architectural Consultancy Services - Stage Milestone',
-        stageName: 'Concept Design',
+        id: `li-${Date.now()}`,
+        stageNumber: 1,
+        description: 'Architectural Design Consultation & Stage Deliverables',
         sacCode: firmProfile.sacCodeDefault || '998321',
         quantity: 1,
+        unit: 'Milestone',
         rate: 50000,
         amount: 50000
       }
     ];
   });
 
-  const [notes, setNotes] = useState(
-    initialInvoice?.notes || 'Payment due within 15 days upon submission.'
-  );
-  const [terms, setTerms] = useState(
-    initialInvoice?.termsAndConditions || firmProfile.standardPaymentTerms
-  );
+  // Client Selection Handler
+  const handleSelectClient = (clientId: string) => {
+    setSelectedClientId(clientId);
+    if (!clientId) return;
+    const cl = clients.find((c) => c.id === clientId);
+    if (cl) {
+      setClient({
+        clientProfileId: cl.id,
+        name: cl.name,
+        organization: cl.organization || '',
+        email: cl.email || '',
+        phone: cl.phone || '',
+        address: cl.address || '',
+        city: cl.city || firmProfile.city,
+        state: cl.state || firmProfile.state,
+        stateCode: cl.stateCode || firmProfile.stateCode,
+        pincode: cl.pincode || '',
+        pan: cl.pan || '',
+        gstin: cl.gstin || ''
+      });
+      setPlaceOfSupply(cl.state || firmProfile.state);
+      setPlaceOfSupplyStateCode(cl.stateCode || firmProfile.stateCode);
+    }
+  };
 
-  // Handle Proposal Selection Change
-  const handleProposalChange = (propId: string) => {
-    setSelectedProposalId(propId);
-    const prop = proposals.find((p) => p.id === propId);
+  // Sync place of supply state code
+  const handleStateChange = (stateName: string) => {
+    setPlaceOfSupply(stateName);
+    const found = INDIAN_STATES_AND_CODES.find((s) => s.name === stateName);
+    if (found) {
+      setPlaceOfSupplyStateCode(found.code);
+    }
+  };
+
+  // Handle Proposal Selection
+  const handleProposalChange = (proposalId: string) => {
+    setSelectedProposalId(proposalId);
+    if (!proposalId) return;
+
+    const prop = proposals.find((p) => p.id === proposalId);
     if (prop) {
       setProjectTitle(prop.projectTitle);
-      setClient(prop.client);
+      setClient({
+        clientProfileId: prop.client.clientProfileId || '',
+        name: prop.client.name,
+        organization: prop.client.organization || '',
+        email: prop.client.email || '',
+        phone: prop.client.phone || '',
+        address: prop.client.address || '',
+        city: prop.client.city || firmProfile.city,
+        state: prop.client.state || firmProfile.state,
+        stateCode: prop.client.stateCode || firmProfile.stateCode,
+        pincode: prop.client.pincode || '',
+        pan: prop.client.pan || '',
+        gstin: prop.client.gstin || ''
+      });
+      setPlaceOfSupply(prop.client.state);
+      setPlaceOfSupplyStateCode(prop.client.stateCode || firmProfile.stateCode);
       setTaxScheme(prop.taxScheme);
-      
-      const stateObj = INDIAN_STATES_AND_CODES.find((s) => s.name === prop.client.state);
-      if (stateObj) {
-        setPlaceOfSupply(stateObj.name);
-        setPlaceOfSupplyStateCode(stateObj.code);
+
+      if (prop.milestones && prop.milestones.length > 0) {
+        const firstStage = prop.milestones[0];
+        setLineItems([
+          {
+            id: `li-prop-${firstStage.stageNumber}`,
+            stageNumber: firstStage.stageNumber,
+            description: `Stage ${firstStage.stageNumber}: ${firstStage.name} - ${firstStage.deliverables}`,
+            sacCode: firmProfile.sacCodeDefault || '998321',
+            quantity: 1,
+            unit: 'Stage',
+            rate: firstStage.amount,
+            amount: firstStage.amount
+          }
+        ]);
       }
     }
   };
 
-  // Quick Add from Proposal Milestone
-  const handleAddMilestoneToInvoice = (stageNumber: number) => {
+  const handleApplyFreelanceTemplate = (templateId: string) => {
+    const tmpl = freelanceTemplates.find((t) => t.id === templateId);
+    if (!tmpl) return;
+
+    setProjectTitle(tmpl.title);
+
+    if (tmpl.items && tmpl.items.length > 0) {
+      const newLineItems: InvoiceLineItem[] = tmpl.items.map((m, idx) => ({
+        id: `li-tmpl-${idx + 1}`,
+        stageNumber: idx + 1,
+        description: `${tmpl.title} - ${m.name}: ${m.deliverables}`,
+        sacCode: m.sacCode || tmpl.sacCode || firmProfile.sacCodeDefault || '998321',
+        quantity: 1,
+        unit: 'Milestone',
+        rate: Math.round((tmpl.lumpSumRate * m.percentage) / 100),
+        amount: Math.round((tmpl.lumpSumRate * m.percentage) / 100)
+      }));
+      setLineItems(newLineItems);
+    } else {
+      setLineItems([
+        {
+          id: `li-tmpl-single`,
+          description: `${tmpl.title} - ${tmpl.description}`,
+          sacCode: tmpl.sacCode || firmProfile.sacCodeDefault || '998321',
+          quantity: 1,
+          unit: 'Job',
+          rate: tmpl.lumpSumRate,
+          amount: tmpl.lumpSumRate
+        }
+      ]);
+    }
+  };
+
+  const handleAddMilestoneToInvoice = (stageNum: number) => {
     const prop = proposals.find((p) => p.id === selectedProposalId);
     if (!prop) return;
-    const milestone = prop.milestones.find((m) => m.stageNumber === stageNumber);
-    if (!milestone) return;
+    const stage = prop.milestones.find((m) => m.stageNumber === stageNum);
+    if (!stage) return;
 
-    const newItem: InvoiceLineItem = {
-      id: `li-${Date.now()}`,
-      description: `CoA Stage ${milestone.stageNumber}: ${milestone.name} - ${milestone.deliverables}`,
-      stageName: milestone.name,
-      sacCode: '998321',
-      percentageBilled: milestone.percentage,
-      quantity: 1,
-      rate: milestone.amount,
-      amount: milestone.amount
-    };
-
-    setLineItems([...lineItems, newItem]);
+    setLineItems([
+      ...lineItems,
+      {
+        id: `li-prop-${stage.stageNumber}-${Date.now()}`,
+        stageNumber: stage.stageNumber,
+        description: `Stage ${stage.stageNumber}: ${stage.name} - ${stage.deliverables}`,
+        sacCode: firmProfile.sacCodeDefault || '998321',
+        quantity: 1,
+        unit: 'Stage',
+        rate: stage.amount,
+        amount: stage.amount
+      }
+    ]);
   };
 
-  // Apply Freelance Template to Line Items
-  const handleApplyFreelanceTemplate = (tplId: string) => {
-    const tpl = freelanceTemplates.find((t) => t.id === tplId);
-    if (!tpl) return;
-
-    if (!projectTitle.trim()) {
-      setProjectTitle(tpl.title);
-    }
-
-    const items: InvoiceLineItem[] = tpl.items.map((it) => ({
-      id: `li-${Date.now()}-${it.id}`,
-      description: `${it.name}: ${it.deliverables}`,
-      stageName: it.name,
-      sacCode: '998321',
-      quantity: 1,
-      rate: it.amount,
-      amount: it.amount
-    }));
-
-    setLineItems(items);
+  const handleAddLineItem = () => {
+    const nextNum = lineItems.length + 1;
+    setLineItems([
+      ...lineItems,
+      {
+        id: `li-${Date.now()}`,
+        stageNumber: nextNum,
+        description: 'Additional Architectural Service / Deliverable',
+        sacCode: firmProfile.sacCodeDefault || '998321',
+        quantity: 1,
+        unit: 'Job',
+        rate: 0,
+        amount: 0
+      }
+    ]);
   };
 
-  // Add Custom / Misc Line Item
-  const handleAddCustomLineItem = (presetTitle?: string, presetRate?: number) => {
-    const newItem: InvoiceLineItem = {
-      id: `li-${Date.now()}`,
-      description: presetTitle || 'Misc/Custom Work: 3D Visualization / Sanction Liaison / Drafting',
-      stageName: 'Custom / Freelance Scope',
-      sacCode: '998321',
-      quantity: 1,
-      rate: presetRate || 15000,
-      amount: presetRate || 15000
-    };
-    setLineItems([...lineItems, newItem]);
-  };
-
-  const handleUpdateLineItem = (index: number, field: keyof InvoiceLineItem, value: any) => {
+  const handleUpdateLineItem = (
+    index: number,
+    field: keyof InvoiceLineItem,
+    value: any
+  ) => {
     const updated = [...lineItems];
     const item = { ...updated[index], [field]: value };
+
     if (field === 'quantity' || field === 'rate') {
-      const q = field === 'quantity' ? parseFloat(value) || 0 : item.quantity;
-      const r = field === 'rate' ? parseFloat(value) || 0 : item.rate;
-      item.quantity = q;
-      item.rate = r;
+      const q = field === 'quantity' ? Number(value) : item.quantity;
+      const r = field === 'rate' ? Number(value) : item.rate;
       item.amount = Math.round(q * r);
     }
+
     updated[index] = item;
     setLineItems(updated);
   };
 
   const handleRemoveLineItem = (index: number) => {
-    if (lineItems.length <= 1) return;
-    setLineItems(lineItems.filter((_, idx) => idx !== index));
+    setLineItems(lineItems.filter((_, i) => i !== index));
   };
 
-  const handleStateChange = (stateName: string) => {
-    const found = INDIAN_STATES_AND_CODES.find((s) => s.name === stateName);
-    if (found) {
-      setPlaceOfSupply(found.name);
-      setPlaceOfSupplyStateCode(found.code);
-      setClient((prev) => ({
-        ...prev,
-        state: found.name
-      }));
-    }
-  };
+  // Subtotal calculation
+  const subtotal = lineItems.reduce((acc, item) => acc + item.amount, 0);
 
-  // Tax calculations
-  const subtotal = lineItems.reduce((sum, item) => sum + (item.amount || 0), 0);
+  // Tax calculation
   const taxBreakdown = calculateGstBreakdown(
-    subtotal, 
-    taxScheme, 
-    firmProfile.stateCode, 
+    subtotal,
+    taxScheme,
+    firmProfile.stateCode,
     placeOfSupplyStateCode
   );
-  const isInterState = taxBreakdown.isInterState;
-  const totalAmount = taxBreakdown.totalAmount;
+  const totalAmount = subtotal + taxBreakdown.totalTax;
+
+  const previousPaid = initialInvoice?.paidAmount || 0;
+  const previousTds = initialInvoice?.tdsDeducted || 0;
+  const balanceDue = Math.max(0, totalAmount - (previousPaid + previousTds));
+
+  let status = initialInvoice?.status || 'UNPAID';
+  if (balanceDue === 0 && totalAmount > 0) {
+    status = 'PAID';
+  } else if (previousPaid > 0 || previousTds > 0) {
+    status = 'PARTIALLY_PAID';
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!client.name.trim()) {
-      alert('Please enter client name.');
-      return;
-    }
-    if (!projectTitle.trim()) {
-      alert('Please enter project title.');
-      return;
-    }
-    if (lineItems.length === 0 || subtotal <= 0) {
-      alert('Please add at least one line item with a non-zero fee.');
-      return;
-    }
-
-    const previousPaid = initialInvoice?.paidAmount || 0;
-    const previousTds = initialInvoice?.tdsDeducted || 0;
-    const balanceDue = Math.max(0, totalAmount - (previousPaid + previousTds));
-
-    let status = initialInvoice?.status || 'UNPAID';
-    if (balanceDue === 0 && totalAmount > 0) {
-      status = 'PAID';
-    } else if (previousPaid + previousTds > 0) {
-      status = 'PARTIALLY_PAID';
-    }
 
     const invoice: Invoice = {
       id: initialInvoice?.id || `inv-${Date.now()}`,
@@ -296,15 +352,28 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
       type: invoiceType,
       date,
       dueDate,
-      client,
-      projectTitle,
+      projectTitle: projectTitle.trim(),
+      client: {
+        clientProfileId: selectedClientId || undefined,
+        name: client.name.trim(),
+        organization: client.organization?.trim() || undefined,
+        email: client.email.trim(),
+        phone: client.phone.trim(),
+        address: client.address.trim(),
+        city: client.city.trim(),
+        state: client.state.trim(),
+        stateCode: placeOfSupplyStateCode,
+        pincode: client.pincode.trim(),
+        gstin: client.gstin?.trim() || undefined,
+        pan: client.pan?.trim() || undefined
+      },
       placeOfSupply,
       placeOfSupplyStateCode,
+      taxScheme,
       lineItems,
       subtotal,
-      taxScheme,
-      isInterState,
       gstRate: taxBreakdown.gstRate,
+      isInterState: taxBreakdown.isInterState,
       cgstRate: taxBreakdown.cgstRate,
       cgstAmount: taxBreakdown.cgstAmount,
       sgstRate: taxBreakdown.sgstRate,
@@ -316,8 +385,8 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
       tdsDeducted: previousTds,
       balanceDue,
       status,
-      notes,
-      termsAndConditions: terms,
+      termsAndConditions:
+        initialInvoice?.termsAndConditions || firmProfile.standardPaymentTerms,
       createdAt: initialInvoice?.createdAt || new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
@@ -326,346 +395,433 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({
     onClose();
   };
 
-  const selectedProposal = proposals.find((p) => p.id === selectedProposalId);
-
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
-        
-        {/* Header */}
-        <div className="px-4 py-3 border-b border-slate-200 flex items-center justify-between bg-slate-900 text-white rounded-t-2xl">
-          <div>
-            <span className="text-[10px] font-bold uppercase text-amber-400 tracking-wide">
-              {invoiceType === 'TAX_INVOICE' ? 'Tax Invoice' : invoiceType === 'BILL_OF_SUPPLY' ? 'Bill of Supply' : 'Invoice'}
-            </span>
-            <h3 className="text-sm sm:text-base font-bold text-white leading-tight">
-              {invoiceNumber}
-            </h3>
+    <div id="invoice-modal-backdrop" className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2 sm:p-4 overflow-y-auto">
+      <div id="invoice-modal-container" className="w-full max-w-4xl bg-white text-[#161616] border border-[#393939] shadow-2xl my-4 flex flex-col max-h-[94vh]">
+        {/* Modal Header */}
+        <div className="flex items-center justify-between px-5 py-3.5 bg-[#161616] text-white border-b border-[#393939] shrink-0">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-2.5 h-2.5 bg-[#0f62fe]" />
+            <div>
+              <h2 className="text-sm font-bold tracking-tight uppercase">
+                {initialInvoice ? 'Edit Architectural Invoice' : 'Generate GST Tax Invoice / Bill of Supply'}
+              </h2>
+              <span className="text-[10px] font-mono text-[#8d8d8d]">
+                SAC 998321 Architectural Services • Rule 46 GST & TDS U/S 194J Compliant
+              </span>
+            </div>
           </div>
           <button
+            id="close-invoice-modal-btn"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+            className="p-1 hover:bg-[#393939] text-white transition-colors"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
-        {/* Form Body */}
-        <form onSubmit={handleSubmit} className="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs">
-          
-          {/* Quick Freelance Template Bar */}
-          <div className="bg-amber-50/80 p-3 rounded-xl border border-amber-200 space-y-2">
-            <span className="font-bold text-amber-950 flex items-center">
-              <Sparkles className="w-3.5 h-3.5 mr-1 text-amber-600" />
-              Apply Freelance / Part-Work Template
-            </span>
-            <select
-              onChange={(e) => handleApplyFreelanceTemplate(e.target.value)}
-              className="w-full text-xs font-semibold px-2.5 py-1.5 bg-white border border-amber-300 rounded-lg text-slate-900 shadow-2xs"
-            >
-              <option value="">Select Freelance / Lump Sum Template...</option>
-              {freelanceTemplates.map((t) => (
-                <option key={t.id} value={t.id}>
-                  {t.title} ({t.category}) — {formatINR(t.lumpSumRate, false)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Section 1: Invoice Header & Linkage */}
-          <div className="space-y-2.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">
-              1. Invoice Details & Linkage
-            </span>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">Invoice #</label>
-                <input
-                  type="text"
-                  required
-                  value={invoiceNumber}
-                  onChange={(e) => setInvoiceNumber(e.target.value)}
-                  className="w-full text-xs font-mono font-bold px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg"
-                />
-              </div>
-
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">Invoice Date</label>
-                <input
-                  type="date"
-                  required
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  className="w-full text-xs font-medium px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg"
-                />
-              </div>
+        {/* Form Content */}
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-5 overflow-y-auto flex-1">
+          {/* Quick Apply Templates & Proposal Link */}
+          <div className="p-3 bg-[#edf5ff] border-l-2 border-[#0f62fe] space-y-2">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-bold uppercase font-mono text-[#0043ce] flex items-center space-x-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-[#0f62fe]" />
+                <span>Link Approved Proposal or Freelance Service Template</span>
+              </span>
+              <span className="text-[10px] font-mono text-[#525252]">Optional</span>
             </div>
 
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">
-                Link to Approved Proposal (Optional)
-              </label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <select
                 value={selectedProposalId}
                 onChange={(e) => handleProposalChange(e.target.value)}
-                className="w-full text-xs font-medium px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg"
+                className="w-full text-xs font-sans px-2.5 py-1.5 bg-white border border-[#8d8d8d] text-[#161616] outline-none focus:border-[#0f62fe]"
               >
-                <option value="">-- Standalone Freelance / Direct Invoice --</option>
+                <option value="">-- Link to Accepted Proposal (Auto-fills Stages) --</option>
                 {proposals.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.proposalNumber} - {p.projectTitle} ({p.client.name})
                   </option>
                 ))}
               </select>
-            </div>
 
-            {/* Quick add stage milestone if proposal linked */}
-            {selectedProposal && selectedProposal.milestones.length > 0 && (
-              <div className="pt-1.5">
-                <span className="text-[10px] font-bold text-slate-600 block mb-1">
-                  Add Milestones from {selectedProposal.proposalNumber}:
-                </span>
-                <div className="flex flex-wrap gap-1">
-                  {selectedProposal.milestones.map((m) => (
-                    <button
-                      key={m.stageId || m.stageNumber}
-                      type="button"
-                      onClick={() => handleAddMilestoneToInvoice(m.stageNumber)}
-                      className="px-2 py-1 bg-white hover:bg-slate-100 border border-slate-200 rounded-md text-[10px] font-bold text-slate-700"
-                    >
-                      + Stage {m.stageNumber} ({m.percentage}%)
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+              <select
+                onChange={(e) => handleApplyFreelanceTemplate(e.target.value)}
+                className="w-full text-xs font-sans px-2.5 py-1.5 bg-white border border-[#8d8d8d] text-[#161616] outline-none focus:border-[#0f62fe]"
+              >
+                <option value="">-- Apply Freelance Milestone Template --</option>
+                {freelanceTemplates.map((t) => (
+                  <option key={t.id} value={t.id}>
+                    {t.title} — {formatINR(t.lumpSumRate, false)}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
-          {/* Section 2: Client & Project Info */}
-          <div className="space-y-2.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider block">
-              2. Client & Project Information
-            </span>
-
-            <div>
-              <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">Project Title *</label>
-              <input
-                type="text"
-                required
-                value={projectTitle}
-                onChange={(e) => setProjectTitle(e.target.value)}
-                placeholder="e.g. 3D Architectural Rendering & CAD Drawings"
-                className="w-full text-xs font-bold px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">Client Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={client.name}
-                  onChange={(e) => setClient({ ...client, name: e.target.value })}
-                  placeholder="Client / Organization Name"
-                  className="w-full text-xs font-bold px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg"
-                />
+          {/* Section 1: Client Profile Selection (Client-First Workflow) */}
+          <div className="p-4 bg-white border border-[#e0e0e0] space-y-3">
+            <div className="flex items-center justify-between pb-1 border-b border-[#e0e0e0]">
+              <div className="flex items-center space-x-2">
+                <User className="w-3.5 h-3.5 text-[#0f62fe]" />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#161616]">
+                  1. Client Profile Selection (Client-First Workflow)
+                </span>
               </div>
-
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">Client GSTIN (if applicable)</label>
-                <input
-                  type="text"
-                  value={client.gstin || ''}
-                  onChange={(e) => setClient({ ...client, gstin: e.target.value.toUpperCase() })}
-                  placeholder="29ABCPK8891J1Z8"
-                  className="w-full text-xs font-mono uppercase px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">Place of Supply (State)</label>
-                <select
-                  value={placeOfSupply}
-                  onChange={(e) => handleStateChange(e.target.value)}
-                  className="w-full text-xs px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-medium"
+              {onAddNewClient && (
+                <button
+                  type="button"
+                  onClick={onAddNewClient}
+                  className="px-2 py-1 bg-[#161616] hover:bg-[#262626] text-[#4589ff] border border-[#0f62fe] text-[10px] font-mono font-bold uppercase transition-colors flex items-center space-x-1"
                 >
-                  {INDIAN_STATES_AND_CODES.map((st) => (
-                    <option key={st.code} value={st.name}>
-                      {st.name} ({st.code})
+                  <UserPlus className="w-3 h-3 text-[#0f62fe]" />
+                  <span>+ Register New Client First</span>
+                </button>
+              )}
+            </div>
+
+            {/* Client Directory Dropdown */}
+            {clients.length > 0 ? (
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Select Registered Client Profile:
+                </label>
+                <select
+                  value={selectedClientId}
+                  onChange={(e) => handleSelectClient(e.target.value)}
+                  className="w-full bg-[#f4f4f4] border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-sans font-bold text-[#161616] outline-none focus:border-[#0f62fe]"
+                >
+                  <option value="">-- Choose from Registered Client Profiles --</option>
+                  {clients.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      [{c.clientCode}] {c.name} {c.organization ? `(${c.organization})` : ''} - {c.city}, {c.category}
                     </option>
                   ))}
                 </select>
               </div>
+            ) : (
+              <div className="p-2.5 bg-[#f4f4f4] border border-[#e0e0e0] flex items-center justify-between text-xs text-[#525252]">
+                <span>No clients in directory yet. Fill in details below or click Register Client First.</span>
+                {onAddNewClient && (
+                  <button
+                    type="button"
+                    onClick={onAddNewClient}
+                    className="font-bold text-[#0f62fe] underline"
+                  >
+                    Register Client
+                  </button>
+                )}
+              </div>
+            )}
+
+            {/* Invoice Meta Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-4 gap-3 pt-1">
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Invoice Number: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={invoiceNumber}
+                  onChange={(e) => setInvoiceNumber(e.target.value)}
+                  className="w-full bg-[#f4f4f4] border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-mono font-bold text-[#161616] outline-none focus:border-[#0f62fe]"
+                />
+              </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-700 mb-0.5">Tax Scheme</label>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Invoice Document Type:
+                </label>
                 <select
-                  value={taxScheme}
-                  onChange={(e) => {
-                    const sch = e.target.value as TaxScheme;
-                    setTaxScheme(sch);
-                    if (sch === 'COMPOSITION_GST') setInvoiceType('BILL_OF_SUPPLY');
-                    else if (sch === 'REGULAR_GST') setInvoiceType('TAX_INVOICE');
-                  }}
-                  className="w-full text-xs px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg font-semibold"
+                  value={invoiceType}
+                  onChange={(e) => setInvoiceType(e.target.value as InvoiceType)}
+                  className="w-full bg-white border border-[#8d8d8d] px-2 py-1.5 text-xs font-sans text-[#161616] outline-none focus:border-[#0f62fe]"
                 >
-                  <option value="REGULAR_GST">Regular GST (18%)</option>
-                  <option value="COMPOSITION_GST">Composition (6%)</option>
-                  <option value="NO_GST">Non-GST / Exempt</option>
+                  <option value="TAX_INVOICE">Tax Invoice (Regular GST)</option>
+                  <option value="BILL_OF_SUPPLY">Bill of Supply (Composition / Non-GST)</option>
+                  <option value="PROFORMA_INVOICE">Proforma Invoice</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Invoice Date:
+                </label>
+                <input
+                  type="date"
+                  required
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  className="w-full bg-white border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-mono text-[#161616] outline-none focus:border-[#0f62fe]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Due Date:
+                </label>
+                <input
+                  type="date"
+                  value={dueDate}
+                  onChange={(e) => setDueDate(e.target.value)}
+                  className="w-full bg-white border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-mono text-[#161616] outline-none focus:border-[#0f62fe]"
+                />
+              </div>
+            </div>
+
+            {/* Client Entity & Project Details */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Client / Billed To Entity: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Mr. Arvind Kulkarni"
+                  value={client.name}
+                  onChange={(e) => setClient({ ...client, name: e.target.value })}
+                  className="w-full bg-white border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-sans font-bold text-[#161616] outline-none focus:border-[#0f62fe]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Project Title / Assignment: *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Architectural Design of 4BHK Residence"
+                  value={projectTitle}
+                  onChange={(e) => setProjectTitle(e.target.value)}
+                  className="w-full bg-white border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-sans font-bold text-[#161616] outline-none focus:border-[#0f62fe]"
+                />
+              </div>
+            </div>
+
+            {/* GSTIN, PAN & Place of Supply */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Client GSTIN (for ITC):
+                </label>
+                <input
+                  type="text"
+                  placeholder="29AABCA8912K1Z8"
+                  value={client.gstin}
+                  onChange={(e) => setClient({ ...client, gstin: e.target.value.toUpperCase() })}
+                  className="w-full bg-white border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-mono uppercase text-[#161616] outline-none focus:border-[#0f62fe]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Client PAN (for TDS u/s 194J):
+                </label>
+                <input
+                  type="text"
+                  placeholder="AABCA8912K"
+                  value={client.pan}
+                  onChange={(e) => setClient({ ...client, pan: e.target.value.toUpperCase() })}
+                  className="w-full bg-white border border-[#8d8d8d] px-2.5 py-1.5 text-xs font-mono uppercase text-[#161616] outline-none focus:border-[#0f62fe]"
+                />
+              </div>
+
+              <div>
+                <label className="block text-[10px] uppercase font-mono text-[#525252] mb-1">
+                  Place of Supply (State / UT):
+                </label>
+                <select
+                  value={placeOfSupply}
+                  onChange={(e) => handleStateChange(e.target.value)}
+                  className="w-full bg-white border border-[#8d8d8d] px-2 py-1.5 text-xs font-sans text-[#161616] outline-none focus:border-[#0f62fe]"
+                >
+                  {INDIAN_STATES_AND_CODES.map((s) => (
+                    <option key={s.code} value={s.name}>
+                      {s.name} ({s.code})
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
           </div>
 
-          {/* Section 3: Line Items & Custom Work */}
-          <div className="space-y-2.5 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
-            <div className="flex items-center justify-between">
-              <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">
-                3. Invoice Line Items ({lineItems.length})
-              </span>
+          {/* Section 2: Billable Milestones & Line Items */}
+          <div className="p-4 bg-white border border-[#e0e0e0] space-y-3">
+            <div className="flex items-center justify-between pb-1 border-b border-[#e0e0e0]">
+              <div className="flex items-center space-x-2">
+                <Receipt className="w-3.5 h-3.5 text-[#0f62fe]" />
+                <span className="text-xs font-bold uppercase tracking-wider text-[#161616]">
+                  2. Billable Stages & SAC Services ({lineItems.length} Items)
+                </span>
+              </div>
 
-              <div className="flex items-center space-x-1.5">
+              <div className="flex items-center space-x-2">
+                {selectedProposalId && (
+                  <div className="flex items-center space-x-1">
+                    <span className="text-[10px] font-mono text-[#525252]">Add Stage:</span>
+                    {proposals
+                      .find((p) => p.id === selectedProposalId)
+                      ?.milestones.map((m) => (
+                        <button
+                          key={m.stageNumber}
+                          type="button"
+                          onClick={() => handleAddMilestoneToInvoice(m.stageNumber)}
+                          className="px-1.5 py-0.5 bg-[#f4f4f4] hover:bg-[#0f62fe] hover:text-white border border-[#8d8d8d] text-[10px] font-mono font-bold transition-colors"
+                        >
+                          S{m.stageNumber}
+                        </button>
+                      ))}
+                  </div>
+                )}
                 <button
                   type="button"
-                  onClick={() => handleAddCustomLineItem('3D Visualization & Exterior Views', 25000)}
-                  className="text-[10px] font-bold text-amber-700 bg-white px-2 py-0.5 rounded border border-amber-200"
+                  onClick={handleAddLineItem}
+                  className="text-[10px] font-mono font-bold text-[#0043ce] hover:bg-[#edf5ff] bg-white px-2 py-1 border border-[#0f62fe] transition-colors flex items-center space-x-1"
                 >
-                  + 3D Render
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleAddCustomLineItem()}
-                  className="text-[10px] font-bold text-blue-600 bg-white px-2 py-0.5 rounded border border-blue-200"
-                >
-                  + Custom Line Item
+                  <Plus className="w-3 h-3 text-[#0f62fe]" />
+                  <span>Add Line Item</span>
                 </button>
               </div>
             </div>
 
             {/* Line items list */}
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {lineItems.map((item, idx) => (
-                <div key={item.id || idx} className="p-2.5 bg-white rounded-xl border border-slate-200 space-y-1.5">
-                  <div className="flex items-center justify-between gap-1.5">
+                <div key={item.id || idx} className="p-3 bg-[#f4f4f4] border border-[#e0e0e0] space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="w-6 h-6 bg-[#161616] text-white text-xs font-mono font-bold flex items-center justify-center shrink-0">
+                      {idx + 1}
+                    </span>
                     <input
                       type="text"
                       value={item.description}
                       onChange={(e) => handleUpdateLineItem(idx, 'description', e.target.value)}
-                      placeholder="Line item description / deliverable details..."
-                      className="w-full text-xs font-bold px-2 py-1 border border-slate-200 rounded"
+                      placeholder="Description of architectural service / milestone deliverable..."
+                      className="w-full text-xs font-bold px-2.5 py-1 bg-white border border-[#8d8d8d] text-[#161616]"
                     />
+                    <select
+                      value={item.sacCode}
+                      onChange={(e) => handleUpdateLineItem(idx, 'sacCode', e.target.value)}
+                      className="text-[10px] font-mono px-1 py-1 bg-white border border-[#8d8d8d] text-[#161616] shrink-0"
+                    >
+                      {SAC_CODES_DIRECTORY.map((sac) => (
+                        <option key={sac.code} value={sac.code}>
+                          SAC {sac.code}
+                        </option>
+                      ))}
+                    </select>
                     {lineItems.length > 1 && (
                       <button
                         type="button"
                         onClick={() => handleRemoveLineItem(idx)}
-                        className="p-1 text-slate-400 hover:text-red-600"
+                        className="p-1 text-[#8d8d8d] hover:text-[#da1e28]"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     )}
                   </div>
 
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-2 pt-1">
                     <div>
-                      <label className="text-[9px] text-slate-400 block">SAC Code</label>
-                      <input
-                        type="text"
-                        value={item.sacCode}
-                        onChange={(e) => handleUpdateLineItem(idx, 'sacCode', e.target.value)}
-                        className="w-full text-xs font-mono px-1.5 py-1 border border-slate-200 rounded"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-[9px] text-slate-400 block">Qty / Units</label>
+                      <label className="block text-[9px] uppercase font-mono text-[#525252]">Qty:</label>
                       <input
                         type="number"
                         min="1"
                         value={item.quantity}
                         onChange={(e) => handleUpdateLineItem(idx, 'quantity', e.target.value)}
-                        className="w-full text-xs font-mono px-1.5 py-1 border border-slate-200 rounded"
+                        className="w-full text-xs font-mono px-2 py-1 bg-white border border-[#8d8d8d]"
                       />
                     </div>
                     <div>
-                      <label className="text-[9px] text-slate-400 block">Rate (₹)</label>
+                      <label className="block text-[9px] uppercase font-mono text-[#525252]">Rate (₹):</label>
                       <input
                         type="number"
                         value={item.rate}
                         onChange={(e) => handleUpdateLineItem(idx, 'rate', e.target.value)}
-                        className="w-full text-xs font-mono font-bold px-1.5 py-1 border border-slate-200 rounded"
+                        className="w-full text-xs font-mono font-bold px-2 py-1 bg-white border border-[#8d8d8d]"
                       />
                     </div>
-                  </div>
-
-                  <div className="flex justify-between text-[10px] font-mono text-slate-500 pt-0.5">
-                    <span>Taxable Value:</span>
-                    <strong className="text-slate-900 font-bold">{formatINR(item.amount, false)}</strong>
+                    <div>
+                      <label className="block text-[9px] uppercase font-mono text-[#525252]">Amount (₹):</label>
+                      <input
+                        type="text"
+                        readOnly
+                        value={formatINR(item.amount, false)}
+                        className="w-full text-xs font-mono font-bold px-2 py-1 bg-[#f4f4f4] border border-[#8d8d8d] text-[#161616]"
+                      />
+                    </div>
                   </div>
                 </div>
               ))}
             </div>
+          </div>
 
-            {/* Subtotal & Tax calculation summary card */}
-            <div className="bg-slate-900 text-white p-3 rounded-xl space-y-1.5">
-              <div className="flex justify-between text-[11px] text-slate-300">
-                <span>Taxable Subtotal:</span>
-                <span className="font-mono font-bold">{formatINR(subtotal, false)}</span>
-              </div>
+          {/* Section 3: Tax Calculation Summary */}
+          <div className="p-4 bg-[#f4f4f4] border border-[#8d8d8d] space-y-2">
+            <div className="flex justify-between text-xs font-mono">
+              <span className="text-[#525252]">Taxable Subtotal:</span>
+              <strong className="text-[#161616]">{formatINR(subtotal, false)}</strong>
+            </div>
 
-              {taxScheme === 'REGULAR_GST' && (
-                <>
-                  {!isInterState ? (
-                    <>
-                      <div className="flex justify-between text-[11px] text-blue-300">
-                        <span>CGST (9%):</span>
-                        <span className="font-mono">{formatINR(taxBreakdown.cgstAmount, false)}</span>
-                      </div>
-                      <div className="flex justify-between text-[11px] text-blue-300">
-                        <span>SGST (9%):</span>
-                        <span className="font-mono">{formatINR(taxBreakdown.sgstAmount, false)}</span>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="flex justify-between text-[11px] text-blue-300">
-                      <span>IGST (18% Inter-state):</span>
-                      <span className="font-mono">{formatINR(taxBreakdown.igstAmount, false)}</span>
+            {taxScheme === 'REGULAR_GST' && (
+              <>
+                {taxBreakdown.isInterState ? (
+                  <div className="flex justify-between text-xs font-mono text-[#0f62fe]">
+                    <span>Integrated GST (IGST 18%):</span>
+                    <strong>+{formatINR(taxBreakdown.igstAmount, false)}</strong>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex justify-between text-xs font-mono text-[#0f62fe]">
+                      <span>Central GST (CGST 9%):</span>
+                      <strong>+{formatINR(taxBreakdown.cgstAmount, false)}</strong>
                     </div>
-                  )}
-                </>
-              )}
+                    <div className="flex justify-between text-xs font-mono text-[#0f62fe]">
+                      <span>State GST (SGST 9%):</span>
+                      <strong>+{formatINR(taxBreakdown.sgstAmount, false)}</strong>
+                    </div>
+                  </>
+                )}
+              </>
+            )}
 
-              {taxScheme === 'COMPOSITION_GST' && (
-                <div className="flex justify-between text-[11px] text-purple-300">
-                  <span>Composition Estimate (6%):</span>
-                  <span className="font-mono">({formatINR(taxBreakdown.totalTax, false)})</span>
-                </div>
-              )}
-
-              <div className="flex justify-between text-xs font-bold text-amber-400 pt-1 border-t border-slate-800">
-                <span>Grand Total:</span>
-                <span className="font-mono text-sm">{formatINR(totalAmount, false)}</span>
+            {taxScheme === 'COMPOSITION_GST' && (
+              <div className="flex justify-between text-xs font-mono text-[#0f62fe]">
+                <span>Composition Tax (6% Sec 10(2A)):</span>
+                <strong>+{formatINR(taxBreakdown.totalTax, false)}</strong>
               </div>
+            )}
+
+            <div className="pt-2 border-t border-[#8d8d8d] flex justify-between items-center">
+              <span className="text-xs font-bold uppercase font-mono text-[#161616]">
+                Total Invoice Value Payable:
+              </span>
+              <span className="text-lg font-mono font-bold text-[#0043ce]">
+                {formatINR(totalAmount, false)}
+              </span>
             </div>
           </div>
 
-          {/* Footer Submit */}
-          <div className="pt-2 flex items-center justify-end space-x-2">
+          {/* Modal Footer Submit */}
+          <div className="pt-3 border-t border-[#e0e0e0] flex items-center justify-between">
             <button
               type="button"
               onClick={onClose}
-              className="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 rounded-xl"
+              className="carbon-btn-ghost px-4 py-2 text-xs font-bold uppercase tracking-wider"
             >
               Cancel
             </button>
             <button
               type="submit"
               id="invoice-save-btn"
-              className="px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-xs"
+              className="carbon-btn-primary px-6 py-2 text-xs font-bold uppercase tracking-wider flex items-center space-x-1.5"
             >
-              {initialInvoice ? 'Save Invoice' : 'Generate Invoice'}
+              <Check className="w-4 h-4" />
+              <span>{initialInvoice ? 'Save Changes' : 'Generate Tax Invoice'}</span>
             </button>
           </div>
         </form>

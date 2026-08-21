@@ -3,6 +3,14 @@
 @layer base {
   * {
     border-radius: 0px !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+
+  *::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
   }
   
   html, body {
@@ -12,29 +20,15 @@
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
+    scrollbar-width: none !important;
   }
 
   code, kbd, samp, pre, .font-mono {
     font-family: 'IBM Plex Mono', monospace !important;
   }
-
-  /* Carbon sharp custom scrollbars */
-  ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: #e0e0e0;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: #8d8d8d;
-  }
-  ::-webkit-scrollbar-thumb:hover {
-    background: #ff832b;
-  }
 }
 
-/* Carbon UI helper classes */
+/* Strict IBM Carbon UI Design System tokens */
 .carbon-tile {
   background-color: #ffffff;
   border: 1px solid #e0e0e0;
@@ -46,16 +40,17 @@
   color: #ffffff;
 }
 
+/* IBM Blue 60 (#0f62fe) / Blue 70 (#0043ce) */
 .carbon-btn-primary {
-  background-color: #ff832b;
-  color: #000000;
+  background-color: #0f62fe;
+  color: #ffffff;
   font-weight: 700;
-  border: 1px solid #ff832b;
+  border: 1px solid #0f62fe;
   transition: all 0.1s ease-in-out;
 }
 .carbon-btn-primary:hover {
-  background-color: #eb6200;
-  border-color: #eb6200;
+  background-color: #0043ce;
+  border-color: #0043ce;
   color: #ffffff;
 }
 
@@ -64,6 +59,7 @@
   color: #ffffff;
   font-weight: 600;
   border: 1px solid #393939;
+  transition: all 0.1s ease-in-out;
 }
 .carbon-btn-secondary:hover {
   background-color: #525252;
@@ -74,6 +70,7 @@
   background-color: transparent;
   color: #161616;
   border: 1px solid #8d8d8d;
+  transition: all 0.1s ease-in-out;
 }
 .carbon-btn-ghost:hover {
   background-color: #e0e0e0;
@@ -83,38 +80,38 @@
 .carbon-input {
   background-color: #ffffff;
   border: 1px solid #8d8d8d;
-  border-bottom: 2px solid #161616;
+  border-bottom: 1px solid #161616;
   color: #161616;
   outline: none;
 }
 .carbon-input:focus {
-  border-bottom: 2px solid #ff832b;
+  border: 1px solid #0f62fe;
   box-shadow: none;
 }
 
 /* Alert tokens */
 .carbon-alert-error {
   background-color: #fff1f1;
-  border-left: 4px solid #da1e28;
+  border-left: 2px solid #da1e28;
   color: #da1e28;
 }
 
 .carbon-alert-warning {
   background-color: #fdf8e2;
-  border-left: 4px solid #f1c21b;
+  border-left: 2px solid #f1c21b;
   color: #8a6d00;
 }
 
 .carbon-alert-success {
   background-color: #defbe6;
-  border-left: 4px solid #24a148;
+  border-left: 2px solid #24a148;
   color: #0f6225;
 }
 
 .carbon-alert-info {
-  background-color: #fff4eb;
-  border-left: 4px solid #ff832b;
-  color: #b84300;
+  background-color: #edf5ff;
+  border-left: 2px solid #0f62fe;
+  color: #0043ce;
 }
 
 @media print {

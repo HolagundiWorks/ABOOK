@@ -5,6 +5,7 @@ import {
   PaymentRecord, 
   ExpenseItem, 
   SalaryRecord, 
+  ClientProfile,
   AppModulesConfig, 
   AppSecurityConfig 
 } from '../types';
@@ -52,6 +53,7 @@ export const INITIAL_FIRM_PROFILE: FirmProfile = {
 };
 
 export const INITIAL_MODULES_CONFIG: AppModulesConfig = {
+  clients: true,
   proposals: true,
   invoices: true,
   payments: true,
@@ -744,5 +746,102 @@ export const INITIAL_PAYMENTS: PaymentRecord[] = [
     bankAccountCredited: 'HDFC Bank (UPI QR Scan)',
     notes: 'Consultation fee advance payment received.',
     createdAt: '2026-07-03T10:15:00.000Z'
+  }
+];
+
+export const INITIAL_CLIENTS: ClientProfile[] = [
+  {
+    id: 'client-001',
+    clientCode: 'CL-2026-001',
+    name: 'Mr. Arvind & Priya Kulkarni',
+    category: 'INDIVIDUAL',
+    organization: 'Kulkarni Family Trust',
+    contactPerson: 'Mr. Arvind Kulkarni',
+    designation: 'Managing Director, Tech Ventures',
+    email: 'arvind.kulkarni@gmail.com',
+    phone: '+91 98801 44521',
+    secondaryPhone: '+91 98801 44522',
+    address: 'Plot 48, 14th Main, Sector 4, HSR Layout',
+    city: 'Bengaluru',
+    state: 'Karnataka',
+    stateCode: '29',
+    pincode: '560102',
+    pan: 'BNZPK4920E',
+    gstin: '',
+    siteAddress: 'Plot 12B, Palm Meadows Gated Enclave, Whitefield, Bengaluru',
+    notes: 'Premium 4BHK sustainable villa client. Prompt on milestone settlements.',
+    tags: ['Residential', 'High-End Villa', 'CoA Scale'],
+    createdAt: '2026-04-10T10:00:00.000Z',
+    updatedAt: '2026-04-10T10:00:00.000Z'
+  },
+  {
+    id: 'client-002',
+    clientCode: 'CL-2026-002',
+    name: 'Apex Horizon Realty Pvt. Ltd.',
+    category: 'REAL_ESTATE_DEVELOPER',
+    organization: 'Apex Horizon Group',
+    contactPerson: 'Vikram Malhotra',
+    designation: 'Vice President - Projects & Planning',
+    email: 'projects@apexhorizon.com',
+    phone: '+91 98200 91823',
+    secondaryPhone: '+91 22 6790 4000',
+    address: 'Horizon Heights, Tower B, Level 14, BKC Bandra',
+    city: 'Mumbai',
+    state: 'Maharashtra',
+    stateCode: '27',
+    pincode: '400051',
+    pan: 'AABCA8912K',
+    gstin: '27AABCA8912K1Z8',
+    siteAddress: 'Survey No. 104/2, Outer Ring Road - Marathahalli Junction, Bengaluru',
+    notes: 'Commercial IT tech park developer. TDS deducted @ 10% under Sec 194J.',
+    tags: ['Commercial', 'Corporate', 'IGST Inter-State'],
+    createdAt: '2026-04-15T11:30:00.000Z',
+    updatedAt: '2026-04-15T11:30:00.000Z'
+  },
+  {
+    id: 'client-003',
+    clientCode: 'CL-2026-003',
+    name: 'Dr. Shalini Ramanathan',
+    category: 'COMMERCIAL_RETAIL',
+    organization: 'Aura Wellness & Aesthetics',
+    contactPerson: 'Dr. Shalini Ramanathan',
+    designation: 'Founder & Chief Dermatologist',
+    email: 'shalini@aurawellness.in',
+    phone: '+91 97402 11984',
+    address: 'No. 32, 100 Feet Road, 12th Main, HAL 2nd Stage, Indiranagar',
+    city: 'Bengaluru',
+    state: 'Karnataka',
+    stateCode: '29',
+    pincode: '560038',
+    pan: 'AGRPR2091J',
+    gstin: '29AGRPR2091J1Z2',
+    siteAddress: 'Ground & 1st Floor, Design Boulevard, 100 Feet Road, Indiranagar',
+    notes: 'Boutique interior fit-out. Turnkey interior space planning & MEP detailing.',
+    tags: ['Interior Design', 'Healthcare/Retail'],
+    createdAt: '2026-05-01T09:00:00.000Z',
+    updatedAt: '2026-05-01T09:00:00.000Z'
+  },
+  {
+    id: 'client-004',
+    clientCode: 'CL-2026-004',
+    name: 'Aditya & Neha Deshmukh',
+    category: 'INDIVIDUAL',
+    organization: '',
+    contactPerson: 'Aditya Deshmukh',
+    designation: 'Architectural Enthusiast',
+    email: 'aditya.deshmukh@yahoo.com',
+    phone: '+91 99002 88471',
+    address: 'Flat 902, Brigade Gateway, Malleshwaram',
+    city: 'Bengaluru',
+    state: 'Karnataka',
+    stateCode: '29',
+    pincode: '560055',
+    pan: 'CKJPD1082Q',
+    gstin: '',
+    siteAddress: 'Sy No 78, Hessarghatta Lake Road, North Bengaluru',
+    notes: 'Site feasibility study and master contour zoning consultation.',
+    tags: ['Feasibility', 'Consulting'],
+    createdAt: '2026-06-25T14:00:00.000Z',
+    updatedAt: '2026-06-25T14:00:00.000Z'
   }
 ];

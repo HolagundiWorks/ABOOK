@@ -50,9 +50,45 @@ export interface ClientInfo {
   address: string;
   city: string;
   state: string;
+  stateCode?: string;
   pincode: string;
   gstin?: string;
   pan?: string;
+  siteLocation?: string;
+  clientProfileId?: string;
+}
+
+export type ClientCategory = 
+  | 'INDIVIDUAL' 
+  | 'CORPORATE' 
+  | 'REAL_ESTATE_DEVELOPER' 
+  | 'GOVERNMENT_INSTITUTION' 
+  | 'COMMERCIAL_RETAIL'
+  | 'INSTITUTIONAL';
+
+export interface ClientProfile {
+  id: string;
+  clientCode: string; // e.g. "CL-2026-001"
+  name: string;
+  category: ClientCategory;
+  organization?: string;
+  contactPerson?: string;
+  designation?: string;
+  email: string;
+  phone: string;
+  secondaryPhone?: string;
+  address: string;
+  city: string;
+  state: string;
+  stateCode: string;
+  pincode: string;
+  gstin?: string;
+  pan?: string;
+  siteAddress?: string;
+  notes?: string;
+  tags?: string[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface FirmProfile {
@@ -273,6 +309,7 @@ export interface FreelanceTemplate {
 }
 
 export interface AppModulesConfig {
+  clients: boolean;
   proposals: boolean;
   invoices: boolean;
   payments: boolean;

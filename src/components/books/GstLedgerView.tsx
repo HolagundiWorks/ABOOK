@@ -29,22 +29,23 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
   const [pdfStatus, setPdfStatus] = useState('');
 
   // Filter invoices
-  const filteredInvoices = invoices.filter((inv) => {
+  const safeInvoices = invoices || [];
+  const filteredInvoices = safeInvoices.filter((inv) => {
     const matchesSearch =
-      inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      inv.projectTitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (inv.client.gstin && inv.client.gstin.toLowerCase().includes(searchTerm.toLowerCase()));
+      (inv.invoiceNumber && inv.invoiceNumber.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (inv.client?.name && inv.client.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (inv.projectTitle && inv.projectTitle.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (inv.client?.gstin && inv.client.gstin.toLowerCase().includes(searchTerm.toLowerCase()));
 
     const matchesScheme = taxSchemeFilter === 'ALL' || inv.taxScheme === taxSchemeFilter;
 
-    const isB2B = Boolean(inv.client.gstin && inv.client.gstin.trim().length > 0);
+    const isB2B = Boolean(inv.client?.gstin && inv.client.gstin.trim().length > 0);
     const matchesB2b =
       b2bFilter === 'ALL' ||
       (b2bFilter === 'B2B' && isB2B) ||
       (b2bFilter === 'B2C' && !isB2B);
 
-    return matchesSearch && matchesScheme && matchesB2b;
+    return Boolean(matchesSearch && matchesScheme && matchesB2b);
   });
 
   // Calculate totals

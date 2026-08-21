@@ -7,6 +7,7 @@ import {
   FreelanceTemplate,
   ExpenseItem,
   SalaryRecord,
+  ClientProfile,
   AppModulesConfig,
   AppSecurityConfig
 } from '../types';
@@ -17,6 +18,7 @@ import {
   INITIAL_PAYMENTS,
   INITIAL_EXPENSES,
   INITIAL_SALARIES,
+  INITIAL_CLIENTS,
   INITIAL_MODULES_CONFIG,
   INITIAL_SECURITY_CONFIG
 } from '../data/initialData';
@@ -25,6 +27,7 @@ import { getCurrentFinancialYear } from './taxCalculations';
 
 const STORAGE_KEYS = {
   FIRM_PROFILE: 'coa_arch_firm_profile_v2',
+  CLIENTS: 'coa_arch_clients_v2',
   PROPOSALS: 'coa_arch_proposals_v2',
   INVOICES: 'coa_arch_invoices_v2',
   PAYMENTS: 'coa_arch_payments_v2',
@@ -34,6 +37,26 @@ const STORAGE_KEYS = {
   MODULES: 'coa_arch_modules_v2',
   SECURITY: 'coa_arch_security_v2'
 };
+
+export function loadClients(): ClientProfile[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEYS.CLIENTS);
+    if (saved) return JSON.parse(saved);
+  } catch (e) {
+    console.error('Failed to load clients', e);
+  }
+  return INITIAL_CLIENTS;
+}
+
+export function saveClients(clients: ClientProfile[]): void {
+  localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify(clients));
+}
+
+export function generateNextClientCode(existingClients: ClientProfile[]): string {
+  const currentYear = new Date().getFullYear();
+  const count = existingClients.length + 1;
+  return `CL-${currentYear}-${count.toString().padStart(3, '0')}`;
+}
 
 export function loadFirmProfile(): FirmProfile {
   try {
@@ -171,6 +194,7 @@ export function saveSalaries(salaries: SalaryRecord[]): void {
 
 export function resetAllToSampleData(): void {
   localStorage.setItem(STORAGE_KEYS.FIRM_PROFILE, JSON.stringify(INITIAL_FIRM_PROFILE));
+  localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify(INITIAL_CLIENTS));
   localStorage.setItem(STORAGE_KEYS.PROPOSALS, JSON.stringify(INITIAL_PROPOSALS));
   localStorage.setItem(STORAGE_KEYS.INVOICES, JSON.stringify(INITIAL_INVOICES));
   localStorage.setItem(STORAGE_KEYS.PAYMENTS, JSON.stringify(INITIAL_PAYMENTS));
@@ -186,6 +210,7 @@ export function exportAllDataAsJSON(): string {
     version: '2.0-carbon',
     exportDate: new Date().toISOString(),
     firmProfile: loadFirmProfile(),
+    clients: loadClients(),
     proposals: loadProposals(),
     invoices: loadInvoices(),
     payments: loadPayments(),
@@ -202,6 +227,7 @@ export function importAllDataFromJSON(jsonString: string): boolean {
   try {
     const data = JSON.parse(jsonString);
     if (data.firmProfile) saveFirmProfile(data.firmProfile);
+    if (Array.isArray(data.clients)) saveClients(data.clients);
     if (Array.isArray(data.proposals)) saveProposals(data.proposals);
     if (Array.isArray(data.invoices)) saveInvoices(data.invoices);
     if (Array.isArray(data.payments)) savePayments(data.payments);

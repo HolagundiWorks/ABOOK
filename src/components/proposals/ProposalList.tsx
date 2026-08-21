@@ -58,34 +58,34 @@ export const ProposalList: React.FC<ProposalListProps> = ({
     switch (status) {
       case 'ACCEPTED':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#24a148] border border-[#24a148]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#edf5ff] text-[#0043ce] border border-[#0f62fe]">
             <CheckCircle2 className="w-3 h-3 mr-1" />
             Accepted
           </span>
         );
       case 'SENT':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#ff832b] border border-[#ff832b]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#fdf8e2] text-[#8a6d00] border border-[#f1c21b]">
             <Clock className="w-3 h-3 mr-1" />
             Sent
           </span>
         );
       case 'DRAFT':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#8d8d8d] border border-[#8d8d8d]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#f4f4f4] text-[#525252] border border-[#8d8d8d]">
             Draft
           </span>
         );
       case 'REJECTED':
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#da1e28] border border-[#da1e28]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#fff1f1] text-[#da1e28] border border-[#da1e28]">
             <AlertCircle className="w-3 h-3 mr-1" />
             Rejected
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#161616] text-[#8d8d8d] border border-[#393939]">
+          <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-mono font-bold bg-[#f4f4f4] text-[#8d8d8d] border border-[#e0e0e0]">
             Archived
           </span>
         );
@@ -95,20 +95,20 @@ export const ProposalList: React.FC<ProposalListProps> = ({
   const getFeeModelBadge = (proposal: ProjectProposal) => {
     if (proposal.feeModel === 'PERCENTAGE_COST') {
       return (
-        <span className="text-[11px] font-mono font-semibold text-[#161616] bg-[#e0e0e0] px-2 py-0.5 border border-[#8d8d8d]">
+        <span className="text-[10px] font-mono font-semibold text-[#0043ce] bg-[#edf5ff] px-2 py-0.5 border border-[#a6c8ff]">
           {proposal.percentageRate}% of Est. Cost
         </span>
       );
     }
     if (proposal.feeModel === 'PER_SQFT') {
       return (
-        <span className="text-[11px] font-mono font-semibold text-[#161616] bg-[#e0e0e0] px-2 py-0.5 border border-[#8d8d8d]">
+        <span className="text-[10px] font-mono font-semibold text-[#0043ce] bg-[#edf5ff] px-2 py-0.5 border border-[#a6c8ff]">
           ₹{proposal.ratePerSqFt}/sq.ft ({proposal.builtUpAreaSqFt?.toLocaleString('en-IN')} sq.ft)
         </span>
       );
     }
     return (
-      <span className="text-[11px] font-mono font-semibold text-[#161616] bg-[#e0e0e0] px-2 py-0.5 border border-[#8d8d8d]">
+      <span className="text-[10px] font-mono font-semibold text-[#161616] bg-[#e0e0e0] px-2 py-0.5 border border-[#8d8d8d]">
         Lump Sum Fee
       </span>
     );
@@ -117,15 +117,15 @@ export const ProposalList: React.FC<ProposalListProps> = ({
   return (
     <div className="space-y-4">
       {/* Section Header Card */}
-      <div className="p-4 sm:p-5 bg-[#161616] text-white border-2 border-[#393939]">
+      <div className="p-4 sm:p-5 bg-[#161616] text-white border border-[#393939]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
             <div className="flex items-center space-x-2">
-              <span className="px-1.5 py-0.5 bg-[#ff832b] text-black text-[10px] font-mono font-bold uppercase tracking-wider">
-                COA COMPREHENSIVE SCALE
+              <span className="px-1.5 py-0.5 bg-[#0f62fe] text-white text-[10px] font-mono font-bold uppercase tracking-wider">
+                STEP 2 • COA COMPREHENSIVE SCALE
               </span>
               <span className="text-[11px] font-mono text-[#8d8d8d]">
-                Total: {proposals.length}
+                Total: {proposals.length} Proposals
               </span>
             </div>
             <h2 className="text-xl font-bold mt-1 text-white uppercase tracking-tight">
@@ -139,16 +139,16 @@ export const ProposalList: React.FC<ProposalListProps> = ({
           <button
             id="proposals-create-btn"
             onClick={onNewProposal}
-            className="inline-flex items-center justify-center px-4 py-2.5 bg-[#ff832b] hover:bg-[#fa7516] text-black font-bold uppercase tracking-wider text-xs border border-black transition-colors shrink-0"
+            className="carbon-btn-primary inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold uppercase tracking-wider shrink-0"
           >
-            <Plus className="w-4 h-4 mr-1.5 stroke-[2.5]" />
+            <Plus className="w-4 h-4 mr-1.5 stroke-[2]" />
             New Proposal
           </button>
         </div>
       </div>
 
       {/* Search & Filter Toolbar */}
-      <div className="p-3 bg-white border border-[#393939] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+      <div className="p-3 bg-white border border-[#e0e0e0] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-[#8d8d8d] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
@@ -157,7 +157,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
             placeholder="Search by project, client, or proposal #..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 text-xs font-sans bg-[#f4f4f4] border border-[#8d8d8d] focus:border-[#ff832b] focus:bg-white focus:outline-none"
+            className="carbon-input w-full pl-9 pr-3 py-2 text-xs font-sans"
           />
         </div>
 
@@ -169,7 +169,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
               onClick={() => setStatusFilter(st)}
               className={`px-3 py-1.5 text-[11px] font-mono uppercase font-bold border transition-colors whitespace-nowrap ${
                 statusFilter === st
-                  ? 'bg-[#161616] text-[#ff832b] border-[#ff832b]'
+                  ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
                   : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
               }`}
             >
@@ -181,7 +181,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
 
       {/* Proposals List */}
       {filteredProposals.length === 0 ? (
-        <div className="text-center py-12 bg-white border border-dashed border-[#8d8d8d] p-6">
+        <div className="text-center py-12 bg-white border border-[#e0e0e0] p-6">
           <FileText className="w-10 h-10 text-[#8d8d8d] mx-auto mb-2" />
           <h3 className="text-sm font-bold uppercase tracking-wider text-[#161616]">No fee proposals found</h3>
           <p className="text-xs text-[#525252] max-w-sm mx-auto mt-1 mb-4">
@@ -191,19 +191,19 @@ export const ProposalList: React.FC<ProposalListProps> = ({
           </p>
           <button
             onClick={onNewProposal}
-            className="inline-flex items-center px-4 py-2 bg-[#161616] text-[#ff832b] border border-[#ff832b] text-xs font-bold uppercase tracking-wider hover:bg-[#262626] transition-colors"
+            className="carbon-btn-primary inline-flex items-center px-4 py-2 text-xs font-bold uppercase tracking-wider"
           >
             <Plus className="w-4 h-4 mr-1.5" />
             Draft New Proposal
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {filteredProposals.map((proposal) => (
             <div
               key={proposal.id}
               id={`proposal-card-${proposal.id}`}
-              className="bg-white border-2 border-[#393939] p-4 flex flex-col justify-between hover:border-[#ff832b] transition-colors"
+              className="bg-white border border-[#e0e0e0] p-4 flex flex-col justify-between hover:border-[#0f62fe] transition-colors"
             >
               <div>
                 {/* Top Row: Proposal Number & Status */}
@@ -220,13 +220,13 @@ export const ProposalList: React.FC<ProposalListProps> = ({
                 </div>
 
                 {/* Project Title & Client */}
-                <h3 className="text-base font-bold text-[#161616] uppercase tracking-tight line-clamp-2">
+                <h3 className="text-sm font-bold text-[#161616] uppercase tracking-tight line-clamp-2">
                   {proposal.projectTitle}
                 </h3>
 
                 <div className="mt-2 space-y-1 text-xs text-[#525252]">
                   <div className="flex items-center space-x-1.5">
-                    <User className="w-3.5 h-3.5 text-[#ff832b] shrink-0" />
+                    <User className="w-3.5 h-3.5 text-[#0f62fe] shrink-0" />
                     <span className="font-semibold text-[#161616]">{proposal.client.name}</span>
                     {proposal.client.organization && (
                       <span className="text-[#8d8d8d]">({proposal.client.organization})</span>
@@ -253,8 +253,8 @@ export const ProposalList: React.FC<ProposalListProps> = ({
 
                   <div className="flex items-center justify-between text-xs pt-1 border-t border-[#e0e0e0]">
                     <span className="text-[10px] font-mono text-[#525252] flex items-center">
-                      <Layers className="w-3.5 h-3.5 mr-1 text-[#ff832b]" />
-                      {proposal.milestones.length} CoA Stages
+                      <Layers className="w-3.5 h-3.5 mr-1 text-[#0f62fe]" />
+                      {(proposal.milestones || []).length} CoA Stages
                     </span>
                     <div>{getFeeModelBadge(proposal)}</div>
                   </div>
@@ -267,7 +267,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
                   <button
                     id={`proposal-view-${proposal.id}-btn`}
                     onClick={() => onViewProposal(proposal)}
-                    className="inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase text-[#161616] bg-[#e0e0e0] hover:bg-[#c6c6c6] border border-[#8d8d8d] transition-colors"
+                    className="carbon-btn-ghost inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase"
                   >
                     <Printer className="w-3.5 h-3.5 mr-1" />
                     Print
@@ -276,7 +276,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
                   <button
                     id={`proposal-edit-${proposal.id}-btn`}
                     onClick={() => onEditProposal(proposal)}
-                    className="p-1.5 text-[#525252] hover:text-[#161616] hover:bg-[#e0e0e0] border border-transparent hover:border-[#8d8d8d] transition-colors"
+                    className="p-1.5 text-[#525252] hover:text-[#0f62fe] hover:bg-[#edf5ff] border border-transparent hover:border-[#0f62fe] transition-colors"
                     title="Edit Proposal"
                   >
                     <Edit3 className="w-3.5 h-3.5" />
@@ -285,7 +285,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
                   <button
                     id={`proposal-duplicate-${proposal.id}-btn`}
                     onClick={() => onDuplicateProposal(proposal)}
-                    className="p-1.5 text-[#525252] hover:text-[#161616] hover:bg-[#e0e0e0] border border-transparent hover:border-[#8d8d8d] transition-colors"
+                    className="p-1.5 text-[#525252] hover:text-[#0f62fe] hover:bg-[#edf5ff] border border-transparent hover:border-[#0f62fe] transition-colors"
                     title="Duplicate as Template"
                   >
                     <Copy className="w-3.5 h-3.5" />
@@ -294,7 +294,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
                   <button
                     id={`proposal-delete-${proposal.id}-btn`}
                     onClick={() => onDeleteProposal(proposal.id)}
-                    className="p-1.5 text-[#8d8d8d] hover:text-[#da1e28] hover:bg-[#da1e28]/10 border border-transparent hover:border-[#da1e28] transition-colors"
+                    className="p-1.5 text-[#8d8d8d] hover:text-[#da1e28] hover:bg-[#fff1f1] border border-transparent hover:border-[#da1e28] transition-colors"
                     title="Delete Proposal"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -304,7 +304,7 @@ export const ProposalList: React.FC<ProposalListProps> = ({
                 <button
                   id={`proposal-invoice-${proposal.id}-btn`}
                   onClick={() => onCreateInvoiceFromProposal(proposal)}
-                  className="inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase text-black bg-[#ff832b] hover:bg-[#fa7516] border border-black transition-colors"
+                  className="carbon-btn-primary inline-flex items-center px-2.5 py-1 text-xs font-bold uppercase"
                 >
                   Bill Stage
                   <ArrowUpRight className="w-3.5 h-3.5 ml-1" />

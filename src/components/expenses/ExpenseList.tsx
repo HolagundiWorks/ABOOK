@@ -27,8 +27,8 @@ interface ExpenseListProps {
 }
 
 export const ExpenseList: React.FC<ExpenseListProps> = ({
-  expenses,
-  proposals,
+  expenses = [],
+  proposals = [],
   onAddExpense,
   onEditExpense,
   onDeleteExpense,
@@ -38,9 +38,11 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
   const [filterType, setFilterType] = useState<'ALL' | 'BILLABLE' | 'NON_BILLABLE' | 'UNBILLED'>('ALL');
   const [categoryFilter, setCategoryFilter] = useState<string>('ALL');
 
+  const safeExpenses = expenses || [];
+
   // Filtered expenses
   const filteredExpenses = useMemo(() => {
-    return expenses.filter(exp => {
+    return safeExpenses.filter(exp => {
       // Type filter
       if (filterType === 'BILLABLE' && !exp.isBillable) return false;
       if (filterType === 'NON_BILLABLE' && exp.isBillable) return false;
@@ -52,8 +54,8 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
       // Search query
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
-        const matchDesc = exp.description.toLowerCase().includes(q);
-        const matchVendor = exp.vendorOrPayee.toLowerCase().includes(q);
+        const matchDesc = (exp.description || '').toLowerCase().includes(q);
+        const matchVendor = (exp.vendorOrPayee || '').toLowerCase().includes(q);
         const matchProj = (exp.projectTitle || '').toLowerCase().includes(q);
         const matchClient = (exp.clientName || '').toLowerCase().includes(q);
         const matchRef = (exp.referenceNumber || '').toLowerCase().includes(q);
@@ -62,13 +64,13 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
 
       return true;
     }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [expenses, filterType, categoryFilter, searchQuery]);
+  }, [safeExpenses, filterType, categoryFilter, searchQuery]);
 
   // Aggregate stats
-  const totalAmount = expenses.reduce((sum, e) => sum + e.amount, 0);
-  const billableAmount = expenses.filter(e => e.isBillable).reduce((sum, e) => sum + e.amount, 0);
-  const nonBillableAmount = expenses.filter(e => !e.isBillable).reduce((sum, e) => sum + e.amount, 0);
-  const unbilledAmount = expenses.filter(e => e.isBillable && !e.isBilled).reduce((sum, e) => sum + e.amount, 0);
+  const totalAmount = safeExpenses.reduce((sum, e) => sum + (e.amount || 0), 0);
+  const billableAmount = safeExpenses.filter(e => e.isBillable).reduce((sum, e) => sum + (e.amount || 0), 0);
+  const nonBillableAmount = safeExpenses.filter(e => !e.isBillable).reduce((sum, e) => sum + (e.amount || 0), 0);
+  const unbilledAmount = safeExpenses.filter(e => e.isBillable && !e.isBilled).reduce((sum, e) => sum + (e.amount || 0), 0);
 
   const getCategoryBadgeLabel = (cat: ExpenseCategory) => {
     switch (cat) {
