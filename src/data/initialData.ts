@@ -7,7 +7,9 @@ import {
   SalaryRecord, 
   ClientProfile,
   AppModulesConfig, 
-  AppSecurityConfig 
+  AppSecurityConfig,
+  SiteInspectionLog,
+  PaymentReminder
 } from '../types';
 import { COA_STANDARD_STAGES, COA_STANDARD_CLAUSES } from './coaStandards';
 
@@ -55,7 +57,9 @@ export const INITIAL_FIRM_PROFILE: FirmProfile = {
 export const INITIAL_MODULES_CONFIG: AppModulesConfig = {
   clients: true,
   proposals: true,
+  siteUpdates: true,
   invoices: true,
+  reminders: true,
   payments: true,
   expenses: true,
   salaries: true,
@@ -843,5 +847,164 @@ export const INITIAL_CLIENTS: ClientProfile[] = [
     tags: ['Feasibility', 'Consulting'],
     createdAt: '2026-06-25T14:00:00.000Z',
     updatedAt: '2026-06-25T14:00:00.000Z'
+  }
+];
+
+export const INITIAL_SITE_UPDATES: SiteInspectionLog[] = [
+  {
+    id: 'site-insp-001',
+    inspectionNumber: 'SITE/2026-27/001',
+    date: '2026-06-18',
+    proposalId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Contemporary Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    clientEmail: 'arvind.kulkarni@gmail.com',
+    clientPhone: '+91 98860 44512',
+    siteLocation: 'Plot 42, Palm Meadows, Whitefield, Bengaluru',
+    milestoneStageName: 'Stage 6.1: Plinth Beam & Ground Level Sub-structure',
+    stagePercentageFee: 10,
+    targetMilestoneAmount: 144000,
+    physicalProgressPercentage: 100,
+    architectObserver: 'Ar. Vishwabhiram Shenoy',
+    contractorName: 'BuildCraft Infra Solutions (Mr. Suresh Rao)',
+    observationsAndNotes: 'Plinth beams de-shuttered and cured for 14 days. Anti-termite treatment completed across the ground footprint. PCC level verification matches structural drawings with ±3mm tolerance. Ready for stage billing.',
+    checklistResults: [
+      { item: 'Sub-soil compaction and anti-termite chemical injection', isPassed: true, notes: 'Certificate submitted by PestControl India' },
+      { item: 'Rebar tie-ins, cover blocks (40mm), and grade of M25 concrete', isPassed: true, notes: 'Cube test 28-day report verified: 27.8 N/mm²' },
+      { item: 'Plinth height benchmark vs road crown level (+750mm)', isPassed: true, notes: 'Maintained as per architectural section AA' },
+      { item: 'Plumbing sleeve embedment through foundation beams', isPassed: true, notes: 'Sanitary slope checked at 1:60' }
+    ],
+    snagList: [
+      {
+        id: 'snag-01',
+        description: 'Clean backfill debris from East boundary retaining wall trench before waterproofing',
+        location: 'East Boundary / Utility Yard',
+        severity: 'MINOR',
+        isResolved: true,
+        resolvedDate: '2026-06-20'
+      }
+    ],
+    verificationStatus: 'MILESTONE_COMPLETED_CERTIFIED',
+    certificateNumber: 'CERT/PROG/2026/01',
+    certifiedByArchitect: 'Ar. Vishwabhiram Shenoy (CA/2015/68294)',
+    certifiedDate: '2026-06-18',
+    createdAt: '2026-06-18T16:00:00.000Z',
+    updatedAt: '2026-06-18T16:00:00.000Z'
+  },
+  {
+    id: 'site-insp-002',
+    inspectionNumber: 'SITE/2026-27/002',
+    date: '2026-07-15',
+    proposalId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Contemporary Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    clientEmail: 'arvind.kulkarni@gmail.com',
+    clientPhone: '+91 98860 44512',
+    siteLocation: 'Plot 42, Palm Meadows, Whitefield, Bengaluru',
+    milestoneStageName: 'Stage 6.2: 1st Floor RCC Slab Casting & Column Stems',
+    stagePercentageFee: 15,
+    targetMilestoneAmount: 216000,
+    physicalProgressPercentage: 85,
+    architectObserver: 'Ar. Ananya Sharma',
+    contractorName: 'BuildCraft Infra Solutions',
+    observationsAndNotes: 'Centering shuttering inspection in progress. Electrical conduit laying for recessed architectural light fixtures underway. Concrete casting scheduled for upcoming Saturday.',
+    checklistResults: [
+      { item: 'Beam bottoms and slab shuttering level & propping spacing', isPassed: true, notes: 'Acro jacks placed at 900mm c/c with cross bracing' },
+      { item: 'Slab reinforcement top crank bars & chair spacers', isPassed: true, notes: 'Fe550D TMT verified' },
+      { item: 'Fan box locations & recessed lighting conduits per lighting layout', isPassed: false, notes: 'Living room light points shifting by 150mm - rectification in progress' },
+      { item: 'Sunken slab drop for Master Toilet & Powder Room (-150mm)', isPassed: true, notes: 'Drop verified' }
+    ],
+    snagList: [
+      {
+        id: 'snag-02',
+        description: 'Living room ceiling 4-spot circuit conduit needs alignment with center ceiling medallion before concrete pour',
+        location: '1st Floor Living / Double Height Void',
+        severity: 'CRITICAL',
+        isResolved: false
+      }
+    ],
+    verificationStatus: 'DEFECTS_HOLD_BILLING',
+    createdAt: '2026-07-15T11:30:00.000Z',
+    updatedAt: '2026-07-15T11:30:00.000Z'
+  },
+  {
+    id: 'site-insp-003',
+    inspectionNumber: 'SITE/2026-27/003',
+    date: '2026-07-02',
+    proposalId: 'prop-aura-hub',
+    projectTitle: 'Aura Commercial Innovation Hub (G+4 Floors)',
+    clientName: 'Naveen Reddy (Director)',
+    clientEmail: 'n.reddy@aurainfotech.com',
+    clientPhone: '+91 99001 88231',
+    siteLocation: 'Electronic City Phase 1, Bengaluru',
+    milestoneStageName: 'Stage 4: Working Drawings, BOQ & Structural Coordination',
+    stagePercentageFee: 20,
+    targetMilestoneAmount: 540000,
+    physicalProgressPercentage: 100,
+    architectObserver: 'Ar. Vishwabhiram Shenoy',
+    contractorName: 'PMC - Turner & Matrix Project Consultants',
+    observationsAndNotes: 'All architectural structural and MEP coordinated drawings signed off by lead structural engineer and fire department clearance obtained.',
+    checklistResults: [
+      { item: 'Architectural GFC Drawing Set delivered & stamped', isPassed: true, notes: 'Full GFC package Rev 2' },
+      { item: 'MEP Coordination clash detection report cleared', isPassed: true, notes: 'HVAC duct clearances verified' },
+      { item: 'Civil BOQ & Rate analysis finalized', isPassed: true, notes: 'Tender floated' }
+    ],
+    verificationStatus: 'BILLED',
+    certificateNumber: 'CERT/PROG/2026/02',
+    certifiedByArchitect: 'Ar. Vishwabhiram Shenoy (CA/2015/68294)',
+    certifiedDate: '2026-07-02',
+    linkedInvoiceId: 'inv-002',
+    linkedInvoiceNumber: 'INV/2026-27/002',
+    createdAt: '2026-07-02T15:00:00.000Z',
+    updatedAt: '2026-07-02T15:00:00.000Z'
+  }
+];
+
+export const INITIAL_PAYMENT_REMINDERS: PaymentReminder[] = [
+  {
+    id: 'rem-001',
+    invoiceId: 'inv-002',
+    invoiceNumber: 'INV/2026-27/002',
+    proposalId: 'prop-aura-hub',
+    projectTitle: 'Aura Commercial Innovation Hub (G+4 Floors)',
+    clientName: 'Naveen Reddy (Director)',
+    clientPhone: '+91 99001 88231',
+    clientEmail: 'n.reddy@aurainfotech.com',
+    dueDate: '2026-06-25',
+    totalAmount: 424800,
+    balanceDue: 424800,
+    reminderType: 'OVERDUE_ALERT',
+    channel: 'WHATSAPP',
+    subject: 'Urgent: Outstanding Architectural Fee Invoice INV/2026-27/002 (Aura Commercial Hub)',
+    messageBody: 'Dear Mr. Naveen Reddy,\n\nWe hope this message finds you well. This is a follow-up regarding Tax Invoice INV/2026-27/002 for the Aura Commercial Innovation Hub project. The balance of ₹4,24,800 was due on 25-Jun-2026.\n\nAs the site working drawings package has been released and contractor mobilization is in progress, we kindly request the expeditious processing of this payment.\n\nBank Transfer Details:\n• Account: Studio Vistara Architects\n• Bank: HDFC Bank Ltd (A/C: 50200049281923)\n• IFSC: HDFC0001234\n• UPI: studiovistara@hdfcbank\n\nThank you,\nAr. Vishwabhiram Shenoy\nStudio Vistara Architects',
+    sentDate: '2026-07-05T10:30:00.000Z',
+    scheduledNextFollowUpDate: '2026-07-12',
+    sentBy: 'Ar. Vishwabhiram Shenoy',
+    status: 'SENT',
+    notes: 'Followed up on WhatsApp. Client accounts team replied indicating cheque will be cleared next billing cycle.',
+    createdAt: '2026-07-05T10:30:00.000Z'
+  },
+  {
+    id: 'rem-002',
+    invoiceId: 'inv-003',
+    invoiceNumber: 'INV/2026-27/003',
+    proposalId: 'prop-zenith-villa',
+    projectTitle: 'The Zenith Residence - Bespoke 4BHK Contemporary Villa',
+    clientName: 'Mr. Arvind & Priya Kulkarni',
+    clientPhone: '+91 98860 44512',
+    clientEmail: 'arvind.kulkarni@gmail.com',
+    dueDate: '2026-07-10',
+    totalAmount: 169920,
+    balanceDue: 169920,
+    reminderType: 'MILESTONE_SITE_COMPLETION',
+    channel: 'EMAIL',
+    subject: 'Stage 6.1 Plinth Completion & Architectural Fee Milestone - Zenith Villa',
+    messageBody: 'Dear Mr. Arvind & Priya Kulkarni,\n\nWe have completed and certified the site inspection for Stage 6.1 (Plinth Beam & Sub-structure) at the Zenith Residence, Whitefield.\n\nIn accordance with the Council of Architecture Milestone Agreement, Tax Invoice INV/2026-27/003 for ₹1,69,920 (inclusive of 18% GST) has been submitted for payment.\n\nPlease find our bank payment details attached.\n\nWarm regards,\nAr. Vishwabhiram Shenoy\nStudio Vistara Architects',
+    sentDate: '2026-06-26T14:00:00.000Z',
+    scheduledNextFollowUpDate: '2026-07-03',
+    sentBy: 'Ar. Vishwabhiram Shenoy',
+    status: 'SENT',
+    notes: 'Stage completion certificate attached to email.',
+    createdAt: '2026-06-26T14:00:00.000Z'
   }
 ];

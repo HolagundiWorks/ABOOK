@@ -10,7 +10,9 @@ import {
   FinancialSummary,
   FreelanceTemplate,
   AppModulesConfig,
-  AppSecurityConfig
+  AppSecurityConfig,
+  SiteInspectionLog,
+  PaymentReminder
 } from './types';
 import { 
   loadFirmProfile, 
@@ -34,6 +36,10 @@ import {
   saveAppModulesConfig,
   loadAppSecurityConfig,
   saveAppSecurityConfig,
+  loadSiteUpdates,
+  saveSiteUpdates,
+  loadPaymentReminders,
+  savePaymentReminders,
   calculateFinancialSummary,
   generateNextProposalNumber,
   generateNextInvoiceNumber,
@@ -62,6 +68,11 @@ import { ExpenseModal } from './components/expenses/ExpenseModal';
 import { SalaryList } from './components/salaries/SalaryList';
 import { SalaryModal } from './components/salaries/SalaryModal';
 import { BooksDashboard } from './components/books/BooksDashboard';
+import { SiteUpdatesList } from './components/siteUpdates/SiteUpdatesList';
+import { SiteUpdateModal } from './components/siteUpdates/SiteUpdateModal';
+import { ProgressCertificateModal } from './components/siteUpdates/ProgressCertificateModal';
+import { PaymentRemindersList } from './components/reminders/PaymentRemindersList';
+import { PaymentReminderModal } from './components/reminders/PaymentReminderModal';
 import { FirmSettingsModal } from './components/settings/FirmSettingsModal';
 import { TemplateManagerModal } from './components/templates/TemplateManagerModal';
 import { LockScreen } from './components/security/LockScreen';
@@ -77,6 +88,8 @@ export default function App() {
   const [payments, setPayments] = useState<PaymentRecord[]>(loadPayments);
   const [expenses, setExpenses] = useState<ExpenseItem[]>(loadExpenses);
   const [salaries, setSalaries] = useState<SalaryRecord[]>(loadSalaries);
+  const [siteUpdates, setSiteUpdates] = useState<SiteInspectionLog[]>(loadSiteUpdates);
+  const [reminders, setReminders] = useState<PaymentReminder[]>(loadPaymentReminders);
   const [freelanceTemplates, setFreelanceTemplates] = useState<FreelanceTemplate[]>(loadFreelanceTemplates);
   const [modulesConfig, setModulesConfig] = useState<AppModulesConfig>(loadAppModulesConfig);
   const [securityConfig, setSecurityConfig] = useState<AppSecurityConfig>(loadAppSecurityConfig);
@@ -87,8 +100,22 @@ export default function App() {
     return Boolean(sec.isLockEnabled);
   });
 
-  // Tab State - Default to 'clients' for Client-First Workflow
-  const [activeTab, setActiveTab] = useState<MainTabType>('clients');
+  // Tab State - Support query params (?tab=invoices etc.) for Android PWA launcher shortcuts
+  const [activeTab, setActiveTab] = useState<MainTabType>(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const tabParam = params.get('tab') as MainTabType;
+        const validTabs: MainTabType[] = ['clients', 'proposals', 'siteUpdates', 'invoices', 'reminders', 'payments', 'expenses', 'salaries', 'books'];
+        if (tabParam && validTabs.includes(tabParam)) {
+          return tabParam;
+        }
+      }
+    } catch {
+      // Fallback
+    }
+    return 'clients';
+  });
 
   // Client Modals
   const [isClientModalOpen, setIsClientModalOpen] = useState(false);
@@ -101,11 +128,22 @@ export default function App() {
   const [editingProposal, setEditingProposal] = useState<ProjectProposal | null>(null);
   const [viewingProposal, setViewingProposal] = useState<ProjectProposal | null>(null);
 
+  // Site Updates Modals
+  const [isSiteUpdateModalOpen, setIsSiteUpdateModalOpen] = useState(false);
+  const [editingSiteUpdate, setEditingSiteUpdate] = useState<SiteInspectionLog | null>(null);
+  const [preselectedClientForSite, setPreselectedClientForSite] = useState<ClientProfile | null>(null);
+  const [viewingCertificateLog, setViewingCertificateLog] = useState<SiteInspectionLog | null>(null);
+
   // Invoice Modals
   const [isInvoiceModalOpen, setIsInvoiceModalOpen] = useState(false);
   const [editingInvoice, setEditingInvoice] = useState<Invoice | null>(null);
   const [viewingInvoice, setViewingInvoice] = useState<Invoice | null>(null);
   const [preselectedProposalForInvoice, setPreselectedProposalForInvoice] = useState<ProjectProposal | null>(null);
+
+  // Reminder Modals
+  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
+  const [editingReminder, setEditingReminder] = useState<PaymentReminder | null>(null);
+  const [preselectedInvoiceForReminder, setPreselectedInvoiceForReminder] = useState<Invoice | null>(null);
 
   // Payment Modals
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
@@ -136,6 +174,34 @@ export default function App() {
     };
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  // Handle URL shortcut launch parameters (e.g., from Android PWA home screen icon)
+  useEffect(() => {
+    try {
+      if (typeof window !== 'undefined') {
+        const params = new URLSearchParams(window.location.search);
+        const action = params.get('action');
+        if (action === 'new-proposal') {
+          setIsProposalModalOpen(true);
+        } else if (action === 'new-invoice') {
+          setIsInvoiceModalOpen(true);
+        } else if (action === 'lan-modal') {
+          setIsLanModalOpen(true);
+        } else if (action === 'new-site-update') {
+          setIsSiteUpdateModalOpen(true);
+        } else if (action === 'new-reminder') {
+          setIsReminderModalOpen(true);
+        }
+        
+        // Clean URL to prevent re-opening modal on refresh
+        if (action || params.get('tab')) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    } catch (e) {
+      console.warn('URL shortcut parse warning:', e);
+    }
   }, []);
 
   const handleInstallPwa = async () => {
@@ -178,6 +244,14 @@ export default function App() {
   useEffect(() => {
     saveSalaries(salaries);
   }, [salaries]);
+
+  useEffect(() => {
+    saveSiteUpdates(siteUpdates);
+  }, [siteUpdates]);
+
+  useEffect(() => {
+    savePaymentReminders(reminders);
+  }, [reminders]);
 
   useEffect(() => {
     saveFreelanceTemplates(freelanceTemplates);
@@ -285,6 +359,77 @@ export default function App() {
     setPreselectedClientForInvoice(null);
     setEditingInvoice(null);
     setIsInvoiceModalOpen(true);
+  };
+
+  // ================= Site Update Actions (Linked to Milestone Billing) =================
+  const handleNewSiteUpdate = (client?: ClientProfile) => {
+    setEditingSiteUpdate(null);
+    setPreselectedClientForSite(client || null);
+    setIsSiteUpdateModalOpen(true);
+  };
+
+  const handleEditSiteUpdate = (log: SiteInspectionLog) => {
+    setEditingSiteUpdate(log);
+    setPreselectedClientForSite(null);
+    setIsSiteUpdateModalOpen(true);
+  };
+
+  const handleSaveSiteUpdate = (savedLog: SiteInspectionLog) => {
+    const existingIndex = siteUpdates.findIndex((s) => s.id === savedLog.id);
+    if (existingIndex >= 0) {
+      const updated = [...siteUpdates];
+      updated[existingIndex] = savedLog;
+      setSiteUpdates(updated);
+    } else {
+      setSiteUpdates([savedLog, ...siteUpdates]);
+    }
+  };
+
+  const handleDeleteSiteUpdate = (id: string) => {
+    if (confirm('Are you sure you want to delete this site inspection log?')) {
+      setSiteUpdates(siteUpdates.filter((s) => s.id !== id));
+    }
+  };
+
+  const handleCreateInvoiceFromSiteUpdate = (log: SiteInspectionLog) => {
+    // Find matching client
+    const targetClient = clients.find((c) => c.id === log.clientId) || null;
+    const targetProposal = proposals.find((p) => p.id === log.proposalId) || null;
+
+    setPreselectedClientForInvoice(targetClient);
+    setPreselectedProposalForInvoice(targetProposal);
+    setEditingInvoice(null);
+    setIsInvoiceModalOpen(true);
+  };
+
+  // ================= Payment Reminder Actions =================
+  const handleNewReminder = (targetInvoice?: Invoice) => {
+    setEditingReminder(null);
+    setPreselectedInvoiceForReminder(targetInvoice || null);
+    setIsReminderModalOpen(true);
+  };
+
+  const handleEditReminder = (reminder: PaymentReminder) => {
+    setEditingReminder(reminder);
+    setPreselectedInvoiceForReminder(null);
+    setIsReminderModalOpen(true);
+  };
+
+  const handleSaveReminder = (savedReminder: PaymentReminder) => {
+    const existingIndex = reminders.findIndex((r) => r.id === savedReminder.id);
+    if (existingIndex >= 0) {
+      const updated = [...reminders];
+      updated[existingIndex] = savedReminder;
+      setReminders(updated);
+    } else {
+      setReminders([savedReminder, ...reminders]);
+    }
+  };
+
+  const handleDeleteReminder = (id: string) => {
+    if (confirm('Are you sure you want to delete this payment reminder record?')) {
+      setReminders(reminders.filter((r) => r.id !== id));
+    }
   };
 
   // ================= Invoice Actions =================
@@ -506,6 +651,8 @@ export default function App() {
         setPayments(loadPayments());
         setExpenses(loadExpenses());
         setSalaries(loadSalaries());
+        setSiteUpdates(loadSiteUpdates());
+        setReminders(loadPaymentReminders());
         setFreelanceTemplates(loadFreelanceTemplates());
         setModulesConfig(loadAppModulesConfig());
         setSecurityConfig(loadAppSecurityConfig());
@@ -533,6 +680,8 @@ export default function App() {
           setPayments(loadPayments());
           setExpenses(loadExpenses());
           setSalaries(loadSalaries());
+          setSiteUpdates(loadSiteUpdates());
+          setReminders(loadPaymentReminders());
           setFreelanceTemplates(loadFreelanceTemplates());
           setModulesConfig(loadAppModulesConfig());
           setSecurityConfig(loadAppSecurityConfig());
@@ -556,6 +705,8 @@ export default function App() {
       setPayments(loadPayments());
       setExpenses(loadExpenses());
       setSalaries(loadSalaries());
+      setSiteUpdates(loadSiteUpdates());
+      setReminders(loadPaymentReminders());
       setFreelanceTemplates(loadFreelanceTemplates());
       setModulesConfig(loadAppModulesConfig());
       setSecurityConfig(loadAppSecurityConfig());
@@ -656,6 +807,34 @@ export default function App() {
             />
           )}
 
+          {activeTab === 'siteUpdates' && modulesConfig.siteUpdates !== false && (
+            <SiteUpdatesList
+              siteUpdates={siteUpdates}
+              clients={clients}
+              proposals={proposals}
+              invoices={invoices}
+              firmProfile={firmProfile}
+              onNewSiteUpdate={handleNewSiteUpdate}
+              onEditSiteUpdate={handleEditSiteUpdate}
+              onDeleteSiteUpdate={handleDeleteSiteUpdate}
+              onViewCertificate={(log) => setViewingCertificateLog(log)}
+              onCreateInvoiceFromSiteUpdate={handleCreateInvoiceFromSiteUpdate}
+            />
+          )}
+
+          {activeTab === 'reminders' && modulesConfig.reminders !== false && (
+            <PaymentRemindersList
+              reminders={reminders}
+              invoices={invoices}
+              clients={clients}
+              firmProfile={firmProfile}
+              onNewReminder={handleNewReminder}
+              onEditReminder={handleEditReminder}
+              onDeleteReminder={handleDeleteReminder}
+              onRecordPayment={(inv) => handleNewPayment(inv)}
+            />
+          )}
+
           {activeTab === 'salaries' && modulesConfig.salaries && (
             <SalaryList
               salaries={salaries}
@@ -685,6 +864,8 @@ export default function App() {
           onNewClient={handleNewClient}
           onNewProposal={handleNewProposal}
           onNewInvoice={handleNewInvoice}
+          onNewSiteUpdate={() => handleNewSiteUpdate()}
+          onNewReminder={() => handleNewReminder()}
           onNewPayment={() => handleNewPayment()}
           onNewExpense={handleNewExpense}
           onNewSalary={handleNewSalary}
@@ -718,7 +899,9 @@ export default function App() {
         counts={{
           clients: clients.length,
           proposals: proposals.length,
+          siteUpdates: siteUpdates.length,
           invoices: invoices.length,
+          reminders: reminders.length,
           payments: payments.length,
           expenses: expenses.length,
           salaries: salaries.length
@@ -765,6 +948,40 @@ export default function App() {
         />
       )}
 
+      {/* Site Update Inspection Modal */}
+      {isSiteUpdateModalOpen && (
+        <SiteUpdateModal
+          isOpen={isSiteUpdateModalOpen}
+          onClose={() => {
+            setIsSiteUpdateModalOpen(false);
+            setPreselectedClientForSite(null);
+          }}
+          onSave={handleSaveSiteUpdate}
+          initialLog={editingSiteUpdate}
+          clients={clients}
+          proposals={proposals}
+          invoices={invoices}
+          preselectedClient={preselectedClientForSite}
+          onAddNewClient={handleNewClient}
+        />
+      )}
+
+      {/* Site Progress / Milestone Certificate View Modal */}
+      {viewingCertificateLog && (
+        <ProgressCertificateModal
+          isOpen={Boolean(viewingCertificateLog)}
+          onClose={() => setViewingCertificateLog(null)}
+          log={viewingCertificateLog}
+          client={clients.find((c) => c.id === viewingCertificateLog.clientId)}
+          proposal={proposals.find((p) => p.id === viewingCertificateLog.proposalId)}
+          firmProfile={firmProfile}
+          onGenerateInvoice={(log) => {
+            setViewingCertificateLog(null);
+            handleCreateInvoiceFromSiteUpdate(log);
+          }}
+        />
+      )}
+
       {/* Invoice Modal */}
       {isInvoiceModalOpen && (
         <InvoiceModal
@@ -797,6 +1014,22 @@ export default function App() {
             setViewingInvoice(null);
             handleNewPayment(inv);
           }}
+        />
+      )}
+
+      {/* Payment Reminder Modal */}
+      {isReminderModalOpen && (
+        <PaymentReminderModal
+          isOpen={isReminderModalOpen}
+          onClose={() => {
+            setIsReminderModalOpen(false);
+            setPreselectedInvoiceForReminder(null);
+          }}
+          onSave={handleSaveReminder}
+          initialReminder={editingReminder}
+          invoices={invoices}
+          clients={clients}
+          preselectedInvoice={preselectedInvoiceForReminder}
         />
       )}
 

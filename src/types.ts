@@ -308,10 +308,114 @@ export interface FreelanceTemplate {
   isCustom?: boolean;
 }
 
+export type SiteStageVerificationStatus = 
+  | 'PENDING_INSPECTION'
+  | 'INSPECTED_IN_PROGRESS'
+  | 'MILESTONE_COMPLETED_CERTIFIED'
+  | 'DEFECTS_HOLD_BILLING'
+  | 'BILLED';
+
+export interface SiteSnagItem {
+  id: string;
+  description: string;
+  location: string;
+  severity: 'CRITICAL' | 'MODERATE' | 'MINOR';
+  isResolved: boolean;
+  resolvedDate?: string;
+  photoUrl?: string;
+}
+
+export interface SiteInspectionLog {
+  id: string;
+  inspectionNumber: string; // e.g. "SITE/2026-27/001"
+  date: string;
+  clientId?: string;
+  proposalId?: string;
+  projectTitle: string;
+  clientName: string;
+  clientEmail?: string;
+  clientPhone?: string;
+  siteLocation: string;
+  
+  // Linked Milestone Stage & Valuation
+  milestoneStageName: string; // e.g. "Stage 4: Structural Slab 1 Completed"
+  stagePercentageFee: number; // e.g. 20%
+  targetMilestoneAmount: number; // e.g. ₹ 2,88,000
+  physicalProgressPercentage: number; // 0 to 100%
+  
+  architectObserver: string;
+  contractorName?: string;
+  observationsAndNotes: string;
+  
+  // Quality & Construction Checklist
+  checklistResults: {
+    item: string;
+    isPassed: boolean;
+    notes?: string;
+  }[];
+  
+  // Snags & Defect punch list
+  snagList?: SiteSnagItem[];
+  
+  // Verification & Stage Certificate
+  verificationStatus: SiteStageVerificationStatus;
+  certificateNumber?: string; // e.g. "CERT/PROG/2026/04"
+  certifiedByArchitect?: string;
+  certifiedDate?: string;
+  
+  // Linked Invoice when billed
+  linkedInvoiceId?: string;
+  linkedInvoiceNumber?: string;
+  
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ReminderType = 
+  | 'MILESTONE_SITE_COMPLETION' 
+  | 'GENTLE_DUE_SOON' 
+  | 'OVERDUE_ALERT' 
+  | 'FORMAL_LEGAL_NOTICE' 
+  | 'CUSTOM';
+
+export type ReminderChannel = 'WHATSAPP' | 'EMAIL' | 'SMS' | 'FORMAL_LETTER';
+
+export type ReminderStatus = 'DRAFT' | 'SENT' | 'ACKNOWLEDGED' | 'RESOLVED_PAID';
+
+export interface PaymentReminder {
+  id: string;
+  invoiceId: string;
+  invoiceNumber: string;
+  proposalId?: string;
+  projectTitle: string;
+  clientName: string;
+  clientPhone?: string;
+  clientEmail?: string;
+  
+  dueDate: string;
+  totalAmount: number;
+  balanceDue: number;
+  
+  reminderType: ReminderType;
+  channel: ReminderChannel;
+  subject: string;
+  messageBody: string;
+  
+  sentDate: string;
+  scheduledNextFollowUpDate?: string;
+  sentBy: string;
+  status: ReminderStatus;
+  notes?: string;
+  
+  createdAt: string;
+}
+
 export interface AppModulesConfig {
   clients: boolean;
   proposals: boolean;
+  siteUpdates: boolean;
   invoices: boolean;
+  reminders: boolean;
   payments: boolean;
   expenses: boolean;
   salaries: boolean;

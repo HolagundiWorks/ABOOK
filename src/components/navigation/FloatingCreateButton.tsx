@@ -4,7 +4,9 @@ import {
   X, 
   UserPlus,
   FileText, 
+  HardHat,
   ReceiptText, 
+  Bell,
   WalletCards, 
   DollarSign, 
   Users,
@@ -16,7 +18,9 @@ interface FloatingCreateButtonProps {
   modulesConfig: AppModulesConfig;
   onNewClient?: () => void;
   onNewProposal: () => void;
+  onNewSiteUpdate?: () => void;
   onNewInvoice: () => void;
+  onNewReminder?: () => void;
   onNewPayment: () => void;
   onNewExpense: () => void;
   onNewSalary: () => void;
@@ -26,7 +30,9 @@ export const FloatingCreateButton: React.FC<FloatingCreateButtonProps> = ({
   modulesConfig,
   onNewClient,
   onNewProposal,
+  onNewSiteUpdate,
   onNewInvoice,
+  onNewReminder,
   onNewPayment,
   onNewExpense,
   onNewSalary
@@ -127,6 +133,29 @@ export const FloatingCreateButton: React.FC<FloatingCreateButtonProps> = ({
               </button>
             )}
 
+            {modulesConfig.siteUpdates !== false && onNewSiteUpdate && (
+              <button
+                id="fab-new-site-update-btn"
+                onClick={() => handleAction(onNewSiteUpdate)}
+                className="w-full flex items-center justify-between p-2 bg-[#161616] hover:bg-[#262626] border border-[#393939] hover:border-[#0f62fe] text-left transition-colors group"
+              >
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-6 h-6 bg-[#262626] group-hover:bg-[#0f62fe] text-[#0f62fe] group-hover:text-white flex items-center justify-center transition-colors">
+                    <HardHat className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-bold text-white block group-hover:text-[#4589ff] transition-colors uppercase tracking-tight">
+                      Site Inspection Log
+                    </span>
+                    <span className="text-[9px] text-[#8d8d8d] block font-mono">
+                      Stage Certificate & Snags
+                    </span>
+                  </div>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-[#8d8d8d] group-hover:text-[#0f62fe] transition-colors" />
+              </button>
+            )}
+
             {modulesConfig.invoices && (
               <button
                 id="fab-new-invoice-btn"
@@ -143,6 +172,29 @@ export const FloatingCreateButton: React.FC<FloatingCreateButtonProps> = ({
                     </span>
                     <span className="text-[9px] text-[#8d8d8d] block font-mono">
                       18% GST / 6% Comp / Non-GST
+                    </span>
+                  </div>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-[#8d8d8d] group-hover:text-[#0f62fe] transition-colors" />
+              </button>
+            )}
+
+            {modulesConfig.reminders !== false && onNewReminder && (
+              <button
+                id="fab-new-reminder-btn"
+                onClick={() => handleAction(onNewReminder)}
+                className="w-full flex items-center justify-between p-2 bg-[#161616] hover:bg-[#262626] border border-[#393939] hover:border-[#0f62fe] text-left transition-colors group"
+              >
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-6 h-6 bg-[#262626] group-hover:bg-[#0f62fe] text-[#f1c21b] group-hover:text-white flex items-center justify-center transition-colors">
+                    <Bell className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <span className="text-[11px] font-bold text-white block group-hover:text-[#4589ff] transition-colors uppercase tracking-tight">
+                      Payment Reminder
+                    </span>
+                    <span className="text-[9px] text-[#8d8d8d] block font-mono">
+                      WhatsApp / Email / Demand Notice
                     </span>
                   </div>
                 </div>

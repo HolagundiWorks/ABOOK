@@ -22,8 +22,17 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Urbanist:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-black text-white antialiased selection:bg-[#0f62fe] selection:text-white">
-    <div id="root"></div>
+  <body class="bg-[#f4f4f4] text-[#161616] antialiased selection:bg-[#0f62fe] selection:text-white">
+    <div id="root">
+      <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f4f4f4; color: #161616; font-family: 'IBM Plex Mono', monospace; padding: 20px; text-align: center;">
+        <div style="width: 32px; height: 32px; border: 3px solid #0f62fe; border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 14px;"></div>
+        <div style="font-size: 13px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #161616;">Architect Studio Suite</div>
+        <div style="font-size: 11px; color: #525252; margin-top: 4px;">Initializing Practice System...</div>
+      </div>
+      <style>
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+      </style>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
       if ('serviceWorker' in navigator) {

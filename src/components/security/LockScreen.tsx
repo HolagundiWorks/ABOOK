@@ -146,6 +146,15 @@ export const LockScreen: React.FC<LockScreenProps> = ({
 
       {/* Security Hint & Emergency Options */}
       <div className="mt-8 text-center space-y-2">
+        {targetPin === '1234' && (
+          <button
+            onClick={() => onUnlock()}
+            className="px-3 py-1.5 bg-[#262626] hover:bg-[#393939] text-[#78a9ff] border border-[#0f62fe]/40 text-xs font-mono mb-2"
+          >
+            Default Demo PIN: 1234 (Tap to Unlock)
+          </button>
+        )}
+
         {securityConfig.securityHint && (
           <div>
             {!showHint ? (
@@ -163,13 +172,15 @@ export const LockScreen: React.FC<LockScreenProps> = ({
           </div>
         )}
 
-        <button
-          id="btn-emergency-reset-pin"
-          onClick={() => setShowEmergencyModal(true)}
-          className="text-[11px] text-[#8d8d8d] hover:text-[#da1e28] underline"
-        >
-          Forgot PIN / Emergency Reset
-        </button>
+        <div>
+          <button
+            id="btn-emergency-reset-pin"
+            onClick={() => setShowEmergencyModal(true)}
+            className="text-[11px] text-[#8d8d8d] hover:text-[#da1e28] underline"
+          >
+            Forgot PIN / Emergency Reset
+          </button>
+        </div>
       </div>
 
       {/* Emergency Reset Modal */}

@@ -3,7 +3,9 @@ import {
   X, 
   Building2, 
   FileText, 
+  HardHat,
   ReceiptText, 
+  Bell,
   WalletCards, 
   DollarSign, 
   Users, 
@@ -42,7 +44,9 @@ interface SidePaneDrawerProps {
   counts: {
     clients?: number;
     proposals: number;
+    siteUpdates?: number;
     invoices: number;
+    reminders?: number;
     payments: number;
     expenses: number;
     salaries: number;
@@ -238,6 +242,33 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                 </button>
               )}
 
+              {modulesConfig.siteUpdates !== false && (
+                <button
+                  id="side-nav-site-updates"
+                  onClick={() => handleSelectTab('siteUpdates')}
+                  className={`w-full flex items-center justify-between p-3 border transition-colors ${
+                    activeTab === 'siteUpdates'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
+                      : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <HardHat className="w-4 h-4 text-[#0f62fe]" />
+                    <div className="text-left">
+                      <span className="text-xs font-bold uppercase tracking-wider block">
+                        2.5. Site Updates & Progress
+                      </span>
+                      <span className="text-[9px] font-mono text-[#8d8d8d] block">
+                        Inspection Logs & Stage Certs
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#4589ff]">
+                    {counts.siteUpdates ?? 0}
+                  </span>
+                </button>
+              )}
+
               {modulesConfig.invoices && (
                 <button
                   id="side-nav-invoices"
@@ -256,6 +287,33 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                   </div>
                   <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#8d8d8d]">
                     {counts.invoices}
+                  </span>
+                </button>
+              )}
+
+              {modulesConfig.reminders !== false && (
+                <button
+                  id="side-nav-reminders"
+                  onClick={() => handleSelectTab('reminders')}
+                  className={`w-full flex items-center justify-between p-3 border transition-colors ${
+                    activeTab === 'reminders'
+                      ? 'bg-[#262626] border-[#0f62fe] text-[#4589ff]'
+                      : 'bg-[#161616] border-[#393939] text-[#e0e0e0] hover:bg-[#262626] hover:text-white'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <Bell className="w-4 h-4 text-[#f1c21b]" />
+                    <div className="text-left">
+                      <span className="text-xs font-bold uppercase tracking-wider block">
+                        3.5. Payment Reminders
+                      </span>
+                      <span className="text-[9px] font-mono text-[#8d8d8d] block">
+                        WhatsApp, Email & Demand Letters
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 bg-black border border-[#393939] text-[#f1c21b]">
+                    {counts.reminders ?? 0}
                   </span>
                 </button>
               )}
