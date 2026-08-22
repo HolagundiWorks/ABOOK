@@ -18,7 +18,8 @@ import {
   RotateCcw,
   ShieldCheck,
   ChevronRight,
-  UserCheck
+  UserCheck,
+  Smartphone
 } from 'lucide-react';
 import { FirmProfile, TaxScheme, AppModulesConfig } from '../../types';
 import { MainTabType } from '../Navbar';
@@ -33,6 +34,7 @@ interface SidePaneDrawerProps {
   onOpenSettings: () => void;
   onOpenTemplates: () => void;
   onOpenLanModal: () => void;
+  onOpenAndroidModal?: () => void;
   onLockApp: () => void;
   onExportData: () => void;
   onImportData: () => void;
@@ -57,6 +59,7 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
   onOpenSettings,
   onOpenTemplates,
   onOpenLanModal,
+  onOpenAndroidModal,
   onLockApp,
   onExportData,
   onImportData,
@@ -347,9 +350,35 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
           {/* Section 2: Studio Tools & Connectivity */}
           <div>
             <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#8d8d8d] block mb-2 px-1">
-              Studio Network & Security
+              Studio Network & Device Access
             </span>
             <div className="space-y-1">
+              {onOpenAndroidModal && (
+                <button
+                  id="side-nav-android-modal"
+                  onClick={() => {
+                    onClose();
+                    onOpenAndroidModal();
+                  }}
+                  className="w-full flex items-center justify-between p-3 border border-[#0f62fe] bg-[#161616] hover:bg-[#262626] text-white transition-colors"
+                >
+                  <div className="flex items-center space-x-3">
+                    <Smartphone className="w-4 h-4 text-[#4589ff]" />
+                    <div className="text-left">
+                      <span className="text-xs font-bold uppercase tracking-wider block text-white">
+                        Android App & APK
+                      </span>
+                      <span className="text-[10px] font-mono text-[#a8a8a8]">
+                        WebAPK • PWA Install • Capacitor Build
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 bg-[#24a148] text-white font-bold">
+                    ANDROID
+                  </span>
+                </button>
+              )}
+
               <button
                 id="side-nav-lan-modal"
                 onClick={() => {

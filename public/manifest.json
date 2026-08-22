@@ -1,0 +1,55 @@
+{
+  "name": "Architect Studio Suite",
+  "short_name": "Studio Suite",
+  "description": "Carbon Architectural Practice Management & Billing Suite",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#161616",
+  "theme_color": "#161616",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "New Proposal",
+      "short_name": "Proposal",
+      "description": "Create architectural fee proposal",
+      "url": "/?action=new-proposal",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Tax Invoices",
+      "short_name": "Invoices",
+      "description": "View & create GST invoices",
+      "url": "/?tab=invoices",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Cable Security Link",
+      "short_name": "Cable Link",
+      "description": "USB Tethering & Local LAN",
+      "url": "/?action=lan-modal",
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "categories": ["business", "productivity", "finance"]
+}

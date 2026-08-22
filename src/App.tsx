@@ -66,6 +66,7 @@ import { FirmSettingsModal } from './components/settings/FirmSettingsModal';
 import { TemplateManagerModal } from './components/templates/TemplateManagerModal';
 import { LockScreen } from './components/security/LockScreen';
 import { LanShareModal } from './components/lan/LanShareModal';
+import { AndroidInstallModal } from './components/android/AndroidInstallModal';
 
 export default function App() {
   // Core App State
@@ -119,11 +120,35 @@ export default function App() {
   const [isSalaryModalOpen, setIsSalaryModalOpen] = useState(false);
   const [editingSalary, setEditingSalary] = useState<SalaryRecord | null>(null);
 
-  // Settings, Template, LAN & Side Pane Modals
+  // Settings, Template, LAN, Android & Side Pane Modals
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isTemplateManagerOpen, setIsTemplateManagerOpen] = useState(false);
   const [isLanModalOpen, setIsLanModalOpen] = useState(false);
+  const [isAndroidModalOpen, setIsAndroidModalOpen] = useState(false);
   const [isSidePaneOpen, setIsSidePaneOpen] = useState(false);
+  const [deferredInstallPrompt, setDeferredInstallPrompt] = useState<any>(null);
+
+  // Capture Android PWA install prompt event
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: Event) => {
+      e.preventDefault();
+      setDeferredInstallPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+  }, []);
+
+  const handleInstallPwa = async () => {
+    if (deferredInstallPrompt) {
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredInstallPrompt(null);
+      }
+    } else {
+      alert('To install on Android: Tap the Chrome 3-dots menu (⋮) -> "Install app" or "Add to Home screen"');
+    }
+  };
 
   // Sync to localStorage
   useEffect(() => {
@@ -685,6 +710,7 @@ export default function App() {
         onOpenSettings={() => setIsSettingsOpen(true)}
         onOpenTemplates={() => setIsTemplateManagerOpen(true)}
         onOpenLanModal={() => setIsLanModalOpen(true)}
+        onOpenAndroidModal={() => setIsAndroidModalOpen(true)}
         onLockApp={() => setIsLocked(true)}
         onExportData={handleExportData}
         onImportData={() => handleImportData()}
@@ -849,6 +875,15 @@ export default function App() {
           firmProfile={firmProfile}
           onExportBackup={handleExportData}
           onImportBackup={(json) => handleImportData(json)}
+        />
+      )}
+
+      {isAndroidModalOpen && (
+        <AndroidInstallModal
+          isOpen={isAndroidModalOpen}
+          onClose={() => setIsAndroidModalOpen(false)}
+          deferredPrompt={deferredInstallPrompt}
+          onInstallPwa={handleInstallPwa}
         />
       )}
     </div>
