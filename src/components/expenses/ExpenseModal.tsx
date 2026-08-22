@@ -116,7 +116,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
         {/* Carbon Modal Header */}
         <div className="flex items-center justify-between px-5 py-4 bg-[#161616] text-[#ffffff] border-b border-[#393939]">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-[#ff832b]"></div>
+            <div className="w-3 h-3 bg-[#0f62fe]"></div>
             <h2 className="text-base font-bold tracking-tight uppercase">
               {expenseToEdit ? 'Edit Studio / Project Expense' : 'Record Studio / Project Expense'}
             </h2>
@@ -144,7 +144,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                 onClick={() => setIsBillable(true)}
                 className={`py-2 px-3 text-xs font-bold uppercase tracking-wider border text-center transition-all ${
                   isBillable
-                    ? 'bg-[#ff832b] text-black border-[#ff832b]'
+                    ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
                     : 'bg-white text-[#525252] border-[#8d8d8d] hover:border-[#161616]'
                 }`}
               >
@@ -167,15 +167,15 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
 
           {/* If Billable, Project Selector */}
           {isBillable && (
-            <div className="space-y-2 p-3 bg-[#fff4eb] border-l-4 border-[#ff832b]">
-              <label className="block text-xs font-bold uppercase tracking-wider text-[#b84300]">
+            <div className="space-y-2 p-3 bg-[#edf5ff] border-l-4 border-[#0f62fe]">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#0043ce]">
                 Associated Project / Proposal
               </label>
               <select
                 id="expense-project-select"
                 value={projectId}
                 onChange={(e) => setProjectId(e.target.value)}
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm text-[#161616]"
               >
                 <option value="">-- General Project Billable --</option>
                 {proposals.map((p) => (
@@ -193,7 +193,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                     id="expense-is-billed-checkbox"
                     checked={isBilled}
                     onChange={(e) => setIsBilled(e.target.checked)}
-                    className="w-4 h-4 accent-[#ff832b]"
+                    className="w-4 h-4 accent-[#0f62fe]"
                   />
                   <span>Already Billed to Client on Invoice</span>
                 </label>
@@ -204,7 +204,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                     placeholder="Invoice Ref (e.g. INV-002)"
                     value={invoiceNumber}
                     onChange={(e) => setInvoiceNumber(e.target.value)}
-                    className="border border-[#8d8d8d] px-2 py-1 text-xs outline-none focus:border-[#ff832b] bg-white w-40"
+                    className="carbon-input px-2 py-1 text-xs w-40"
                   />
                 )}
               </div>
@@ -223,7 +223,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
               />
             </div>
             <div>
@@ -234,7 +234,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                 id="expense-category-select"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as ExpenseCategory)}
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm text-[#161616]"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>
@@ -257,7 +257,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
               onChange={(e) => setDescription(e.target.value)}
               placeholder="e.g. A0 Working Drawing sets plotting & lamination"
               required
-              className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+              className="carbon-input w-full p-2 text-sm text-[#161616]"
             />
           </div>
 
@@ -278,7 +278,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                   onChange={(e) => setAmount(parseFloat(e.target.value) || 0)}
                   placeholder="0.00"
                   required
-                  className="w-full bg-white border border-[#8d8d8d] pl-7 pr-2 py-2 text-sm font-mono font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                  className="carbon-input w-full pl-7 pr-2 py-2 text-sm font-mono font-bold text-[#161616]"
                 />
               </div>
             </div>
@@ -293,7 +293,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                 onChange={(e) => setVendorOrPayee(e.target.value)}
                 placeholder="e.g. Apex Reprographics / Fastag"
                 required
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm text-[#161616]"
               />
             </div>
           </div>
@@ -308,7 +308,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                 id="expense-payment-method-select"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm text-[#161616]"
               >
                 <option value="UPI">UPI (GPay / PhonePe / QR)</option>
                 <option value="NEFT_RTGS">NEFT / RTGS</option>
@@ -328,7 +328,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
                 value={referenceNumber}
                 onChange={(e) => setReferenceNumber(e.target.value)}
                 placeholder="e.g. BILL-9921 / UTR-4912"
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
               />
             </div>
           </div>
@@ -344,7 +344,7 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="e.g. Reimbursable as per stage 3 agreement clause."
-              className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+              className="carbon-input w-full p-2 text-sm text-[#161616]"
             />
           </div>
 
@@ -354,14 +354,14 @@ export const ExpenseModal: React.FC<ExpenseModalProps> = ({
               type="button"
               id="cancel-expense-btn"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#161616] bg-transparent border border-[#8d8d8d] hover:bg-[#e0e0e0]"
+              className="carbon-btn-ghost px-4 py-2 text-xs font-bold uppercase tracking-wider"
             >
               Cancel
             </button>
             <button
               type="submit"
               id="save-expense-btn"
-              className="px-5 py-2 text-xs font-bold uppercase tracking-wider text-black bg-[#ff832b] hover:bg-[#eb6200] hover:text-white border border-[#ff832b] transition-all flex items-center space-x-1"
+              className="carbon-btn-primary px-5 py-2 text-xs font-bold uppercase tracking-wider flex items-center space-x-1"
             >
               <Check className="w-4 h-4 mr-1" />
               {expenseToEdit ? 'Save Changes' : 'Record Expense'}

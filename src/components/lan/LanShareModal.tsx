@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
+  Cable,
+  Usb,
   Wifi, 
   Copy, 
   Check, 
@@ -16,7 +18,10 @@ import {
   Lock, 
   Info,
   RefreshCw,
-  Zap
+  Zap,
+  HardDrive,
+  ShieldAlert,
+  ArrowRight
 } from 'lucide-react';
 import { FirmProfile } from '../../types';
 
@@ -28,7 +33,7 @@ interface LanShareModalProps {
   onImportBackup: (json: string) => void;
 }
 
-type WifiMode = 'REGULAR_WIFI' | 'DEDICATED_HOTSPOT';
+type ConnectionMode = 'USB_CABLE' | 'DEDICATED_HOTSPOT' | 'REGULAR_WIFI';
 
 export const LanShareModal: React.FC<LanShareModalProps> = ({
   isOpen,
@@ -37,17 +42,25 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
   onExportBackup,
   onImportBackup
 }) => {
-  const [wifiMode, setWifiMode] = useState<WifiMode>('DEDICATED_HOTSPOT');
-  const [lanIp, setLanIp] = useState<string>('192.168.137.1');
+  const [connectionMode, setConnectionMode] = useState<ConnectionMode>('USB_CABLE');
+  const [lanIp, setLanIp] = useState<string>('192.168.42.129');
   const [port, setPort] = useState<string>('3000');
   const [copied, setCopied] = useState<boolean>(false);
   const [hotspotSsid, setHotspotSsid] = useState<string>('Studio_Arch_Secure_LAN');
   const [hotspotPassword, setHotspotPassword] = useState<string>('ArchStudio@2026');
   const [copiedPass, setCopiedPass] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<'CONNECT' | 'HOTSPOT_SETUP' | 'BACKUP'>('CONNECT');
+  const [cableDeviceType, setCableDeviceType] = useState<'ANDROID' | 'IPHONE' | 'ADB_DIRECT'>('ANDROID');
 
   useEffect(() => {
-    if (wifiMode === 'DEDICATED_HOTSPOT') {
+    if (connectionMode === 'USB_CABLE') {
+      if (cableDeviceType === 'ANDROID') {
+        setLanIp('192.168.42.129');
+      } else if (cableDeviceType === 'IPHONE') {
+        setLanIp('172.20.10.1');
+      } else {
+        setLanIp('127.0.0.1');
+      }
+    } else if (connectionMode === 'DEDICATED_HOTSPOT') {
       setLanIp('192.168.137.1');
     } else {
       const host = window.location.hostname;
@@ -58,7 +71,7 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
       }
     }
     setPort(window.location.port || '3000');
-  }, [wifiMode, isOpen]);
+  }, [connectionMode, cableDeviceType, isOpen]);
 
   if (!isOpen) return null;
 
@@ -86,13 +99,13 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
           <div className="flex items-center space-x-2.5">
             <div className="w-2.5 h-2.5 bg-[#0f62fe]" />
             <div className="flex items-center space-x-2">
-              <Wifi className="w-4 h-4 text-[#0f62fe]" />
+              <Cable className="w-4 h-4 text-[#0f62fe]" />
               <div>
                 <h2 className="text-sm font-bold tracking-tight uppercase">
-                  Studio Wi-Fi Portal & Security Gateway
+                  Mobile Data Cable & Security Link Gateway
                 </h2>
                 <span className="text-[10px] font-mono text-[#8d8d8d]">
-                  Dual-Mode: Dedicated Isolated Hotspot & Office LAN
+                  Physical USB Data Cable Tethering • Anti-Sniffing Air-Gap Protection
                 </span>
               </div>
             </div>
@@ -106,34 +119,49 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
           </button>
         </div>
 
-        {/* Dual Mode Switcher Bar */}
-        <div className="bg-[#f4f4f4] border-b border-[#e0e0e0] p-2 flex items-center justify-between gap-2 shrink-0">
-          <div className="flex items-center space-x-1">
+        {/* Security Mode Selector Bar */}
+        <div className="bg-[#f4f4f4] border-b border-[#e0e0e0] p-2 flex items-center justify-between gap-2 shrink-0 overflow-x-auto">
+          <div className="flex items-center space-x-1.5 w-full sm:w-auto">
+            {/* Primary: USB Data Cable */}
             <button
-              onClick={() => setWifiMode('DEDICATED_HOTSPOT')}
-              className={`px-3 py-1.5 text-xs font-bold uppercase transition-all flex items-center space-x-1.5 border ${
-                wifiMode === 'DEDICATED_HOTSPOT'
+              onClick={() => setConnectionMode('USB_CABLE')}
+              className={`px-3 py-1.5 text-xs font-bold uppercase transition-all flex items-center space-x-1.5 border shrink-0 ${
+                connectionMode === 'USB_CABLE'
                   ? 'bg-[#161616] text-white border-[#0f62fe]'
                   : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
               }`}
             >
-              <Lock className={`w-3.5 h-3.5 ${wifiMode === 'DEDICATED_HOTSPOT' ? 'text-[#4589ff]' : 'text-[#8d8d8d]'}`} />
-              <span>1. Dedicated Secure Wi-Fi Hotspot</span>
+              <Cable className={`w-3.5 h-3.5 ${connectionMode === 'USB_CABLE' ? 'text-[#4589ff]' : 'text-[#8d8d8d]'}`} />
+              <span>1. USB Mobile Data Cable</span>
               <span className="px-1 text-[9px] font-mono bg-[#0f62fe] text-white ml-1">
                 MAX SECURITY
               </span>
             </button>
 
+            {/* Fallback 1: Dedicated Hotspot */}
             <button
-              onClick={() => setWifiMode('REGULAR_WIFI')}
-              className={`px-3 py-1.5 text-xs font-bold uppercase transition-all flex items-center space-x-1.5 border ${
-                wifiMode === 'REGULAR_WIFI'
+              onClick={() => setConnectionMode('DEDICATED_HOTSPOT')}
+              className={`px-3 py-1.5 text-xs font-bold uppercase transition-all flex items-center space-x-1.5 border shrink-0 ${
+                connectionMode === 'DEDICATED_HOTSPOT'
                   ? 'bg-[#161616] text-white border-[#0f62fe]'
                   : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
               }`}
             >
-              <Radio className={`w-3.5 h-3.5 ${wifiMode === 'REGULAR_WIFI' ? 'text-[#4589ff]' : 'text-[#8d8d8d]'}`} />
-              <span>2. Regular Office Wi-Fi LAN</span>
+              <Lock className={`w-3.5 h-3.5 ${connectionMode === 'DEDICATED_HOTSPOT' ? 'text-[#4589ff]' : 'text-[#8d8d8d]'}`} />
+              <span>2. Dedicated Hotspot</span>
+            </button>
+
+            {/* Fallback 2: Regular Office Wi-Fi */}
+            <button
+              onClick={() => setConnectionMode('REGULAR_WIFI')}
+              className={`px-3 py-1.5 text-xs font-bold uppercase transition-all flex items-center space-x-1.5 border shrink-0 ${
+                connectionMode === 'REGULAR_WIFI'
+                  ? 'bg-[#161616] text-white border-[#0f62fe]'
+                  : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
+              }`}
+            >
+              <Radio className={`w-3.5 h-3.5 ${connectionMode === 'REGULAR_WIFI' ? 'text-[#4589ff]' : 'text-[#8d8d8d]'}`} />
+              <span>3. Office Wi-Fi LAN</span>
             </button>
           </div>
         </div>
@@ -141,26 +169,61 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
         {/* Modal Body */}
         <div className="p-4 sm:p-5 space-y-4 overflow-y-auto flex-1">
           {/* Mode Banner */}
-          {wifiMode === 'DEDICATED_HOTSPOT' ? (
-            <div className="p-3 bg-[#edf5ff] border-l-2 border-[#0f62fe] space-y-1">
+          {connectionMode === 'USB_CABLE' && (
+            <div className="p-3.5 bg-[#edf5ff] border-l-4 border-[#0f62fe] space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase font-mono text-[#0043ce] flex items-center space-x-1.5">
                   <ShieldCheck className="w-4 h-4 text-[#0f62fe]" />
-                  <span>Host-Created Dedicated Wi-Fi (Zero Cloud Leak)</span>
+                  <span>Physical USB Data Cable Connection (Air-Gapped Hardware Link)</span>
                 </span>
                 <span className="text-[10px] font-mono bg-[#0f62fe] text-white px-2 py-0.5 font-bold">
-                  Air-Gapped
+                  Zero RF Radiation
                 </span>
               </div>
-              <p className="text-xs text-[#161616]">
-                The Host Laptop creates an isolated Wi-Fi hotspot. Other laptops, iPads, and mobile devices connect directly to this Wi-Fi to access proposals & invoices with zero external internet exposure.
+              <p className="text-xs text-[#161616] leading-relaxed">
+                Connect your mobile phone or tablet to this computer via a physical <strong>USB Data Cable</strong>. By bypassing wireless Wi-Fi broadcasts entirely, this eliminates packet sniffing, man-in-the-middle attacks, and unauthorized Wi-Fi snooping on confidential architectural billing data.
+              </p>
+
+              {/* Physical Security Checklist */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+                <div className="bg-white p-2 border border-[#a6c8ff] text-[11px] font-mono flex items-center space-x-1.5 text-[#0043ce]">
+                  <Check className="w-3.5 h-3.5 text-[#24a148] shrink-0" />
+                  <span>Zero Wi-Fi Radio Leak</span>
+                </div>
+                <div className="bg-white p-2 border border-[#a6c8ff] text-[11px] font-mono flex items-center space-x-1.5 text-[#0043ce]">
+                  <Check className="w-3.5 h-3.5 text-[#24a148] shrink-0" />
+                  <span>100% Offline Hardware Bus</span>
+                </div>
+                <div className="bg-white p-2 border border-[#a6c8ff] text-[11px] font-mono flex items-center space-x-1.5 text-[#0043ce]">
+                  <Check className="w-3.5 h-3.5 text-[#24a148] shrink-0" />
+                  <span>Zero Router Ingress Risk</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {connectionMode === 'DEDICATED_HOTSPOT' && (
+            <div className="p-3 bg-[#f4f4f4] border-l-2 border-[#0f62fe] space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold uppercase font-mono text-[#161616] flex items-center space-x-1.5">
+                  <Lock className="w-4 h-4 text-[#0f62fe]" />
+                  <span>Host-Created Dedicated Wi-Fi (Air-Gapped Wireless)</span>
+                </span>
+                <span className="text-[10px] font-mono bg-[#0f62fe] text-white px-2 py-0.5 font-bold">
+                  Wireless Air-Gap
+                </span>
+              </div>
+              <p className="text-xs text-[#525252]">
+                The Host Laptop broadcasts a direct peer-to-peer Wi-Fi hotspot for devices within line-of-sight when physical USB cables are not available.
               </p>
             </div>
-          ) : (
+          )}
+
+          {connectionMode === 'REGULAR_WIFI' && (
             <div className="p-3 bg-[#f4f4f4] border-l-2 border-[#525252] space-y-1">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase font-mono text-[#161616] flex items-center space-x-1.5">
-                  <Radio className="w-4 h-4 text-[#0f62fe]" />
+                  <Radio className="w-4 h-4 text-[#525252]" />
                   <span>Office Router Wi-Fi LAN Mode</span>
                 </span>
                 <span className="text-[10px] font-mono bg-[#e0e0e0] text-[#161616] px-2 py-0.5 font-bold">
@@ -168,13 +231,103 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
                 </span>
               </div>
               <p className="text-xs text-[#525252]">
-                Both the host machine and other studio devices are connected to the same standard office Wi-Fi router.
+                Both host and client devices communicate over the shared building Wi-Fi network. Note: USB data cable or isolated hotspot offers higher security against local network snoopers.
               </p>
             </div>
           )}
 
+          {/* USB DATA CABLE SETUP GUIDE (When USB Cable is selected) */}
+          {connectionMode === 'USB_CABLE' && (
+            <div className="border border-[#0f62fe] p-3.5 bg-white space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#e0e0e0]">
+                <span className="text-xs font-bold uppercase tracking-wider text-[#161616] flex items-center space-x-1.5">
+                  <Usb className="w-3.5 h-3.5 text-[#0f62fe]" />
+                  <span>USB Data Cable Connection Step-by-Step Guide</span>
+                </span>
+                <div className="flex items-center space-x-1">
+                  <button
+                    onClick={() => setCableDeviceType('ANDROID')}
+                    className={`px-2 py-0.5 text-[10px] font-mono uppercase font-bold border transition-colors ${
+                      cableDeviceType === 'ANDROID'
+                        ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
+                        : 'bg-white text-[#525252] border-[#8d8d8d]'
+                    }`}
+                  >
+                    Android USB
+                  </button>
+                  <button
+                    onClick={() => setCableDeviceType('IPHONE')}
+                    className={`px-2 py-0.5 text-[10px] font-mono uppercase font-bold border transition-colors ${
+                      cableDeviceType === 'IPHONE'
+                        ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
+                        : 'bg-white text-[#525252] border-[#8d8d8d]'
+                    }`}
+                  >
+                    iPhone / iPad Cable
+                  </button>
+                  <button
+                    onClick={() => setCableDeviceType('ADB_DIRECT')}
+                    className={`px-2 py-0.5 text-[10px] font-mono uppercase font-bold border transition-colors ${
+                      cableDeviceType === 'ADB_DIRECT'
+                        ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
+                        : 'bg-white text-[#525252] border-[#8d8d8d]'
+                    }`}
+                  >
+                    ADB Direct Tunnel
+                  </button>
+                </div>
+              </div>
+
+              {/* Instructions based on selected cable device */}
+              {cableDeviceType === 'ANDROID' && (
+                <div className="p-3 bg-[#f4f4f4] space-y-2 border border-[#e0e0e0]">
+                  <span className="font-bold text-xs text-[#161616] uppercase font-mono block">
+                    Android USB Tethering Instructions:
+                  </span>
+                  <ol className="list-decimal list-inside space-y-1.5 text-xs text-[#161616]">
+                    <li>Plug your Android phone into the computer using a <strong>standard USB Data Cable</strong> (ensure cable supports data, not just charging).</li>
+                    <li>On your phone, open <strong>Settings → Connections / Network & Internet → Hotspot & Tethering</strong>.</li>
+                    <li>Toggle ON <strong>USB Tethering</strong> (a direct hardware network adapter will be created instantly).</li>
+                    <li>Open Chrome/browser on your phone and navigate to the IP address below: <strong className="font-mono text-[#0043ce]">http://192.168.42.129:{port}</strong> (or scan the QR code below).</li>
+                  </ol>
+                </div>
+              )}
+
+              {cableDeviceType === 'IPHONE' && (
+                <div className="p-3 bg-[#f4f4f4] space-y-2 border border-[#e0e0e0]">
+                  <span className="font-bold text-xs text-[#161616] uppercase font-mono block">
+                    iPhone / iPad Lightning or USB-C Cable Instructions:
+                  </span>
+                  <ol className="list-decimal list-inside space-y-1.5 text-xs text-[#161616]">
+                    <li>Plug your iPhone/iPad into your Mac or PC using the <strong>Lightning / USB-C data cable</strong>.</li>
+                    <li>Tap <strong>"Trust This Computer"</strong> on your iPhone screen if prompted.</li>
+                    <li>Go to <strong>Settings → Personal Hotspot</strong>, enable <strong>"Allow Others to Join"</strong>, and choose <strong>"USB Only"</strong> if prompted.</li>
+                    <li>Open Safari on iPhone and navigate to <strong className="font-mono text-[#0043ce]">http://172.20.10.1:{port}</strong> (or scan the QR code below).</li>
+                  </ol>
+                </div>
+              )}
+
+              {cableDeviceType === 'ADB_DIRECT' && (
+                <div className="p-3 bg-[#f4f4f4] space-y-2 border border-[#e0e0e0]">
+                  <span className="font-bold text-xs text-[#161616] uppercase font-mono block">
+                    Developer Direct ADB Reverse Tunnel (Port 3000 over Cable):
+                  </span>
+                  <p className="text-xs text-[#525252]">
+                    For maximum hardware isolation, enable USB Debugging on your phone and run this terminal command:
+                  </p>
+                  <div className="p-2 bg-[#161616] text-[#78a9ff] font-mono text-xs border border-[#393939] select-all">
+                    adb reverse tcp:3000 tcp:3000
+                  </div>
+                  <p className="text-xs text-[#161616]">
+                    Then open <strong className="font-mono text-[#0043ce]">http://localhost:3000</strong> directly in your mobile browser with 0% network exposure!
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Dedicated Hotspot Setup Box (When Hotspot is selected) */}
-          {wifiMode === 'DEDICATED_HOTSPOT' && (
+          {connectionMode === 'DEDICATED_HOTSPOT' && (
             <div className="border border-[#0f62fe] p-3.5 bg-white space-y-3">
               <div className="flex items-center justify-between pb-2 border-b border-[#e0e0e0]">
                 <span className="text-xs font-bold uppercase tracking-wider text-[#161616] flex items-center space-x-1.5">
@@ -182,7 +335,7 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
                   <span>Host Hotspot Wi-Fi Credentials</span>
                 </span>
                 <span className="text-[10px] font-mono text-[#0043ce]">
-                  Connect other devices to this SSID
+                  Connect devices to this SSID
                 </span>
               </div>
 
@@ -238,22 +391,23 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
           {/* Quick IP Presets & Custom Configuration */}
           <div className="p-3.5 bg-white border border-[#e0e0e0] space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
-              <span className="text-xs font-bold uppercase tracking-wider text-[#161616]">
-                Portal Access Address & Gateway IP
+              <span className="text-xs font-bold uppercase tracking-wider text-[#161616] flex items-center space-x-1.5">
+                <HardDrive className="w-3.5 h-3.5 text-[#0f62fe]" />
+                <span>Portal Access Address & Gateway IP</span>
               </span>
               <div className="flex items-center space-x-1 overflow-x-auto">
                 <span className="text-[9px] font-mono text-[#8d8d8d] uppercase">Presets:</span>
                 {[
+                  { ip: '192.168.42.129', label: 'Android USB Cable' },
+                  { ip: '172.20.10.1', label: 'iPhone Cable' },
+                  { ip: '127.0.0.1', label: 'ADB Cable Local' },
                   { ip: '192.168.137.1', label: 'Win Hotspot' },
-                  { ip: '192.168.2.1', label: 'Mac Hotspot' },
-                  { ip: '192.168.43.1', label: 'Android' },
-                  { ip: '172.20.10.1', label: 'iPhone' },
                   { ip: '192.168.1.100', label: 'Office Router' }
                 ].map((p) => (
                   <button
                     key={p.ip}
                     onClick={() => setLanIp(p.ip)}
-                    className={`px-1.5 py-0.5 text-[9px] font-mono border transition-colors ${
+                    className={`px-1.5 py-0.5 text-[9px] font-mono border transition-colors shrink-0 ${
                       lanIp === p.ip
                         ? 'bg-[#161616] text-[#4589ff] border-[#0f62fe] font-bold'
                         : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
@@ -268,7 +422,7 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
             <div className="grid grid-cols-3 gap-2">
               <div className="col-span-2">
                 <label className="block text-[10px] uppercase font-mono text-[#525252] mb-0.5">
-                  Host Machine IPv4:
+                  Host Interface IPv4 / Cable Gateway:
                 </label>
                 <input
                   type="text"
@@ -303,7 +457,7 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
                 className="carbon-btn-primary px-3 py-2 text-xs font-bold uppercase flex items-center space-x-1 shrink-0"
               >
                 {copied ? <Check className="w-3.5 h-3.5 mr-1" /> : <Copy className="w-3.5 h-3.5 mr-1" />}
-                <span>{copied ? 'Copied' : 'Copy URL'}</span>
+                <span>{copied ? 'Copied' : 'Copy Cable URL'}</span>
               </button>
             </div>
           </div>
@@ -313,7 +467,7 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
             <div className="p-2 border border-[#161616] bg-white shrink-0">
               <img
                 src={qrSvgUrl}
-                alt="LAN QR Code"
+                alt="Cable / LAN QR Code"
                 className="w-28 h-28"
                 onError={(e) => {
                   (e.target as HTMLElement).style.display = 'none';
@@ -323,14 +477,14 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
             <div className="space-y-1 text-left">
               <div className="flex items-center space-x-1.5 text-xs font-bold uppercase text-[#161616]">
                 <Smartphone className="w-4 h-4 text-[#0f62fe]" />
-                <span>Instant Mobile & Tablet Access</span>
+                <span>Instant Mobile & Tablet Direct Access</span>
               </div>
-              <p className="text-xs text-[#525252]">
-                Once connected to the host's Wi-Fi (either Dedicated Hotspot or Office LAN), scan this QR code on iPhone, iPad, or Android to load the full studio portal.
+              <p className="text-xs text-[#525252] leading-relaxed">
+                Once your phone is connected via <strong>USB Data Cable Tethering</strong> (or dedicated hotspot), scan this QR code using the phone camera to open the portal instantly over the physical cable bus.
               </p>
               <div className="pt-1 flex items-center space-x-2 text-[10px] font-mono text-[#0043ce]">
                 <span className="w-2 h-2 bg-[#24a148] rounded-full inline-block animate-pulse" />
-                <span>Zero Internet Required • High-Speed Local Cache</span>
+                <span>Zero Cloud Server • Hardware-Enforced Offline Privacy</span>
               </div>
             </div>
           </div>
@@ -338,7 +492,7 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
           {/* Backup Sync Section */}
           <div className="border-t border-[#e0e0e0] pt-3 space-y-2">
             <span className="block text-xs font-bold uppercase tracking-wider text-[#161616]">
-              Instant Offline JSON Backup & Peer Data Import
+              Encrypted Offline JSON Backup & Peer Data Import
             </span>
             <div className="grid grid-cols-2 gap-2">
               <button
@@ -377,7 +531,7 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
         {/* Footer */}
         <div className="px-5 py-3 bg-[#f4f4f4] border-t border-[#e0e0e0] flex items-center justify-between shrink-0">
           <span className="text-[10px] font-mono text-[#8d8d8d]">
-            Binding: 0.0.0.0:{port} • AES-WPA2/3 Air-Gap Capable
+            Hardware Link: USB-C / Lightning Bus • Binding: 0.0.0.0:{port}
           </span>
           <button
             onClick={onClose}
@@ -390,3 +544,4 @@ export const LanShareModal: React.FC<LanShareModalProps> = ({
     </div>
   );
 };
+

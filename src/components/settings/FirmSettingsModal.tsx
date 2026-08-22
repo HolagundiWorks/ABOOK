@@ -19,6 +19,7 @@ import {
   Plus,
   Trash2,
   Wifi,
+  Cable,
   Users
 } from 'lucide-react';
 
@@ -128,7 +129,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
         {/* Header */}
         <div className="px-5 py-4 border-b border-[#393939] flex items-center justify-between bg-[#161616] text-white">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-[#ff832b]"></div>
+            <div className="w-3 h-3 bg-[#0f62fe]"></div>
             <div>
               <h3 className="text-base font-bold uppercase tracking-tight text-white leading-tight">
                 Studio Configuration & Settings
@@ -154,7 +155,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
             onClick={() => setActiveTab('FIRM')}
             className={`px-4 py-3 border-b-2 whitespace-nowrap transition-colors ${
               activeTab === 'FIRM'
-                ? 'bg-white text-[#161616] border-[#ff832b]'
+                ? 'bg-white text-[#0f62fe] border-[#0f62fe]'
                 : 'text-[#525252] border-transparent hover:text-[#161616]'
             }`}
           >
@@ -167,7 +168,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
               onClick={() => setActiveTab('PARTNERS')}
               className={`px-4 py-3 border-b-2 whitespace-nowrap transition-colors ${
                 activeTab === 'PARTNERS'
-                  ? 'bg-white text-[#161616] border-[#ff832b]'
+                  ? 'bg-white text-[#0f62fe] border-[#0f62fe]'
                   : 'text-[#525252] border-transparent hover:text-[#161616]'
               }`}
             >
@@ -180,7 +181,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
             onClick={() => setActiveTab('MODULES')}
             className={`px-4 py-3 border-b-2 whitespace-nowrap transition-colors ${
               activeTab === 'MODULES'
-                ? 'bg-white text-[#161616] border-[#ff832b]'
+                ? 'bg-white text-[#0f62fe] border-[#0f62fe]'
                 : 'text-[#525252] border-transparent hover:text-[#161616]'
             }`}
           >
@@ -192,7 +193,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
             onClick={() => setActiveTab('SECURITY')}
             className={`px-4 py-3 border-b-2 whitespace-nowrap transition-colors ${
               activeTab === 'SECURITY'
-                ? 'bg-white text-[#161616] border-[#ff832b]'
+                ? 'bg-white text-[#0f62fe] border-[#0f62fe]'
                 : 'text-[#525252] border-transparent hover:text-[#161616]'
             }`}
           >
@@ -204,7 +205,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
             onClick={() => setActiveTab('DATA')}
             className={`px-4 py-3 border-b-2 whitespace-nowrap transition-colors ${
               activeTab === 'DATA'
-                ? 'bg-white text-[#161616] border-[#ff832b]'
+                ? 'bg-white text-[#0f62fe] border-[#0f62fe]'
                 : 'text-[#525252] border-transparent hover:text-[#161616]'
             }`}
           >
@@ -236,13 +237,13 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     onClick={() => handleChange('firmType', 'FREELANCER')}
                     className={`p-3 text-left border transition-all ${
                       formData.firmType === 'FREELANCER'
-                        ? 'bg-white border-[#ff832b] shadow-xs'
+                        ? 'bg-white border-[#0f62fe] shadow-xs'
                         : 'bg-white border-[#e0e0e0] hover:border-[#161616]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-bold text-xs text-[#161616]">Freelancer</span>
-                      {formData.firmType === 'FREELANCER' && <span className="w-2 h-2 bg-[#ff832b]"></span>}
+                      {formData.firmType === 'FREELANCER' && <span className="w-2 h-2 bg-[#0f62fe]"></span>}
                     </div>
                     <p className="text-[11px] text-[#525252]">Independent Consultant / Solo Practice</p>
                   </button>
@@ -252,13 +253,13 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     onClick={() => handleChange('firmType', 'PROPRIETORSHIP')}
                     className={`p-3 text-left border transition-all ${
                       formData.firmType === 'PROPRIETORSHIP'
-                        ? 'bg-white border-[#ff832b] shadow-xs'
+                        ? 'bg-white border-[#0f62fe] shadow-xs'
                         : 'bg-white border-[#e0e0e0] hover:border-[#161616]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-bold text-xs text-[#161616]">Sole Proprietor</span>
-                      {formData.firmType === 'PROPRIETORSHIP' && <span className="w-2 h-2 bg-[#ff832b]"></span>}
+                      {formData.firmType === 'PROPRIETORSHIP' && <span className="w-2 h-2 bg-[#0f62fe]"></span>}
                     </div>
                     <p className="text-[11px] text-[#525252]">Single Principal Architect Firm</p>
                   </button>
@@ -268,13 +269,13 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     onClick={() => handleChange('firmType', 'PARTNERSHIP')}
                     className={`p-3 text-left border transition-all ${
                       isMultiPartner
-                        ? 'bg-white border-[#ff832b] shadow-xs'
+                        ? 'bg-white border-[#0f62fe] shadow-xs'
                         : 'bg-white border-[#e0e0e0] hover:border-[#161616]'
                     }`}
                   >
                     <div className="flex items-center justify-between mb-1">
                       <span className="font-bold text-xs text-[#161616]">Partnership / LLP</span>
-                      {isMultiPartner && <span className="w-2 h-2 bg-[#ff832b]"></span>}
+                      {isMultiPartner && <span className="w-2 h-2 bg-[#0f62fe]"></span>}
                     </div>
                     <p className="text-[11px] text-[#525252]">Multiple Partner CoA Architects</p>
                   </button>
@@ -292,7 +293,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     required
                     value={formData.firmName}
                     onChange={(e) => handleChange('firmName', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs font-bold text-[#161616]"
                   />
                 </div>
 
@@ -305,7 +306,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     required
                     value={formData.architectName}
                     onChange={(e) => handleChange('architectName', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs font-bold text-[#161616]"
                   />
                 </div>
               </div>
@@ -322,7 +323,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     placeholder="CA/2015/68294"
                     value={formData.coaRegistrationNo}
                     onChange={(e) => handleChange('coaRegistrationNo', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono font-bold uppercase text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs font-mono font-bold uppercase text-[#161616]"
                   />
                 </div>
 
@@ -335,7 +336,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     placeholder="A-21945"
                     value={formData.iiaNumber || ''}
                     onChange={(e) => handleChange('iiaNumber', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs font-mono text-[#161616]"
                   />
                 </div>
 
@@ -348,7 +349,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     placeholder="AAA-1234 / U74210..."
                     value={formData.cinOrLlpin || ''}
                     onChange={(e) => handleChange('cinOrLlpin', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono uppercase text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs font-mono uppercase text-[#161616]"
                   />
                 </div>
               </div>
@@ -363,7 +364,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     type="text"
                     value={formData.phone}
                     onChange={(e) => handleChange('phone', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs text-[#161616]"
                   />
                 </div>
 
@@ -375,7 +376,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleChange('email', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs text-[#161616]"
                   />
                 </div>
               </div>
@@ -389,7 +390,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                   type="text"
                   value={formData.address}
                   onChange={(e) => handleChange('address', e.target.value)}
-                  className="w-full bg-white border border-[#8d8d8d] p-2 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+                  className="carbon-input w-full p-2 text-xs text-[#161616]"
                 />
               </div>
 
@@ -401,7 +402,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     type="text"
                     value={formData.city}
                     onChange={(e) => handleChange('city', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs text-[#161616]"
                   />
                 </div>
 
@@ -410,7 +411,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                   <select
                     value={formData.state}
                     onChange={(e) => handleStateChange(e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs text-[#161616]"
                   >
                     {INDIAN_STATES_AND_CODES.map((st) => (
                       <option key={st.code} value={st.name}>
@@ -426,7 +427,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     type="text"
                     value={formData.pincode}
                     onChange={(e) => handleChange('pincode', e.target.value)}
-                    className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                    className="carbon-input w-full p-2 text-xs font-mono text-[#161616]"
                   />
                 </div>
               </div>
@@ -444,7 +445,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     <select
                       value={formData.defaultTaxScheme}
                       onChange={(e) => handleChange('defaultTaxScheme', e.target.value as TaxScheme)}
-                      className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                      className="carbon-input w-full p-2 text-xs font-bold text-[#161616]"
                     >
                       <option value="REGULAR_GST">Regular GST (18%)</option>
                       <option value="COMPOSITION_GST">Composition Scheme (6%)</option>
@@ -461,7 +462,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       placeholder="29AABCU9603R1ZM"
                       value={formData.gstin || ''}
                       onChange={(e) => handleChange('gstin', e.target.value.toUpperCase())}
-                      className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                      className="carbon-input w-full p-2 text-xs font-mono font-bold text-[#161616]"
                     />
                   </div>
 
@@ -474,7 +475,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       placeholder="AABCU9603R"
                       value={formData.pan}
                       onChange={(e) => handleChange('pan', e.target.value.toUpperCase())}
-                      className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                      className="carbon-input w-full p-2 text-xs font-mono font-bold text-[#161616]"
                     />
                   </div>
                 </div>
@@ -492,7 +493,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       type="text"
                       value={formData.bankName}
                       onChange={(e) => handleChange('bankName', e.target.value)}
-                      className="w-full bg-white border border-[#8d8d8d] p-2 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+                      className="carbon-input w-full p-2 text-xs text-[#161616]"
                     />
                   </div>
                   <div>
@@ -501,7 +502,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       type="text"
                       value={formData.accountNumber}
                       onChange={(e) => handleChange('accountNumber', e.target.value)}
-                      className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                      className="carbon-input w-full p-2 text-xs font-mono font-bold text-[#161616]"
                     />
                   </div>
                   <div>
@@ -510,7 +511,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       type="text"
                       value={formData.ifscCode}
                       onChange={(e) => handleChange('ifscCode', e.target.value.toUpperCase())}
-                      className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono uppercase font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                      className="carbon-input w-full p-2 text-xs font-mono uppercase font-bold text-[#161616]"
                     />
                   </div>
                   <div>
@@ -520,7 +521,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       placeholder="studio@bank"
                       value={formData.upiId || ''}
                       onChange={(e) => handleChange('upiId', e.target.value)}
-                      className="w-full bg-white border border-[#8d8d8d] p-2 text-xs font-mono font-bold text-[#ff832b] outline-none focus:border-[#ff832b]"
+                      className="carbon-input w-full p-2 text-xs font-mono font-bold text-[#0f62fe]"
                     />
                   </div>
                 </div>
@@ -546,7 +547,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                   onClick={handleAddPartner}
                   className="carbon-btn-primary px-3 py-1.5 text-xs font-bold uppercase flex items-center space-x-1"
                 >
-                  <Plus className="w-3.5 h-3.5 mr-1 text-black" />
+                  <Plus className="w-3.5 h-3.5 mr-1 text-white" />
                   <span>Add Partner</span>
                 </button>
               </div>
@@ -555,7 +556,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                 {(formData.partners || []).map((partner, idx) => (
                   <div key={partner.id} className="p-3.5 bg-[#f4f4f4] border border-[#e0e0e0] space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold uppercase text-[#ff832b]">
+                      <span className="text-[10px] font-mono font-bold uppercase text-[#0f62fe]">
                         Partner #{idx + 1}
                       </span>
                       <button
@@ -576,7 +577,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                           value={partner.name}
                           onChange={(e) => handleUpdatePartner(partner.id, 'name', e.target.value)}
                           placeholder="Ar. Full Name"
-                          className="w-full bg-white border border-[#8d8d8d] p-1.5 text-xs text-[#161616]"
+                          className="carbon-input w-full p-1.5 text-xs text-[#161616]"
                         />
                       </div>
                       <div>
@@ -586,7 +587,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                           value={partner.coaRegistrationNo || ''}
                           onChange={(e) => handleUpdatePartner(partner.id, 'coaRegistrationNo', e.target.value)}
                           placeholder="CA/2018/12345"
-                          className="w-full bg-white border border-[#8d8d8d] p-1.5 text-xs font-mono text-[#161616]"
+                          className="carbon-input w-full p-1.5 text-xs font-mono text-[#161616]"
                         />
                       </div>
                     </div>
@@ -599,7 +600,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                           value={partner.designation}
                           onChange={(e) => handleUpdatePartner(partner.id, 'designation', e.target.value)}
                           placeholder="Managing Partner"
-                          className="w-full bg-white border border-[#8d8d8d] p-1.5 text-xs text-[#161616]"
+                          className="carbon-input w-full p-1.5 text-xs text-[#161616]"
                         />
                       </div>
                       <div>
@@ -609,7 +610,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                           value={partner.sharePercentage || ''}
                           onChange={(e) => handleUpdatePartner(partner.id, 'sharePercentage', parseFloat(e.target.value) || 0)}
                           placeholder="50"
-                          className="w-full bg-white border border-[#8d8d8d] p-1.5 text-xs font-mono text-[#161616]"
+                          className="carbon-input w-full p-1.5 text-xs font-mono text-[#161616]"
                         />
                       </div>
                     </div>
@@ -646,7 +647,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                     id={`toggle-module-${mod.key}`}
                     className={`p-3.5 border flex items-start space-x-3 cursor-pointer transition-colors ${
                       (modules as any)[mod.key]
-                        ? 'bg-[#fff4eb] border-[#ff832b]'
+                        ? 'bg-[#edf5ff] border-[#0f62fe]'
                         : 'bg-[#f4f4f4] border-[#e0e0e0]'
                     }`}
                   >
@@ -654,7 +655,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       type="checkbox"
                       checked={(modules as any)[mod.key]}
                       onChange={(e) => setModules(prev => ({ ...prev, [mod.key]: e.target.checked }))}
-                      className="mt-0.5 w-4 h-4 accent-[#ff832b]"
+                      className="mt-0.5 w-4 h-4 accent-[#0f62fe]"
                     />
                     <div>
                       <span className="font-bold text-xs text-[#161616] block">{mod.title}</span>
@@ -672,7 +673,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
               {/* Lock App Section */}
               <div className="p-4 bg-[#f4f4f4] border border-[#e0e0e0] space-y-3">
                 <div className="flex items-center space-x-2">
-                  <Lock className="w-4 h-4 text-[#ff832b]" />
+                  <Lock className="w-4 h-4 text-[#0f62fe]" />
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#161616]">
                     Master PIN Lock Protection
                   </h4>
@@ -688,7 +689,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       id="security-lock-enabled-checkbox"
                       checked={security.isLockEnabled}
                       onChange={(e) => setSecurity(prev => ({ ...prev, isLockEnabled: e.target.checked }))}
-                      className="w-4 h-4 accent-[#ff832b]"
+                      className="w-4 h-4 accent-[#0f62fe]"
                     />
                     <span>Enable Master PIN Lock</span>
                   </label>
@@ -705,7 +706,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                         maxLength={6}
                         value={security.pin}
                         onChange={(e) => setSecurity(prev => ({ ...prev, pin: e.target.value }))}
-                        className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono font-bold text-center tracking-widest text-[#161616] outline-none focus:border-[#ff832b]"
+                        className="carbon-input w-full p-2 text-sm font-mono font-bold text-center tracking-widest text-[#161616]"
                       />
                     </div>
                     <div>
@@ -717,20 +718,20 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                         placeholder="e.g. Studio founding year"
                         value={security.securityHint || ''}
                         onChange={(e) => setSecurity(prev => ({ ...prev, securityHint: e.target.value }))}
-                        className="w-full bg-white border border-[#8d8d8d] p-2 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+                        className="carbon-input w-full p-2 text-xs text-[#161616]"
                       />
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Local Wi-Fi Sharing Helper */}
+              {/* Mobile Data Cable & Security Link */}
               <div className="p-4 bg-white border border-[#161616] space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-2">
-                    <Wifi className="w-4 h-4 text-[#ff832b]" />
+                    <Cable className="w-4 h-4 text-[#0f62fe]" />
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#161616]">
-                      Wi-Fi Local Network Access (LAN)
+                      Mobile Data Cable & Security Link (Air-Gapped)
                     </h4>
                   </div>
                   {onOpenLanModal && (
@@ -742,12 +743,12 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                       }}
                       className="carbon-btn-primary px-3 py-1 text-xs font-bold uppercase"
                     >
-                      Open LAN QR & IP
+                      Open Cable / USB Link
                     </button>
                   )}
                 </div>
                 <p className="text-xs text-[#525252]">
-                  Run this suite across multiple devices on the same studio Wi-Fi network without requiring internet connection.
+                  Connect your phone or tablet directly via a physical <strong>USB Data Cable (Tethering)</strong> for maximum security against Wi-Fi packet sniffing and radio wave interception.
                 </p>
               </div>
             </div>
@@ -770,9 +771,9 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                   <button
                     type="button"
                     onClick={onExportData}
-                    className="p-4 border border-[#161616] hover:bg-[#161616] hover:text-white transition-colors text-left"
+                    className="p-4 border border-[#161616] hover:bg-[#161616] hover:text-white transition-colors text-left group"
                   >
-                    <Download className="w-5 h-5 text-[#ff832b] mb-2" />
+                    <Download className="w-5 h-5 text-[#0f62fe] group-hover:text-white mb-2" />
                     <span className="font-bold text-xs block">Export JSON Archive</span>
                     <span className="text-[10px] text-[#8d8d8d] block mt-1">Full studio data dump</span>
                   </button>
@@ -782,9 +783,9 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
                   <button
                     type="button"
                     onClick={onImportData}
-                    className="p-4 border border-[#161616] hover:bg-[#161616] hover:text-white transition-colors text-left"
+                    className="p-4 border border-[#161616] hover:bg-[#161616] hover:text-white transition-colors text-left group"
                   >
-                    <Upload className="w-5 h-5 text-[#ff832b] mb-2" />
+                    <Upload className="w-5 h-5 text-[#0f62fe] group-hover:text-white mb-2" />
                     <span className="font-bold text-xs block">Import JSON Archive</span>
                     <span className="text-[10px] text-[#8d8d8d] block mt-1">Restore studio records</span>
                   </button>
@@ -811,7 +812,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
               type="button"
               id="cancel-firm-settings-btn"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#161616] bg-transparent border border-[#8d8d8d] hover:bg-[#e0e0e0]"
+              className="carbon-btn-ghost px-4 py-2 text-xs font-bold uppercase tracking-wider"
             >
               Cancel
             </button>
@@ -820,7 +821,7 @@ export const FirmSettingsModal: React.FC<FirmSettingsModalProps> = ({
               id="save-firm-settings-btn"
               className="carbon-btn-primary px-5 py-2 text-xs font-bold uppercase tracking-wider flex items-center space-x-1"
             >
-              <Save className="w-4 h-4 mr-1 text-black" />
+              <Save className="w-4 h-4 mr-1 text-white" />
               <span>Save Configuration</span>
             </button>
           </div>

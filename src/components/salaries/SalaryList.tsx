@@ -83,8 +83,8 @@ export const SalaryList: React.FC<SalaryListProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#161616] text-[#ffffff] p-5 border border-[#393939]">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 bg-[#ff832b]"></span>
-            <span className="text-xs font-mono uppercase tracking-widest text-[#8d8d8d]">Studio Payroll Ledger</span>
+            <span className="w-2.5 h-2.5 bg-[#0f62fe]"></span>
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8d8d8d]">STEP 6 • Studio Payroll Ledger</span>
           </div>
           <h1 className="text-2xl font-black tracking-tight mt-1 text-white">
             Salaries, Stipends & Consultant Retainers
@@ -98,16 +98,16 @@ export const SalaryList: React.FC<SalaryListProps> = ({
           onClick={onAddSalary}
           className="carbon-btn-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shrink-0 self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 mr-1 text-black" />
+          <Plus className="w-4 h-4 mr-1 text-white" />
           <span>Disburse / Record Salary</span>
         </button>
       </div>
 
       {/* KPI Metric Tiles */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#161616]">
+        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
           <span className="block text-[11px] font-bold uppercase tracking-wider text-[#525252]">Net Disbursed</span>
-          <span className="text-xl font-black font-mono text-[#161616] mt-1 block">
+          <span className="text-xl font-black font-mono text-[#0043ce] mt-1 block">
             {formatCurrency(totalNetDisbursed)}
           </span>
           <span className="text-[10px] text-[#8d8d8d] font-mono mt-1 block">
@@ -115,9 +115,9 @@ export const SalaryList: React.FC<SalaryListProps> = ({
           </span>
         </div>
 
-        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#ff832b]">
-          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#b84300]">Total Gross Payroll</span>
-          <span className="text-xl font-black font-mono text-[#ff832b] mt-1 block">
+        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#525252]">Total Gross Payroll</span>
+          <span className="text-xl font-black font-mono text-[#161616] mt-1 block">
             {formatCurrency(totalGrossSalaries)}
           </span>
           <span className="text-[10px] text-[#525252] font-mono mt-1 block">Basic + Allowances</span>
@@ -152,7 +152,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
             id="salary-month-filter"
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
-            className="bg-white border border-[#8d8d8d] px-3 py-1.5 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+            className="carbon-input px-3 py-1.5 text-xs text-[#161616]"
           >
             <option value="ALL">All Payroll Months</option>
             {availableMonths.map(m => (
@@ -170,7 +170,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
             placeholder="Search architect name, role..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#f4f4f4] border border-[#8d8d8d] pl-9 pr-3 py-1.5 text-xs text-[#161616] outline-none focus:border-[#ff832b] focus:bg-white"
+            className="carbon-input w-full pl-9 pr-3 py-1.5 text-xs text-[#161616]"
           />
         </div>
       </div>
@@ -187,7 +187,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
             onClick={onAddSalary}
             className="carbon-btn-primary px-4 py-2 text-xs font-bold uppercase tracking-wider mt-4 inline-flex items-center space-x-1"
           >
-            <Plus className="w-4 h-4 mr-1 text-black" />
+            <Plus className="w-4 h-4 mr-1 text-white" />
             <span>Record First Salary</span>
           </button>
         </div>
@@ -197,7 +197,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
             <div
               key={sal.id}
               id={`salary-card-${sal.id}`}
-              className="bg-white border border-[#e0e0e0] hover:border-[#161616] transition-colors p-4"
+              className="bg-white border border-[#e0e0e0] hover:border-[#0f62fe] transition-colors p-4"
             >
               {/* Header Bar */}
               <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#f4f4f4]">
@@ -218,7 +218,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
                     title="Click to toggle paid / pending status"
                     className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 flex items-center space-x-1 border cursor-pointer ${
                       sal.paymentStatus === 'PAID'
-                        ? 'bg-[#defbe6] text-[#0f6225] border-[#24a148]'
+                        ? 'bg-[#edf5ff] text-[#0043ce] border-[#0f62fe]'
                         : 'bg-[#fff1f1] text-[#da1e28] border-[#da1e28]'
                     }`}
                   >
@@ -252,7 +252,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
                     {sal.allowances > 0 && <span>Allowances: +{formatCurrency(sal.allowances)}</span>}
                     {sal.deductions > 0 && <span>Deductions: -{formatCurrency(sal.deductions)}</span>}
                     {sal.tdsDeducted > 0 && (
-                      <span className="text-[#b84300] font-semibold">TDS 192/194J: -{formatCurrency(sal.tdsDeducted)}</span>
+                      <span className="text-[#0043ce] font-semibold">TDS 192/194J: -{formatCurrency(sal.tdsDeducted)}</span>
                     )}
                     <span>Mode: {sal.paymentMethod}</span>
                     <span>Ref: {sal.transactionReference}</span>
@@ -262,7 +262,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
                 <div className="flex items-center justify-between md:justify-end md:space-x-4 border-t md:border-t-0 pt-2 md:pt-0 border-[#f4f4f4]">
                   <div className="text-right">
                     <span className="text-xs text-[#8d8d8d] uppercase tracking-wider block">Net Disbursed</span>
-                    <span className="text-lg font-black font-mono text-[#ff832b]">
+                    <span className="text-lg font-black font-mono text-[#0043ce]">
                       {formatCurrency(sal.netPaid)}
                     </span>
                   </div>
@@ -271,7 +271,7 @@ export const SalaryList: React.FC<SalaryListProps> = ({
                     <button
                       id={`btn-payslip-${sal.id}`}
                       onClick={() => setSlipModalSalary(sal)}
-                      className="p-1.5 border border-[#8d8d8d] hover:bg-[#ff832b] hover:text-black text-[#161616] transition-colors"
+                      className="p-1.5 border border-[#8d8d8d] hover:bg-[#edf5ff] hover:text-[#0043ce] text-[#161616] transition-colors"
                       title="View & Print Salary Pay Slip"
                     >
                       <Printer className="w-3.5 h-3.5" />
@@ -377,9 +377,9 @@ export const SalaryList: React.FC<SalaryListProps> = ({
                       <td className="p-2 text-right text-[#da1e28]">-{formatCurrency(slipModalSalary.tdsDeducted)}</td>
                     </tr>
                   )}
-                  <tr className="bg-[#fff4eb] border-t-2 border-[#ff832b]">
+                  <tr className="bg-[#edf5ff] border-t-2 border-[#0f62fe]">
                     <td className="p-2 font-bold text-black uppercase">Net Salary Disbursed</td>
-                    <td className="p-2 text-right font-bold text-[#ff832b] text-sm">
+                    <td className="p-2 text-right font-bold text-[#0043ce] text-sm">
                       {formatCurrency(slipModalSalary.netPaid)}
                     </td>
                   </tr>

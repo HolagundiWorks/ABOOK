@@ -59,12 +59,12 @@ export const ProposalView: React.FC<ProposalViewProps> = ({
       <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[94vh] flex flex-col shadow-2xl border border-slate-200 print:shadow-none print:border-none print:max-w-none print:max-h-none print:rounded-none">
         
         {/* Floating Action Bar (Hidden during Print) */}
-        <div className="px-4 sm:px-6 py-3 border-b border-slate-200 flex items-center justify-between bg-slate-900 text-white rounded-t-2xl print:hidden gap-2 flex-wrap">
+        <div className="px-4 sm:px-6 py-3 border-b border-[#393939] flex items-center justify-between bg-[#161616] text-white print:hidden gap-2 flex-wrap">
           <div className="flex items-center space-x-2">
-            <span className="font-mono text-xs text-amber-400 bg-slate-800 px-2 py-0.5 rounded">
+            <span className="font-mono text-xs text-[#78a9ff] bg-[#262626] px-2 py-0.5 border border-[#525252]">
               {proposal.proposalNumber}
             </span>
-            <span className="text-xs text-slate-300 font-medium truncate max-w-[160px] sm:max-w-xs">
+            <span className="text-xs text-[#c6c6c6] font-medium truncate max-w-[160px] sm:max-w-xs">
               {proposal.projectTitle}
             </span>
           </div>
@@ -73,7 +73,7 @@ export const ProposalView: React.FC<ProposalViewProps> = ({
             <button
               onClick={handleWhatsAppShare}
               title="Share via WhatsApp"
-              className="inline-flex items-center px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-lg transition-colors shadow-xs"
+              className="inline-flex items-center px-2.5 py-1.5 bg-[#24a148] hover:bg-[#198038] text-white font-bold text-xs uppercase tracking-wider transition-colors"
             >
               <Share2 className="w-3.5 h-3.5 sm:mr-1" />
               <span className="hidden sm:inline">WhatsApp</span>
@@ -83,7 +83,7 @@ export const ProposalView: React.FC<ProposalViewProps> = ({
               onClick={handleDownloadPDF}
               disabled={isExportingPDF}
               id="download-proposal-pdf-btn"
-              className="inline-flex items-center px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs rounded-lg transition-colors shadow-xs"
+              className="inline-flex items-center px-3 py-1.5 bg-[#0f62fe] hover:bg-[#0043ce] text-white font-bold text-xs uppercase tracking-wider transition-colors"
             >
               <Download className="w-3.5 h-3.5 mr-1" />
               <span>{isExportingPDF ? (pdfProgress || 'Exporting...') : 'Download PDF'}</span>
@@ -92,7 +92,7 @@ export const ProposalView: React.FC<ProposalViewProps> = ({
             <button
               onClick={onPrint}
               id="print-proposal-btn"
-              className="inline-flex items-center px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs rounded-lg transition-colors border border-slate-700"
+              className="inline-flex items-center px-3 py-1.5 bg-[#393939] hover:bg-[#4c4c4c] text-white font-bold text-xs uppercase tracking-wider transition-colors border border-[#525252]"
             >
               <Printer className="w-3.5 h-3.5 mr-1" />
               <span>Print</span>
@@ -100,7 +100,7 @@ export const ProposalView: React.FC<ProposalViewProps> = ({
 
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+              className="p-1.5 text-[#8d8d8d] hover:text-white hover:bg-[#262626] transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -202,8 +202,8 @@ export const ProposalView: React.FC<ProposalViewProps> = ({
           </div>
 
           {/* Project Title Block */}
-          <div className="bg-slate-900 text-white p-4 rounded-xl">
-            <span className="text-[10px] text-amber-400 uppercase font-bold tracking-wider block">
+          <div className="bg-[#161616] text-white p-4 border border-[#393939]">
+            <span className="text-[10px] text-[#78a9ff] uppercase font-bold tracking-wider block">
               Project Title
             </span>
             <h3 className="text-base sm:text-lg font-bold text-white mt-0.5">{proposal.projectTitle}</h3>

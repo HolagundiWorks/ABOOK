@@ -96,8 +96,8 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#161616] text-[#ffffff] p-5 border border-[#393939]">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 bg-[#ff832b]"></span>
-            <span className="text-xs font-mono uppercase tracking-widest text-[#8d8d8d]">Studio Financial Ledger</span>
+            <span className="w-2.5 h-2.5 bg-[#0f62fe]"></span>
+            <span className="text-xs font-mono uppercase tracking-widest text-[#8d8d8d]">STEP 5 • Studio Financial Ledger</span>
           </div>
           <h1 className="text-2xl font-black tracking-tight mt-1 text-white">
             Studio Expenses & Reimbursables
@@ -111,7 +111,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           onClick={onAddExpense}
           className="carbon-btn-primary px-4 py-2.5 text-xs font-bold uppercase tracking-wider flex items-center justify-center space-x-2 shrink-0 self-start sm:self-auto"
         >
-          <Plus className="w-4 h-4 mr-1 text-black" />
+          <Plus className="w-4 h-4 mr-1 text-white" />
           <span>Record Expense</span>
         </button>
       </div>
@@ -126,9 +126,9 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
           <span className="text-[10px] text-[#8d8d8d] font-mono mt-1 block">{expenses.length} Total Records</span>
         </div>
 
-        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#ff832b]">
-          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#b84300]">Client Reimbursable</span>
-          <span className="text-xl font-black font-mono text-[#ff832b] mt-1 block">
+        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
+          <span className="block text-[11px] font-bold uppercase tracking-wider text-[#525252]">Client Reimbursable</span>
+          <span className="text-xl font-black font-mono text-[#0043ce] mt-1 block">
             {formatCurrency(billableAmount)}
           </span>
           <span className="text-[10px] text-[#525252] font-mono mt-1 block">
@@ -170,8 +170,8 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
                 onClick={() => setFilterType(tab.key as any)}
                 className={`px-3 py-1.5 text-xs font-bold uppercase tracking-wider border transition-all ${
                   filterType === tab.key
-                    ? 'bg-[#161616] text-white border-[#161616]'
-                    : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#161616]'
+                    ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
+                    : 'bg-white text-[#525252] border-[#e0e0e0] hover:border-[#8d8d8d]'
                 }`}
               >
                 {tab.label}
@@ -184,7 +184,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
             id="expense-category-filter"
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="bg-white border border-[#8d8d8d] px-3 py-1.5 text-xs text-[#161616] outline-none focus:border-[#ff832b]"
+            className="carbon-input px-3 py-1.5 text-xs text-[#161616]"
           >
             <option value="ALL">All Categories</option>
             <option value="PRINTING_PLOTTING">Printing & Plotting</option>
@@ -211,7 +211,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
             placeholder="Search description, payee/vendor, project, client, or reference..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#f4f4f4] border border-[#8d8d8d] pl-9 pr-3 py-2 text-xs text-[#161616] outline-none focus:border-[#ff832b] focus:bg-white"
+            className="carbon-input w-full pl-9 pr-3 py-2 text-xs text-[#161616]"
           />
         </div>
       </div>
@@ -228,7 +228,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
             onClick={onAddExpense}
             className="carbon-btn-primary px-4 py-2 text-xs font-bold uppercase tracking-wider mt-4 inline-flex items-center space-x-1"
           >
-            <Plus className="w-4 h-4 mr-1 text-black" />
+            <Plus className="w-4 h-4 mr-1 text-white" />
             <span>Add First Expense</span>
           </button>
         </div>
@@ -238,14 +238,14 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
             <div
               key={exp.id}
               id={`expense-card-${exp.id}`}
-              className="bg-white border border-[#e0e0e0] hover:border-[#161616] transition-colors p-4 relative"
+              className="bg-white border border-[#e0e0e0] hover:border-[#0f62fe] transition-colors p-4 relative"
             >
               {/* Classification Tag Indicator */}
               <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#f4f4f4]">
                 <div className="flex items-center space-x-2">
                   <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 border ${
                     exp.isBillable
-                      ? 'bg-[#fff4eb] text-[#b84300] border-[#ff832b]'
+                      ? 'bg-[#edf5ff] text-[#0043ce] border-[#0f62fe]'
                       : 'bg-[#f4f4f4] text-[#525252] border-[#8d8d8d]'
                   }`}>
                     {exp.isBillable ? 'Billable to Client' : 'Studio Overhead'}
@@ -265,7 +265,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
                       title="Click to toggle billed status"
                       className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 flex items-center space-x-1 border cursor-pointer ${
                         exp.isBilled
-                          ? 'bg-[#defbe6] text-[#0f6225] border-[#24a148]'
+                          ? 'bg-[#edf5ff] text-[#0043ce] border-[#0f62fe]'
                           : 'bg-[#fff1f1] text-[#da1e28] border-[#da1e28] hover:bg-[#da1e28] hover:text-white'
                       }`}
                     >
@@ -297,7 +297,7 @@ export const ExpenseList: React.FC<ExpenseListProps> = ({
                     {exp.referenceNumber && <span><strong>Ref:</strong> {exp.referenceNumber}</span>}
                   </div>
                   {exp.projectTitle && (
-                    <p className="text-xs text-[#b84300] font-semibold mt-1">
+                    <p className="text-xs text-[#0043ce] font-semibold mt-1">
                       📁 Project: {exp.projectTitle} {exp.clientName ? `(${exp.clientName})` : ''}
                     </p>
                   )}

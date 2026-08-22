@@ -137,22 +137,25 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 duration-150">
+    <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-3 sm:p-5 overflow-y-auto">
+      <div className="bg-white max-w-2xl w-full max-h-[92vh] flex flex-col border border-[#393939]">
         
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-emerald-950 text-white rounded-t-2xl">
-          <div>
-            <span className="text-xs font-semibold uppercase text-emerald-400 tracking-wide">
-              Fee Collections Bookkeeping
-            </span>
-            <h3 className="text-xl font-bold text-white">
-              Record Fee Payment Receipt
-            </h3>
+        <div className="px-6 py-4 border-b border-[#393939] flex items-center justify-between bg-[#161616] text-white">
+          <div className="flex items-center space-x-2.5">
+            <div className="w-3 h-3 bg-[#0f62fe]"></div>
+            <div>
+              <span className="text-xs font-semibold uppercase text-[#8d8d8d] tracking-wider block">
+                Fee Collections Bookkeeping
+              </span>
+              <h3 className="text-lg font-bold text-white uppercase tracking-wider">
+                Record Fee Payment Receipt
+              </h3>
+            </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-slate-400 hover:text-white rounded-lg hover:bg-emerald-900 transition-colors"
+            className="p-1.5 text-[#8d8d8d] hover:text-white hover:bg-[#262626] transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -163,13 +166,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           
           {/* 1. Target Invoice Selector */}
           <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-1">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
               Select Invoice to Settle *
             </label>
             <select
               value={selectedInvoiceId}
               onChange={(e) => setSelectedInvoiceId(e.target.value)}
-              className="w-full text-xs font-semibold px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-slate-900"
+              className="carbon-input w-full text-xs font-semibold"
             >
               {invoices.map((inv) => (
                 <option key={inv.id} value={inv.id}>
@@ -181,22 +184,22 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
           {/* Selected Invoice Highlights */}
           {selectedInvoice && (
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 text-xs grid grid-cols-3 gap-3">
+            <div className="bg-[#f4f4f4] border border-[#e0e0e0] p-4 text-xs grid grid-cols-3 gap-3">
               <div>
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Total Invoice</span>
-                <span className="font-mono font-bold text-slate-900 text-sm">
+                <span className="text-[10px] uppercase font-bold text-[#525252] block">Total Invoice</span>
+                <span className="font-mono font-bold text-[#161616] text-sm">
                   {formatINR(selectedInvoice.totalAmount)}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Already Received</span>
-                <span className="font-mono font-semibold text-emerald-700 text-sm">
+                <span className="text-[10px] uppercase font-bold text-[#525252] block">Already Received</span>
+                <span className="font-mono font-bold text-[#24a148] text-sm">
                   {formatINR(selectedInvoice.paidAmount + selectedInvoice.tdsDeducted)}
                 </span>
               </div>
               <div>
-                <span className="text-[10px] uppercase font-bold text-slate-400 block">Current Balance Due</span>
-                <span className="font-mono font-bold text-amber-700 text-sm">
+                <span className="text-[10px] uppercase font-bold text-[#525252] block">Current Balance Due</span>
+                <span className="font-mono font-bold text-[#0f62fe] text-sm">
                   {formatINR(selectedInvoice.balanceDue)}
                 </span>
               </div>
@@ -206,7 +209,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           {/* Receipt Info & Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
                 Receipt Voucher #
               </label>
               <input
@@ -214,12 +217,12 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 required
                 value={receiptNumber}
                 onChange={(e) => setReceiptNumber(e.target.value)}
-                className="w-full text-xs font-mono font-bold px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:ring-2 focus:ring-slate-900"
+                className="carbon-input w-full text-xs font-mono font-bold"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
                 Payment Date
               </label>
               <input
@@ -227,36 +230,36 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 required
                 value={paymentDate}
                 onChange={(e) => setPaymentDate(e.target.value)}
-                className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900"
+                className="carbon-input w-full text-xs"
               />
             </div>
           </div>
 
           {/* Amount & TDS Calculator Box */}
-          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-2xl p-4 space-y-3">
+          <div className="bg-[#f4f4f4] border border-[#e0e0e0] p-4 space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-emerald-950 uppercase tracking-wide">
+              <span className="text-xs font-bold text-[#161616] uppercase tracking-wider">
                 Remittance & TDS Settlement Breakdown
               </span>
-              <div className="flex items-center space-x-1 text-xs">
+              <div className="flex items-center space-x-1.5 text-xs">
                 <button
                   type="button"
                   onClick={handleApplyTds10Percent}
-                  className="px-2 py-0.5 bg-blue-100 text-blue-800 hover:bg-blue-200 rounded font-semibold text-[11px] transition-colors"
+                  className="px-2.5 py-1 bg-[#edf5ff] text-[#0f62fe] hover:bg-[#d0e2ff] font-bold text-[11px] border border-[#a6c8ff] transition-colors"
                 >
                   10% TDS (194J)
                 </button>
                 <button
                   type="button"
                   onClick={handleApplyTds2Percent}
-                  className="px-2 py-0.5 bg-blue-100 text-blue-800 hover:bg-blue-200 rounded font-semibold text-[11px] transition-colors"
+                  className="px-2.5 py-1 bg-[#edf5ff] text-[#0f62fe] hover:bg-[#d0e2ff] font-bold text-[11px] border border-[#a6c8ff] transition-colors"
                 >
                   2% TDS
                 </button>
                 <button
                   type="button"
                   onClick={handleZeroTds}
-                  className="px-2 py-0.5 bg-slate-200 text-slate-800 hover:bg-slate-300 rounded font-semibold text-[11px] transition-colors"
+                  className="px-2.5 py-1 bg-[#e0e0e0] text-[#161616] hover:bg-[#c6c6c6] font-bold text-[11px] border border-[#8d8d8d] transition-colors"
                 >
                   No TDS
                 </button>
@@ -265,7 +268,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
                   Net Amount Received in Bank / Cash (₹) *
                 </label>
                 <input
@@ -275,15 +278,15 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   required
                   value={netAmountReceived}
                   onChange={(e) => setNetAmountReceived(parseFloat(e.target.value) || 0)}
-                  className="w-full text-sm font-bold font-mono px-3 py-2 bg-white border border-emerald-300 rounded-lg focus:ring-2 focus:ring-emerald-700"
+                  className="carbon-input w-full text-sm font-bold font-mono"
                 />
-                <span className="text-[11px] text-emerald-800 mt-0.5 block">
+                <span className="text-[11px] text-[#24a148] font-mono font-bold mt-1 block">
                   {formatINR(netAmountReceived)}
                 </span>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-slate-700 mb-1">
+                <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
                   TDS Deducted by Client (u/s 194J) (₹)
                 </label>
                 <input
@@ -292,17 +295,17 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                   step="1"
                   value={tdsDeducted}
                   onChange={(e) => setTdsDeducted(parseFloat(e.target.value) || 0)}
-                  className="w-full text-sm font-bold font-mono px-3 py-2 bg-white border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900"
+                  className="carbon-input w-full text-sm font-bold font-mono"
                 />
-                <span className="text-[11px] text-blue-700 mt-0.5 block">
+                <span className="text-[11px] text-[#0f62fe] font-mono font-bold mt-1 block">
                   {formatINR(tdsDeducted)} (Credited in 26AS)
                 </span>
               </div>
             </div>
 
-            <div className="pt-2 border-t border-emerald-200/80 flex justify-between items-center text-xs font-bold text-slate-900">
-              <span>Gross Fee Settled Against Invoice:</span>
-              <span className="font-mono text-base text-emerald-950">
+            <div className="pt-2 border-t border-[#e0e0e0] flex justify-between items-center text-xs font-bold text-[#161616]">
+              <span className="uppercase tracking-wider">Gross Fee Settled Against Invoice:</span>
+              <span className="font-mono text-base text-[#161616]">
                 {formatINR(grossSettled)}
               </span>
             </div>
@@ -311,13 +314,13 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
           {/* Payment Method & UTR */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
                 Payment Mode *
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full text-xs font-semibold px-3 py-2 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900"
+                className="carbon-input w-full text-xs font-semibold"
               >
                 <option value="NEFT_RTGS">NEFT / RTGS Bank Transfer</option>
                 <option value="UPI">UPI (Google Pay, PhonePe, Paytm, BHIM)</option>
@@ -329,7 +332,7 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
+              <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
                 Transaction Ref / UTR / Cheque # *
               </label>
               <input
@@ -337,25 +340,25 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
                 placeholder="e.g. UTR # HDFCN2608194721 or UPI-482910"
                 value={transactionRef}
                 onChange={(e) => setTransactionRef(e.target.value)}
-                className="w-full text-xs font-mono px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900"
+                className="carbon-input w-full text-xs font-mono"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
               Bank Account Credited
             </label>
             <input
               type="text"
               value={bankAccountCredited}
               onChange={(e) => setBankAccountCredited(e.target.value)}
-              className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900"
+              className="carbon-input w-full text-xs"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#525252] mb-1">
               Receipt Notes / Milestone Stage Notes
             </label>
             <input
@@ -363,28 +366,28 @@ export const PaymentModal: React.FC<PaymentModalProps> = ({
               placeholder="e.g. Stage 1 Concept fee full settlement"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full text-xs px-3 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-slate-900"
+              className="carbon-input w-full text-xs"
             />
           </div>
 
           {/* Modal Footer */}
-          <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
-            <div className="text-xs text-slate-500">
-              Settling: <strong className="text-slate-900">{formatINR(grossSettled)}</strong>
+          <div className="pt-4 border-t border-[#e0e0e0] flex items-center justify-between">
+            <div className="text-xs text-[#525252] uppercase tracking-wider font-semibold">
+              Settling: <strong className="text-[#161616] font-mono">{formatINR(grossSettled)}</strong>
             </div>
 
             <div className="flex items-center space-x-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
+                className="carbon-btn-secondary px-4 py-2 text-xs font-bold uppercase tracking-wider"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 id="payment-save-btn"
-                className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-lg shadow-sm transition-colors"
+                className="carbon-btn-primary px-5 py-2 text-xs font-bold uppercase tracking-wider"
               >
                 Save Payment Receipt
               </button>

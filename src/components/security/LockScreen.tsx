@@ -70,7 +70,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({
     <div id="app-lock-screen" className="fixed inset-0 z-50 bg-[#161616] text-white flex flex-col items-center justify-center p-4">
       {/* Studio Header */}
       <div className="text-center mb-6 space-y-2">
-        <div className="w-14 h-14 bg-[#ff832b] text-black mx-auto flex items-center justify-center border border-[#ff832b]">
+        <div className="w-14 h-14 bg-[#0f62fe] text-white mx-auto flex items-center justify-center border border-[#0f62fe]">
           <Lock className="w-7 h-7" />
         </div>
         <div>
@@ -94,7 +94,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({
               key={idx}
               className={`w-4 h-4 border transition-all ${
                 idx < enteredPin.length
-                  ? 'bg-[#ff832b] border-[#ff832b]'
+                  ? 'bg-[#0f62fe] border-[#0f62fe]'
                   : 'bg-transparent border-[#8d8d8d]'
               }`}
             />
@@ -116,7 +116,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({
             key={digit}
             id={`pin-btn-${digit}`}
             onClick={() => handleKeyPress(digit)}
-            className="h-14 bg-[#262626] hover:bg-[#393939] active:bg-[#ff832b] active:text-black text-white font-mono text-xl font-bold border border-[#393939] transition-colors"
+            className="h-14 bg-[#262626] hover:bg-[#393939] active:bg-[#0f62fe] active:text-white text-white font-mono text-xl font-bold border border-[#393939] transition-colors"
           >
             {digit}
           </button>
@@ -131,7 +131,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({
         <button
           id="pin-btn-0"
           onClick={() => handleKeyPress('0')}
-          className="h-14 bg-[#262626] hover:bg-[#393939] active:bg-[#ff832b] active:text-black text-white font-mono text-xl font-bold border border-[#393939]"
+          className="h-14 bg-[#262626] hover:bg-[#393939] active:bg-[#0f62fe] active:text-white text-white font-mono text-xl font-bold border border-[#393939]"
         >
           0
         </button>
@@ -151,12 +151,12 @@ export const LockScreen: React.FC<LockScreenProps> = ({
             {!showHint ? (
               <button
                 onClick={() => setShowHint(true)}
-                className="text-xs text-[#8d8d8d] hover:text-[#ff832b] underline"
+                className="text-xs text-[#8d8d8d] hover:text-[#0f62fe] underline"
               >
                 Show PIN Hint
               </button>
             ) : (
-              <div className="p-2 bg-[#262626] border border-[#ff832b] text-xs text-[#ff832b] font-mono">
+              <div className="p-2 bg-[#262626] border border-[#0f62fe] text-xs text-[#78a9ff] font-mono">
                 Hint: {securityConfig.securityHint}
               </div>
             )}
@@ -166,7 +166,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({
         <button
           id="btn-emergency-reset-pin"
           onClick={() => setShowEmergencyModal(true)}
-          className="text-[11px] text-[#525252] hover:text-[#da1e28] underline"
+          className="text-[11px] text-[#8d8d8d] hover:text-[#da1e28] underline"
         >
           Forgot PIN / Emergency Reset
         </button>
@@ -181,7 +181,7 @@ export const LockScreen: React.FC<LockScreenProps> = ({
               <h3 className="text-base font-bold uppercase">Emergency PIN Reset</h3>
             </div>
             <p className="text-xs text-[#8d8d8d]">
-              To reset your lock PIN without losing your studio records, type <strong className="text-white">RESET</strong> below. The lock will be disabled and PIN set back to default <strong className="text-[#ff832b]">1234</strong>.
+              To reset your lock PIN without losing your studio records, type <strong className="text-white">RESET</strong> below. The lock will be disabled and PIN set back to default <strong className="text-[#0f62fe]">1234</strong>.
             </p>
             <input
               type="text"

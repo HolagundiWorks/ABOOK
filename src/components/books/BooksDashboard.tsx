@@ -115,11 +115,11 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
           onClick={() => setSubTab('overview')}
           className={`px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors flex items-center space-x-2 ${
             subTab === 'overview'
-              ? 'bg-[#f4f4f4] text-[#161616] border-[#ff832b]'
+              ? 'bg-[#f4f4f4] text-[#161616] border-[#0f62fe]'
               : 'text-[#525252] border-transparent hover:text-[#161616]'
           }`}
         >
-          <BookOpenCheck className="w-4 h-4 text-[#ff832b]" />
+          <BookOpenCheck className="w-4 h-4 text-[#0f62fe]" />
           <span>Income & Financial Books</span>
         </button>
 
@@ -127,11 +127,11 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
           onClick={() => setSubTab('profit_loss')}
           className={`px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors flex items-center space-x-2 ${
             subTab === 'profit_loss'
-              ? 'bg-[#f4f4f4] text-[#161616] border-[#ff832b]'
+              ? 'bg-[#f4f4f4] text-[#161616] border-[#0f62fe]'
               : 'text-[#525252] border-transparent hover:text-[#161616]'
           }`}
         >
-          <TrendingUp className="w-4 h-4 text-[#ff832b]" />
+          <TrendingUp className="w-4 h-4 text-[#0f62fe]" />
           <span>Studio P&L & Cash Flow</span>
         </button>
 
@@ -139,11 +139,11 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
           onClick={() => setSubTab('gst_ledger')}
           className={`px-5 py-3 text-xs font-bold uppercase tracking-wider border-b-2 transition-colors flex items-center space-x-2 ${
             subTab === 'gst_ledger'
-              ? 'bg-[#f4f4f4] text-[#161616] border-[#ff832b]'
+              ? 'bg-[#f4f4f4] text-[#161616] border-[#0f62fe]'
               : 'text-[#525252] border-transparent hover:text-[#161616]'
           }`}
         >
-          <ReceiptText className="w-4 h-4 text-[#ff832b]" />
+          <ReceiptText className="w-4 h-4 text-[#0f62fe]" />
           <span>GST Returns & Tax Ledger</span>
         </button>
       </div>
@@ -157,7 +157,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
           <div className="bg-[#161616] text-white p-5 border border-[#393939] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 bg-[#ff832b]"></span>
+                <span className="w-2.5 h-2.5 bg-[#0f62fe]"></span>
                 <span className="text-xs font-mono uppercase tracking-widest text-[#8d8d8d]">Financial Health & Operations</span>
               </div>
               <h2 className="text-2xl font-black tracking-tight mt-1 text-white">Studio Profit & Loss Statement</h2>
@@ -169,7 +169,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
               onClick={() => window.print()}
               className="carbon-btn-primary px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center space-x-1 shrink-0 self-start sm:self-auto"
             >
-              <Printer className="w-4 h-4 mr-1 text-black" />
+              <Printer className="w-4 h-4 mr-1 text-white" />
               <span>Print P&L</span>
             </button>
           </div>
@@ -196,9 +196,9 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
               </span>
             </div>
 
-            <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#ff832b]">
-              <span className="block text-[11px] font-bold uppercase tracking-wider text-[#b84300]">Net Studio Operating Margin</span>
-              <span className="text-2xl font-black font-mono text-[#ff832b] mt-1 block">
+            <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
+              <span className="block text-[11px] font-bold uppercase tracking-wider text-[#0043ce]">Net Studio Operating Margin</span>
+              <span className="text-2xl font-black font-mono text-[#0f62fe] mt-1 block">
                 {formatCurrency(netOperatingProfit)}
               </span>
               <span className="text-[10px] text-[#161616] font-mono mt-1 block font-bold">
@@ -213,7 +213,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
           <div className="bg-white border border-[#e0e0e0]">
             <div className="p-4 bg-[#161616] text-white flex items-center justify-between">
               <h3 className="text-sm font-bold uppercase tracking-wider">Statement of Financial Operations</h3>
-              <span className="text-xs font-mono text-[#ff832b]">{firmProfile.firmName}</span>
+              <span className="text-xs font-mono text-[#78a9ff]">{firmProfile.firmName}</span>
             </div>
 
             <table className="w-full text-xs font-mono">
@@ -232,7 +232,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
                 </tr>
                 <tr>
                   <td className="p-3 font-sans">Section 194J TDS Deducted by Clients (Form 26AS Asset)</td>
-                  <td className="p-3 text-right text-[#b84300]">+{formatCurrency(summary.totalTdsDeducted)}</td>
+                  <td className="p-3 text-right text-[#0043ce]">+{formatCurrency(summary.totalTdsDeducted)}</td>
                 </tr>
                 <tr>
                   <td className="p-3 font-sans text-[#525252]">Outstanding Uncollected Invoiced Client Balance</td>
@@ -252,9 +252,9 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
                   <td className="p-3 text-right text-[#da1e28]">-{formatCurrency(nonBillableExpenses)}</td>
                 </tr>
                 {unbilledReimbursables > 0 && (
-                  <tr className="bg-[#fff4eb]">
-                    <td className="p-3 font-sans text-[#b84300] font-bold">Unbilled Reimbursables (Pending invoice addition to client)</td>
-                    <td className="p-3 text-right text-[#b84300] font-bold">{formatCurrency(unbilledReimbursables)}</td>
+                  <tr className="bg-[#edf5ff]">
+                    <td className="p-3 font-sans text-[#0043ce] font-bold">Unbilled Reimbursables (Pending invoice addition to client)</td>
+                    <td className="p-3 text-right text-[#0043ce] font-bold">{formatCurrency(unbilledReimbursables)}</td>
                   </tr>
                 )}
 
@@ -270,7 +270,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
                 {/* Bottom Line */}
                 <tr className="bg-[#161616] text-white font-bold text-sm">
                   <td className="p-4 font-sans uppercase">Net Retained Studio Operating Profit (P&L)</td>
-                  <td className="p-4 text-right font-mono text-[#ff832b] text-base">
+                  <td className="p-4 text-right font-mono text-[#78a9ff] text-base">
                     {formatCurrency(netOperatingProfit)}
                   </td>
                 </tr>
@@ -285,7 +285,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-[#161616] text-white p-5 border border-[#393939]">
             <div>
               <div className="flex items-center space-x-2">
-                <span className="w-2.5 h-2.5 bg-[#ff832b]"></span>
+                <span className="w-2.5 h-2.5 bg-[#0f62fe]"></span>
                 <span className="text-xs font-mono uppercase tracking-widest text-[#8d8d8d]">
                   Income Books • Professional Architectural Practice
                 </span>
@@ -311,7 +311,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
                 onClick={() => window.print()}
                 className="carbon-btn-primary px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center space-x-1"
               >
-                <Printer className="w-3.5 h-3.5 mr-1 text-black" />
+                <Printer className="w-3.5 h-3.5 mr-1 text-white" />
                 <span>Print Ledger</span>
               </button>
             </div>
@@ -343,11 +343,11 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
               </span>
             </div>
 
-            <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#ff832b]">
-              <span className="text-[11px] font-bold text-[#b84300] uppercase tracking-wider block">
+            <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
+              <span className="text-[11px] font-bold text-[#0043ce] uppercase tracking-wider block">
                 TDS (194J) Credits
               </span>
-              <p className="text-xl font-black text-[#ff832b] mt-1 font-mono">
+              <p className="text-xl font-black text-[#0f62fe] mt-1 font-mono">
                 {formatCurrency(summary.totalTdsDeducted)}
               </p>
               <span className="text-[10px] text-[#525252] font-mono block mt-1">
@@ -376,7 +376,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
                   <span className="text-xs font-bold uppercase tracking-wider text-[#161616]">
                     Regular GST (18%)
                   </span>
-                  <ShieldCheck className="w-4 h-4 text-[#ff832b]" />
+                  <ShieldCheck className="w-4 h-4 text-[#0f62fe]" />
                 </div>
                 <div className="mt-3 space-y-1">
                   <span className="text-[10px] font-bold text-[#8d8d8d] uppercase tracking-wider block">
@@ -398,7 +398,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
                   <span className="text-xs font-bold uppercase tracking-wider text-[#161616]">
                     Composition (6%)
                   </span>
-                  <ShieldCheck className="w-4 h-4 text-[#ff832b]" />
+                  <ShieldCheck className="w-4 h-4 text-[#0f62fe]" />
                 </div>
                 <div className="mt-3 space-y-1">
                   <span className="text-[10px] font-bold text-[#8d8d8d] uppercase tracking-wider block">
@@ -420,7 +420,7 @@ export const BooksDashboard: React.FC<BooksDashboardProps> = ({
                   <span className="text-xs font-bold uppercase tracking-wider text-[#161616]">
                     Sec 194J TDS Ledger
                   </span>
-                  <FileCheck2 className="w-4 h-4 text-[#ff832b]" />
+                  <FileCheck2 className="w-4 h-4 text-[#0f62fe]" />
                 </div>
                 <div className="mt-3 space-y-1">
                   <span className="text-[10px] font-bold text-[#8d8d8d] uppercase tracking-wider block">

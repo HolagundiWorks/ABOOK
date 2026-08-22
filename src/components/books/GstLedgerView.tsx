@@ -154,7 +154,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
       <div className="bg-[#161616] text-white p-5 border border-[#393939] space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-[#ff832b]"></div>
+            <div className="w-3 h-3 bg-[#0f62fe]"></div>
             <div>
               <h2 className="text-xl font-bold uppercase tracking-tight text-white leading-tight">
                 GST Output Tax Ledger & Returns
@@ -164,7 +164,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono font-bold px-3 py-1 bg-black text-[#ff832b] border border-[#393939] self-start sm:self-auto">
+          <span className="text-xs font-mono font-bold px-3 py-1 bg-black text-[#78a9ff] border border-[#393939] self-start sm:self-auto">
             GSTIN: {firmProfile.gstin || 'Registered'}
           </span>
         </div>
@@ -177,7 +177,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
             disabled={isExportingPDF}
             className="carbon-btn-primary px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center space-x-1"
           >
-            <FileText className="w-4 h-4 mr-1 text-black" />
+            <FileText className="w-4 h-4 mr-1 text-white" />
             <span>{isExportingPDF ? (pdfStatus || 'Generating...') : 'Export Ledger PDF'}</span>
           </button>
 
@@ -206,11 +206,11 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
           </span>
         </div>
 
-        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#ff832b]">
-          <span className="text-[11px] font-bold text-[#b84300] uppercase tracking-wider block">
+        <div className="bg-white p-4 border border-[#e0e0e0] border-t-2 border-t-[#0f62fe]">
+          <span className="text-[11px] font-bold text-[#0043ce] uppercase tracking-wider block">
             Output GST (18%)
           </span>
-          <p className="text-xl font-black text-[#ff832b] mt-1 font-mono">
+          <p className="text-xl font-black text-[#0f62fe] mt-1 font-mono">
             {formatCurrency(totalOutputTax)}
           </p>
           <span className="text-[10px] text-[#525252] font-mono block mt-1">
@@ -247,7 +247,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
       <div className="bg-white p-4 border border-[#e0e0e0] space-y-3">
         <h3 className="text-xs font-bold text-[#161616] uppercase tracking-wider flex items-center justify-between">
           <span>Regular GST Component Breakdown</span>
-          <span className="text-[10px] font-mono text-[#ff832b] font-bold">GSTR-1 Ready</span>
+          <span className="text-[10px] font-mono text-[#0f62fe] font-bold">GSTR-1 Ready</span>
         </h3>
 
         <div className="grid grid-cols-3 gap-3 text-center">
@@ -283,7 +283,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
             placeholder="Search by invoice #, client, GSTIN..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full text-xs pl-9 pr-3 py-2.5 bg-white border border-[#8d8d8d] outline-none focus:border-[#ff832b]"
+            className="carbon-input w-full pl-9 pr-3 py-2 text-xs font-mono"
           />
         </div>
 
@@ -303,7 +303,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
             onClick={() => setTaxSchemeFilter('REGULAR_GST')}
             className={`px-3 py-1.5 border transition-colors ${
               taxSchemeFilter === 'REGULAR_GST'
-                ? 'bg-[#ff832b] text-black border-[#ff832b]'
+                ? 'bg-[#0f62fe] text-white border-[#0f62fe]'
                 : 'bg-white text-[#525252] border-[#8d8d8d] hover:text-black'
             }`}
           >
@@ -313,7 +313,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
             onClick={() => setTaxSchemeFilter('COMPOSITION_GST')}
             className={`px-3 py-1.5 border transition-colors ${
               taxSchemeFilter === 'COMPOSITION_GST'
-                ? 'bg-[#161616] text-[#ff832b] border-[#161616]'
+                ? 'bg-[#161616] text-[#78a9ff] border-[#161616]'
                 : 'bg-white text-[#525252] border-[#8d8d8d] hover:text-black'
             }`}
           >
@@ -344,7 +344,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
           <button
             onClick={() => setB2bFilter('B2B')}
             className={`flex-1 py-1.5 text-center transition-all border-x border-[#8d8d8d] ${
-              b2bFilter === 'B2B' ? 'bg-[#ff832b] text-black' : 'text-[#525252] hover:text-black'
+              b2bFilter === 'B2B' ? 'bg-[#0f62fe] text-white' : 'text-[#525252] hover:text-black'
             }`}
           >
             B2B (With GSTIN)
@@ -393,7 +393,7 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
                           {inv.invoiceNumber}
                         </span>
                         <span className={`text-[10px] font-bold px-1.5 py-0.5 uppercase border ${
-                          isB2B ? 'bg-[#161616] text-[#ff832b] border-[#161616]' : 'bg-white text-[#525252] border-[#8d8d8d]'
+                          isB2B ? 'bg-[#161616] text-[#78a9ff] border-[#161616]' : 'bg-white text-[#525252] border-[#8d8d8d]'
                         }`}>
                           {isB2B ? 'B2B' : 'B2C'}
                         </span>
@@ -426,19 +426,19 @@ export const GstLedgerView: React.FC<GstLedgerViewProps> = ({
                         {inv.isInterState ? (
                           <span>
                             <span className="text-[#8d8d8d] mr-1">IGST 18%:</span>
-                            <strong className="text-[#b84300]">{formatCurrency(inv.igstAmount || 0)}</strong>
+                            <strong className="text-[#0f62fe]">{formatCurrency(inv.igstAmount || 0)}</strong>
                           </span>
                         ) : (
                           <span>
                             <span className="text-[#8d8d8d] mr-1">CGST+SGST:</span>
-                            <strong className="text-[#b84300]">{formatCurrency(taxTotal)}</strong>
+                            <strong className="text-[#0f62fe]">{formatCurrency(taxTotal)}</strong>
                           </span>
                         )}
                       </div>
                     )}
 
                     {inv.taxScheme === 'COMPOSITION_GST' && (
-                      <span className="text-[#ff832b] font-bold">
+                      <span className="text-[#0f62fe] font-bold">
                         Comp. 6% (Bill of Supply)
                       </span>
                     )}

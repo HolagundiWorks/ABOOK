@@ -11,6 +11,7 @@ import {
   Settings, 
   Briefcase, 
   Wifi, 
+  Cable,
   Lock, 
   Download, 
   Upload, 
@@ -358,18 +359,18 @@ export const SidePaneDrawer: React.FC<SidePaneDrawerProps> = ({
                 className="w-full flex items-center justify-between p-3 border border-[#393939] bg-[#161616] hover:bg-[#262626] text-[#e0e0e0] hover:text-white transition-colors"
               >
                 <div className="flex items-center space-x-3">
-                  <Wifi className="w-4 h-4 text-[#0f62fe]" />
+                  <Cable className="w-4 h-4 text-[#0f62fe]" />
                   <div className="text-left">
                     <span className="text-xs font-bold uppercase tracking-wider block">
-                      Dedicated Wi-Fi Portal
+                      Data Cable & Security Link
                     </span>
                     <span className="text-[10px] font-mono text-[#8d8d8d]">
-                      Hotspot Air-Gap & Office LAN
+                      USB Tethering & Hardware Air-Gap
                     </span>
                   </div>
                 </div>
                 <span className="text-[10px] font-mono px-1.5 py-0.5 bg-[#0f62fe] text-white font-bold">
-                  SECURE
+                  USB LINK
                 </span>
               </button>
 

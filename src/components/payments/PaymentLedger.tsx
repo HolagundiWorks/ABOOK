@@ -305,6 +305,5 @@ export const PaymentLedger: React.FC<PaymentLedgerProps> = ({
         )}
       </div>
     </div>
-    </div>
   );
 };

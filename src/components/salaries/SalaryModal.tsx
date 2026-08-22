@@ -119,7 +119,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 bg-[#161616] text-[#ffffff] border-b border-[#393939]">
           <div className="flex items-center space-x-2">
-            <div className="w-3 h-3 bg-[#ff832b]"></div>
+            <div className="w-3 h-3 bg-[#0f62fe]"></div>
             <h2 className="text-base font-bold tracking-tight uppercase">
               {salaryToEdit ? 'Edit Salary / Payroll Record' : 'Record Salary / Stipend / Consultant Draw'}
             </h2>
@@ -147,7 +147,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                 value={monthYear}
                 onChange={(e) => setMonthYear(e.target.value)}
                 required
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
               />
             </div>
             <div>
@@ -160,7 +160,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                 value={paymentDate}
                 onChange={(e) => setPaymentDate(e.target.value)}
                 required
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
               />
             </div>
           </div>
@@ -177,7 +177,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
               onChange={(e) => setEmployeeName(e.target.value)}
               placeholder="e.g. Ar. Ananya Sharma"
               required
-              className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+              className="carbon-input w-full p-2 text-sm text-[#161616]"
             />
           </div>
 
@@ -191,7 +191,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                 id="salary-role-select"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm text-[#161616]"
               >
                 {ROLES.map((r) => (
                   <option key={r} value={r}>
@@ -208,7 +208,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                 id="salary-employment-type-select"
                 value={employmentType}
                 onChange={(e) => setEmploymentType(e.target.value as EmploymentType)}
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm text-[#161616]"
               >
                 <option value="FULL_TIME">Full-Time Studio Staff</option>
                 <option value="PART_TIME">Part-Time</option>
@@ -237,7 +237,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                   onChange={(e) => setBasicSalary(parseFloat(e.target.value) || 0)}
                   placeholder="0.00"
                   required
-                  className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono font-bold text-[#161616] outline-none focus:border-[#ff832b]"
+                  className="carbon-input w-full p-2 text-sm font-mono font-bold text-[#161616]"
                 />
               </div>
               <div>
@@ -251,7 +251,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                   value={allowances || ''}
                   onChange={(e) => setAllowances(parseFloat(e.target.value) || 0)}
                   placeholder="0.00"
-                  className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                  className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
                 />
               </div>
             </div>
@@ -268,7 +268,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                   value={deductions || ''}
                   onChange={(e) => setDeductions(parseFloat(e.target.value) || 0)}
                   placeholder="0.00"
-                  className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                  className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
                 />
               </div>
               <div>
@@ -282,18 +282,18 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                   value={tdsDeducted || ''}
                   onChange={(e) => setTdsDeducted(parseFloat(e.target.value) || 0)}
                   placeholder="0.00"
-                  className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                  className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
                 />
               </div>
             </div>
 
             {/* Net Calculation Tile */}
-            <div className="p-3 bg-[#161616] text-white flex items-center justify-between">
+            <div className="p-3 bg-[#161616] text-white flex items-center justify-between border border-[#393939]">
               <div>
                 <span className="text-[10px] uppercase font-mono tracking-widest text-[#8d8d8d]">Net Take-Home Pay</span>
                 <p className="text-xs text-[#8d8d8d]">(Basic + Allowances - Deductions - TDS)</p>
               </div>
-              <span className="text-xl font-black font-mono text-[#ff832b]">
+              <span className="text-xl font-black font-mono text-[#0f62fe]">
                 {formatCurrency(netPayable)}
               </span>
             </div>
@@ -309,7 +309,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                 id="salary-payment-method-select"
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm text-[#161616]"
               >
                 <option value="NEFT_RTGS">Bank Direct NEFT / RTGS</option>
                 <option value="UPI">UPI Direct Transfer</option>
@@ -328,7 +328,7 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
                 value={transactionReference}
                 onChange={(e) => setTransactionReference(e.target.value)}
                 placeholder="e.g. UTR-HDFC-99120"
-                className="w-full bg-white border border-[#8d8d8d] p-2 text-sm font-mono text-[#161616] outline-none focus:border-[#ff832b]"
+                className="carbon-input w-full p-2 text-sm font-mono text-[#161616]"
               />
             </div>
           </div>
@@ -366,14 +366,14 @@ export const SalaryModal: React.FC<SalaryModalProps> = ({
               type="button"
               id="cancel-salary-btn"
               onClick={onClose}
-              className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-[#161616] bg-transparent border border-[#8d8d8d] hover:bg-[#e0e0e0]"
+              className="carbon-btn-ghost px-4 py-2 text-xs font-bold uppercase tracking-wider"
             >
               Cancel
             </button>
             <button
               type="submit"
               id="save-salary-btn"
-              className="px-5 py-2 text-xs font-bold uppercase tracking-wider text-black bg-[#ff832b] hover:bg-[#eb6200] hover:text-white border border-[#ff832b] transition-all flex items-center space-x-1"
+              className="carbon-btn-primary px-5 py-2 text-xs font-bold uppercase tracking-wider flex items-center space-x-1"
             >
               <Check className="w-4 h-4 mr-1" />
               {salaryToEdit ? 'Save Changes' : 'Record Salary'}
